@@ -20,3 +20,10 @@ Make sure to keep your local repository up to date. Create meaningful commits of
 [backend] Commit Descripton
 [database] Commit Descripton
 ```
+## Adding or Modifying a Feature
+If you planning to make large changes or edit a feature:
+1. Create a new branch.
+2. Commit Changes
+3. Create a Pull Request
+4. Assign the Team Involved as Reviewer
+- Team Member should review and resolve any conflicts and then Merge.
