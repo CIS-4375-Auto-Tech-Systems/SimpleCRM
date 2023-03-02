@@ -8,3 +8,11 @@ npm install
 ```
 npm start
 ```
+## Database Configuration
+Create a file named ```.env```.
+File should contain:
+```
+USER = [user]
+PASSWORD = [password]
+CONNECTIONSTRING = [connectionString]
+```
