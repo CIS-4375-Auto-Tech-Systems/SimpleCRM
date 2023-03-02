@@ -14,7 +14,7 @@ async function dbCheck() {
     try {
         connection = await oracledb.getConnection({user:username, password:password,connectionString:connectionString});
         console.log("Successfully connected to Oracle Database");
-    }catch{
+    }catch(err){
         console.log(err);
     }finally{
         if(connection){
