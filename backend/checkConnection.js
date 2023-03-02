@@ -13,17 +13,18 @@ async function dbCheck() {
     let connection;
     try {
         connection = await oracledb.getConnection({user:username, password:password,connectionString:connectionString});
-        console.log("Successfully connected to Oracle Database")
+        console.log("Successfully connected to Oracle Database");
     }catch{
         console.log(err);
     }finally{
         if(connection){
             try{
                 await connection.close();
-                console.log("Successfully disconnected from Oracle Database")
+                console.log("Successfully disconnected from Oracle Database");
             }catch(err){
                 console.error(err);
             }
         }
     }
-}
+};
+dbCheck();
