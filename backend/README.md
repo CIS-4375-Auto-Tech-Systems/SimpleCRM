@@ -14,5 +14,5 @@ File should contain:
 ```
 USER = [user]
 PASSWORD = [password]
-CONNECTIONSTRING = [connectionString]
+CONNECTIONSTRING = "COT-CIS4375-03.cougarnet.uh.edu/orclpdb"
 ```
