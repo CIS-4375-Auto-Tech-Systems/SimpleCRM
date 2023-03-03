@@ -1,11 +1,24 @@
 // oracledb
-import oracledb from 'oracledb';
+const oracledb = require('oracledb');
+const fs = require("fs");
 // dotenv
 require("dotenv").config();
-// CREDENTIALS
+
+//Credentials for oracleDB user from .env
 const username = process.env.USER;
-const password = process.env.PASSWORD;
-const connectionString = process.env.CONNECTIONSTRING;
+const pass = process.env.PASSWORD;
+const conn = process.env.CONNECTIONSTRING;
+
+// Client Libraries
+let libPath;
+if (process.platform === 'win32') {           // Windows
+  libPath = 'C:\\oracle\\instantclient_19_16';
+} else if (process.platform === 'darwin') {   // macOS
+  libPath = process.env.HOME + '/Downloads/instantclient_19_8';
+}
+if (libPath && fs.existsSync(libPath)) {
+  oracledb.initOracleClient({ libDir: libPath });
+}
 
 /* CREATE */
 async function createOP(){
