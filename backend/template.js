@@ -21,16 +21,33 @@ if (libPath && fs.existsSync(libPath)) {
 }
 
 /* CREATE */
-async function createOP(){
+// QUERY CREATION
+let createQuery =  `INSERT INTO hokage VALUES (:id, :name)`;
+let createBinds = [[6, 'Kakashi'], [7, 'Boruto']]; // ITEMS BEING INSERTED
+// FUNCTION
+async function createOP(query, binds){
     let connection;
     try{
+        //CONNECTION OPEN
+        connection = await oracledb.getConnection(
+            {
+                user : username, 
+                password : pass, 
+                connectString : conn
+            });
+        console.log("Successfully connected to database");
 
+        // EXECUTION
+        result = await connection.executeMany(query, binds, {autoCommit: true});
+        console.log("Rows inserted: " + result.rowsAffected);
     }catch(err){
         console.log(err);
     }finally{
         if(connection){
             try{
+                //CONNECTION CLOSE
                 await connection.close();
+                console.log("Connection Closed");
             }catch(err){
                 console.log(err);
             }
@@ -38,16 +55,32 @@ async function createOP(){
     }
 };
 /* READ */
-async function readOP(){
+// QUERY CREATION
+let readQuery =  `SELECT * FROM hokage`;
+// FUNCTION
+async function readOP(query){
     let connection;
     try{
-        
+        //CONNECTION OPEN
+        connection = await oracledb.getConnection(
+            {
+                user : username, 
+                password : pass, 
+                connectString : conn
+            });
+        console.log("Successfully connected to database");
+
+        // EXECUTION
+        result = await connection.execute(query);
+        return result
     }catch(err){
         console.log(err);
     }finally{
         if(connection){
             try{
+                //CONNECTION CLOSE
                 await connection.close();
+                console.log("Connection Closed");
             }catch(err){
                 console.log(err);
             }
@@ -55,16 +88,33 @@ async function readOP(){
     }
 };
 /* UPDATE */
-async function updateOP(){
+// QUERY CREATION
+let updateQuery =  `UPDATE hokage SET name = :2 WHERE id = :1`;
+let updateBinds = [7, 'Naruto']; // ITEM BEING UPDATED
+// FUNCTION
+async function updateOP(query, binds){
     let connection;
     try{
-        
+        //CONNECTION OPEN
+        connection = await oracledb.getConnection(
+            {
+                user : username, 
+                password : pass, 
+                connectString : conn
+            });
+        console.log("Successfully connected to database");
+
+        // EXECUTION
+        result = await connection.execute(query, binds, {autoCommit: true});
+        console.log("Rows Updated: " + result.rowsAffected);
     }catch(err){
         console.log(err);
     }finally{
         if(connection){
             try{
+                //CONNECTION CLOSE
                 await connection.close();
+                console.log("Connection Closed");
             }catch(err){
                 console.log(err);
             }
@@ -72,16 +122,33 @@ async function updateOP(){
     }
 };
 /* DELETE */
-async function deleteOP(){
+// QUERY CREATION
+let deleteQuery =  `DELETE FROM hokage WHERE id = :1`;
+let deleteBinds = [7]; //ITEM BEING DELETED
+// FUNCTION
+async function deleteOP(query, binds){
     let connection;
     try{
-        
+        //CONNECTION OPEN
+        connection = await oracledb.getConnection(
+            {
+                user : username, 
+                password : pass, 
+                connectString : conn
+            });
+        console.log("Successfully connected to database");
+
+        // EXECUTION
+        result = await connection.execute(query, binds, {autoCommit: true});
+        console.log("Rows Deleted: " + result.rowsAffected);
     }catch(err){
         console.log(err);
     }finally{
         if(connection){
             try{
+                //CONNECTION CLOSE
                 await connection.close();
+                console.log("Connection Closed");
             }catch(err){
                 console.log(err);
             }
