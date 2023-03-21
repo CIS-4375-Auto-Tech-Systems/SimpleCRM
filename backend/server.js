@@ -159,16 +159,16 @@ app.post('/employee', function(req, res){
     // Column Names
     const empAttributes = ':emp_id,:emp_address,:city,:state,:zip,:phone,:datehired,:Lname,:Fname,:sex';
     // Values
-    let emp_Id = '';
-    let emp_address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let datehired = '';
-    let Lname = '';
-    let Fname = '';
-    let sex = '';
+    let emp_Id = req.body.id ||'';
+    let emp_address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let datehired = req.body.datehired ||'';
+    let Lname = req.body.lastname ||'';
+    let Fname = req.body.firstname ||'';
+    let sex = req.body.sex ||'';
     // Query Creation
     let createQuery = 'INSERT INTO EMPLOYEE VALUES '+'('+empAttributes+')';
     let createBinds = [[emp_Id,emp_address,city,state,zip,phone,datehired,Lname,Fname,sex]];
@@ -177,33 +177,40 @@ app.post('/employee', function(req, res){
 // READ
 app.get('/employee', async function(req, res){
     // Values
-    let restriction = ''; // Search by table attribute
-    let restrictionValue = ''; // Value of attribute
+    let restriction = req.body.restriction ||''; // Search by table attribute
+    let restrictionValue = req.body.restrictionvalue ||''; // Value of attribute
 
-    let isRestricted = false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
+    let isRestricted = req.body.isRestricted || false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
         let readQuery = 'SELECT * FROM EMPLOYEE WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
-        console.log(await readOP(readQuery,readBinds));
+        // Send a response
+        res.send(await readOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM EMPLOYEE';
-        console.log(await readOP(readQuery));
+        // Send a response
+        res.send(await readOP(readQuery));
     }
 });
 // UPDATE
 app.put('/employee', function(req, res){
+    /*
+    Most likely going to read customer by ID and compare their current values to the new values.
+    IF the value is different THEN it will UPDATE the column to the new value.
+    Will repeat for each column other than ID.
+    */
     // Values
-    let emp_id = '';
-    let emp_address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let datehired = '';
-    let Lname = '';
-    let Fname = '';
-    let sex = '';
+    let emp_id = req.body.id ||'';
+    let emp_address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let datehired = req.body.datehired ||'';
+    let Lname = req.body.lastname ||'';
+    let Fname = req.body.firstname ||'';
+    let sex = req.body.sex ||'';
     // Need a way to only update the columns that have been changed
     let columnNames = '';
     let updatedValues = '';
@@ -215,7 +222,7 @@ app.put('/employee', function(req, res){
 // DELETE
 app.delete('/employee', function(req, res){
     // Values
-    let emp_Id = '';
+    let emp_Id = req.body.id ||'';
     // Query Creation
     let deleteQuery = 'DELETE FROM EMPLOYEE WHERE emp_id = :emp_id';
     let deleteBinds = [emp_Id];
@@ -228,16 +235,16 @@ app.post('/customer', function(req, res){
     // Column Names
     const custAttributes = ':cust_id,:name,:address,:city,:state,:zip,:phone,:Edate,:company,:taxnum';
     // Values
-    let cust_id = '';
-    let name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let Edate = '';
-    let company = '';
-    let taxnum = '';
+    let cust_id = req.body.id ||'';
+    let name = req.body.name ||'';
+    let address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let Edate = req.body.edate ||'';
+    let company = req.body.company ||'';
+    let taxnum = req.body.taxnum ||'';
     // Query Creation
     let createQuery = 'INSERT INTO CUSTOMER VALUES '+'('+custAttributes+')';
     let createBinds = [[cust_id,name,address,city,state,zip,phone,Edate,company,taxnum]];
@@ -246,45 +253,52 @@ app.post('/customer', function(req, res){
 // READ
 app.get('/customer', async function(req, res){
     // Values
-    let restriction = ''; // Search by table attribute
-    let restrictionValue = ''; // Value of attribute
+    let restriction = req.body.restriction ||''; // Search by table attribute
+    let restrictionValue = req.body.restrictionvalue ||''; // Value of attribute
 
-    let isRestricted = false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
+    let isRestricted = req.body.isRestricted ||false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
         let readQuery = 'SELECT * FROM CUSTOMER WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
-        console.log(await readOP(readQuery,readBinds));
+        // Send a response
+        res.send(await readOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM CUSTOMER';
-        console.log(await readOP(readQuery));
+        // Send a response
+        res.send(await readOP(readQuery));
     }
 });
 // UPDATE
 app.put('/customer', function(req, res){
+    /*
+    Most likely going to read customer by ID and compare their current values to the new values.
+    IF the value is different THEN it will UPDATE the column to the new value.
+    Will repeat for each column other than ID.
+    */
     // Values
-    let cust_id = '';
-    let name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let Edate = '';
-    let company = '';
-    let taxnum = '';
-    // Need a way to only update the columns that have been changed
-    let columnNames = '';
-    let updatedValues = '';
+    let cust_id = req.body.id ||'';
+    let name = req.body.name ||'';
+    let address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let Edate = req.body.edate ||'';
+    let company = req.body.company ||'';
+    let taxnum = req.body.taxnum ||'';
+    // SEE ABOVE
+    let columnName = '';
+    let updatedValue = '';
     // Query Creation
-    let updateQuery = 'UPDATE CUSTOMER SET '+columnNames+' = :updatedValues WHERE cust_id =:cust_id';
-    let updateBinds = [updatedValues, cust_id];
+    let updateQuery = 'UPDATE CUSTOMER SET '+columnName+' = :updatedValue WHERE cust_id =:cust_id';
+    let updateBinds = [updatedValue, cust_id];
     updateOP(updateQuery, updateBinds);
 });
 // DELETE
 app.delete('/customer', function(req, res){
     // Values
-    let cust_id = '';
+    let cust_id = req.body.id ||'';
     // Query Creation
     let deleteQuery = 'DELETE FROM CUSTOMER WHERE cust_id = :cust_id';
     let deleteBinds = [cust_id];
@@ -297,19 +311,19 @@ app.post('/vendor', function(req, res){
     // Column Names
     const vendAttributes = ':vendor_id,:ven_name,:address,:city,:state,:zip,:phone,:phone2,:fax,:contact,:Edate,:email,:keymap';
     // Values
-    let vendor_id = '';
-    let ven_name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let phone2 = '';
-    let fax = '';
-    let contact = '';
-    let Edate = '';
-    let email = '';
-    let keymap = '';
+    let vendor_id = req.body.id ||'';
+    let ven_name = req.body.name ||'';
+    let address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let phone2 = req.body.phone2 ||'';
+    let fax = req.body.fax ||'';
+    let contact = req.body.contact ||'';
+    let Edate = req.body.edate ||'';
+    let email = req.body.email ||'';
+    let keymap = req.body.keymap ||'';
     // Query Creation
     let createQuery = 'INSERT INTO VENDOR VALUES '+'('+vendAttributes+')';
     let createBinds = [[vendor_id,ven_name,address,city,state,zip,phone,phone2,fax,contact,Edate,email,keymap]];
@@ -318,36 +332,43 @@ app.post('/vendor', function(req, res){
 // READ
 app.get('/vendor', async function(req, res){
     // Values
-    let restriction = ''; // Search by table attribute
-    let restrictionValue = ''; // Value of attribute
+    let restriction = req.body.restriction ||''; // Search by table attribute
+    let restrictionValue = req.body.restrictionvalue ||''; // Value of attribute
 
-    let isRestricted = false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
+    let isRestricted = req.body.isRestricted ||false; // (TRUE = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
         let readQuery = 'SELECT * FROM VENDOR WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
-        console.log(await readOP(readQuery,readBinds));
+        // Send a response
+        res.send(await readOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM CUSTOMER';
-        console.log(await readOP(readQuery));
+        // Send a response
+        res.send(await readOP(readQuery));
     }
 });
 // UPDATE
 app.put('/vendor', function(req, res){
+    /*
+    Most likely going to read customer by ID and compare their current values to the new values.
+    IF the value is different THEN it will UPDATE the column to the new value.
+    Will repeat for each column other than ID.
+    */
     // Values
-    let vendor_id = '';
-    let ven_name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let phone2 = '';
-    let fax = '';
-    let contact = '';
-    let Edate = '';
-    let email = '';
-    let keymap = '';
+    let vendor_id = req.body.id ||'';
+    let ven_name = req.body.name ||'';
+    let address = req.body.address ||'';
+    let city = req.body.city ||'';
+    let state = req.body.state ||'';
+    let zip = req.body.zip ||'';
+    let phone = req.body.phone ||'';
+    let phone2 = req.body.phone2 ||'';
+    let fax = req.body.fax ||'';
+    let contact = req.body.contact ||'';
+    let Edate = req.body.edate ||'';
+    let email = req.body.email ||'';
+    let keymap = req.body.keymap ||'';
     // Need a way to only update the columns that have been changed
     let columnNames = '';
     let updatedValues = '';
@@ -359,7 +380,7 @@ app.put('/vendor', function(req, res){
 // DELETE
 app.delete('/vendor', function(req, res){
     // Values
-    let vendor_id = '';
+    let vendor_id = req.body.id ||'';
     // Query Creation
     let deleteQuery = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
     let deleteBinds = [vendor_id];
