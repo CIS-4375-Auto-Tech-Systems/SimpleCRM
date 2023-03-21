@@ -72,7 +72,11 @@ async function readOP(query, binds){
         console.log("Successfully connected to database");
 
         // EXECUTION
-        result = await connection.execute(query,binds);
+        if (binds === undefined){
+            result = await connection.execute(query);
+        }else{
+            result = await connection.execute(query,binds); 
+        }
         return result
     }catch(err){
         console.log(err);
