@@ -9,6 +9,7 @@ app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine","ejs");
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(express.static("public"));
 
 // HOMEPAGE
 app.get('/', function(req,res){
