@@ -18,141 +18,46 @@ if (process.platform === 'win32') {           // Windows
   libPath = 'C:\\oracle\\instantclient_21_9';
 } else if (process.platform === 'darwin') {   // macOS
   libPath = process.env.HOME + '/Downloads/instantclient_19_8';
-}
+};
 if (libPath && fs.existsSync(libPath)) {
   oracledb.initOracleClient({ libDir: libPath });
-}
+};
 
 //declare port number for the api
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 /* CRUD OPS */
-// CREATE
-async function createOP(query, binds){
+async function crudOP(query, binds){
     let connection;
     try{
-        //CONNECTION OPEN
-        connection = await oracledb.getConnection(
-            {
-                user : username, 
-                password : pass, 
-                connectString : conn
-            });
-        console.log("Successfully connected to database");
-
-        // EXECUTION
-        result = await connection.executeMany(query, binds, {autoCommit: true});
-        console.log("Rows inserted: " + result.rowsAffected);
-        return 'Success'
-    }catch(err){
-        console.log(err);
-        return err
-    }finally{
-        if(connection){
-            try{
-                //CONNECTION CLOSE
-                await connection.close();
-                console.log("Connection Closed");
-            }catch(err){
-                console.log(err);
-            }
-        }
-    }
-};
-// READ
-async function readOP(query, binds){
-    let connection;
-    try{
-        //CONNECTION OPEN
-        connection = await oracledb.getConnection(
-            {
-                user : username, 
-                password : pass, 
-                connectString : conn
-            });
-        console.log("Successfully connected to database");
-
-        // EXECUTION
+        //OPEN CONNECTION
+        connection = await oracledb.getConnection({
+            user: username,
+            password: pass,
+            connectString: conn
+        });
+        console.log('[DB]CONNECTION OPEN');
+        // EXECUTE QUERY
         if (binds === undefined){
+            // If NO Binds are given
             result = await connection.execute(query);
+            console.log(`${result.rowsAffected} Rows Affected`);
         }else{
-            result = await connection.execute(query,binds); 
+            //  If Binds are given
+            result = await connection.execute(query,binds);
+            console.log(`${result.rowsAffected} Rows Affected`);
         }
         return result
     }catch(err){
         console.log(err);
-        return err
+        return 'FAILURE'
     }finally{
-        if(connection){
+        if (connection){
             try{
-                //CONNECTION CLOSE
+                // CLOSE CONNECTION
                 await connection.close();
-                console.log("Connection Closed");
-            }catch(err){
-                console.log(err);
-            }
-        }
-    }
-};
-// UPDATE
-async function updateOP(query, binds){
-    let connection;
-    try{
-        //CONNECTION OPEN
-        connection = await oracledb.getConnection(
-            {
-                user : username, 
-                password : pass, 
-                connectString : conn
-            });
-        console.log("Successfully connected to database");
-
-        // EXECUTION
-        result = await connection.execute(query, binds, {autoCommit: true});
-        console.log("Rows Updated: " + result.rowsAffected);
-        return 'Success'
-    }catch(err){
-        console.log(err);
-        return err
-    }finally{
-        if(connection){
-            try{
-                //CONNECTION CLOSE
-                await connection.close();
-                console.log("Connection Closed");
-            }catch(err){
-                console.log(err);
-            }
-        }
-    }
-};
-// DELETE 
-async function deleteOP(query, binds){
-    let connection;
-    try{
-        //CONNECTION OPEN
-        connection = await oracledb.getConnection(
-            {
-                user : username, 
-                password : pass, 
-                connectString : conn
-            });
-        console.log("Successfully connected to database");
-
-        // EXECUTION
-        result = await connection.execute(query, binds, {autoCommit: true});
-        console.log("Rows Deleted: " + result.rowsAffected);
-        return 'Success'
-    }catch(err){
-        console.log(err);
-        return err
-    }finally{
-        if(connection){
-            try{
-                //CONNECTION CLOSE
-                await connection.close();
-                console.log("Connection Closed");
+                console.log('[DB]CONNECTION CLOSED');
             }catch(err){
                 console.log(err);
             }
@@ -179,7 +84,7 @@ app.post('/employee', async function(req, res){
     // Query Creation
     let createQuery = 'INSERT INTO EMPLOYEE VALUES '+'('+empAttributes+')';
     let createBinds = [[emp_id,emp_address,city,state,zip,phone,datehired,Lname,Fname,sex]];
-    res.send(await createOP(createQuery, createBinds));
+    res.send(await crudOP(createQuery, createBinds));
 });
 // READ
 app.get('/employee', async function(req, res){
@@ -193,11 +98,11 @@ app.get('/employee', async function(req, res){
         let readQuery = 'SELECT * FROM EMPLOYEE WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
         // Send a response
-        res.send(await readOP(readQuery,readBinds));
+        res.send(await crudOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM EMPLOYEE';
         // Send a response
-        res.send(await readOP(readQuery));
+        res.send(await crudOP(readQuery));
     }
 });
 // UPDATE
@@ -212,7 +117,7 @@ app.put('/employee', async function(req, res){
     let restrictionValue = emp_id;
     let readQuery = 'SELECT * FROM EMPLOYEE WHERE emp_id =:restrictionValue'
     let readBinds = [restrictionValue];
-    let readEmp = await readOP(readQuery, readBinds);
+    let readEmp = await crudOP(readQuery, readBinds);
     let currentEmp = readEmp.rows[0];
     // Store Old
     let currentAddress = currentEmp[1];
@@ -294,7 +199,7 @@ app.put('/employee', async function(req, res){
     // Query Creation 
     let updateQuery = 'UPDATE EMPLOYEE SET ' +empAttributes+ ' WHERE emp_id = :emp_id';
     let updateBinds = [emp_address,city,state,zip,phone,datehired,Lname,Fname,sex,emp_id];
-    res.send(await updateOP(updateQuery, updateBinds));
+    res.send(await crudOP(updateQuery, updateBinds));
 });
 // DELETE
 app.delete('/employee',async function(req, res){
@@ -303,7 +208,7 @@ app.delete('/employee',async function(req, res){
     // Query Creation
     let deleteQuery = 'DELETE FROM EMPLOYEE WHERE emp_id = :emp_id';
     let deleteBinds = [emp_id];
-    res.send(await deleteOP(deleteQuery, deleteBinds));
+    res.send(await crudOP(deleteQuery, deleteBinds));
 });
 
 /* CUSTOMER */
@@ -325,7 +230,7 @@ app.post('/customer',async function(req, res){
     // Query Creation
     let createQuery = 'INSERT INTO CUSTOMER VALUES '+'('+custAttributes+')';
     let createBinds = [[cust_id,name,address,city,state,zip,phone,Edate,company,taxnum]];
-    res.send(await createOP(createQuery, createBinds));
+    res.send(await crudOP(createQuery, createBinds));
 });
 // READ
 app.get('/customer', async function(req, res){
@@ -339,11 +244,11 @@ app.get('/customer', async function(req, res){
         let readQuery = 'SELECT * FROM CUSTOMER WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
         // Send a response
-        res.send(await readOP(readQuery,readBinds));
+        res.send(await crudOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await readOP(readQuery));
+        res.send(await crudOP(readQuery));
     }
 });
 // UPDATE
@@ -358,7 +263,7 @@ app.put('/customer', async function(req, res){
     let restrictionValue = cust_id;
     let readQuery = 'SELECT * FROM CUSTOMER WHERE cust_id = :restrictionValue';
     let readBinds = [restrictionValue];
-    let readCust = await readOP(readQuery, readBinds);
+    let readCust = await crudOP(readQuery, readBinds);
     let currentCust = readCust.rows[0];
     // Store Old
     let currentName = currentCust[1];
@@ -441,7 +346,7 @@ app.put('/customer', async function(req, res){
     // Query Creation
     let updateQuery = 'UPDATE CUSTOMER SET '+custAttributes+' WHERE cust_id =:cust_id';
     let updateBinds = [name, address, city, state, zip, phone, Edate, company, taxnum, cust_id];
-    res.send(await updateOP(updateQuery, updateBinds));
+    res.send(await crudOP(updateQuery, updateBinds));
 });
 // DELETE
 app.delete('/customer',async function(req, res){
@@ -450,7 +355,7 @@ app.delete('/customer',async function(req, res){
     // Query Creation
     let deleteQuery = 'DELETE FROM CUSTOMER WHERE cust_id = :cust_id';
     let deleteBinds = [cust_id];
-    res.send(await deleteOP(deleteQuery, deleteBinds));
+    res.send(await crudOP(deleteQuery, deleteBinds));
 });
 
 /* VENDOR */
@@ -475,7 +380,7 @@ app.post('/vendor',async function(req, res){
     // Query Creation
     let createQuery = 'INSERT INTO VENDOR VALUES '+'('+vendAttributes+')';
     let createBinds = [[vendor_id,ven_name,address,city,state,zip,phone,phone2,fax,contact,Edate,email,keymap]];
-    res.send(await createOP(createQuery, createBinds));
+    res.send(await crudOP(createQuery, createBinds));
 });
 // READ
 app.get('/vendor', async function(req, res){
@@ -489,11 +394,11 @@ app.get('/vendor', async function(req, res){
         let readQuery = 'SELECT * FROM VENDOR WHERE '+restriction+'=:restrictionValue';
         let readBinds = [restrictionValue];
         // Send a response
-        res.send(await readOP(readQuery,readBinds));
+        res.send(await crudOP(readQuery,readBinds));
     }else{
         let readQuery = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await readOP(readQuery));
+        res.send(await crudOP(readQuery));
     }
 });
 // UPDATE
@@ -508,7 +413,7 @@ app.put('/vendor',async function(req, res){
     let restrictionValue = vendor_id;
     let readQuery = 'SELCT * FROM VENDOR WHERE vendor_id = :restrictionValue';
     let readBinds = [restrictionValue];
-    let readVend = await readOP(readQuery, readBinds);
+    let readVend = await crudOP(readQuery, readBinds);
     let currentVend = readVend.rows[0];
     // Store Old
     let currentName = currentVend[1];
@@ -615,7 +520,7 @@ app.put('/vendor',async function(req, res){
     // Query Creation
     let updateQuery = 'UPDATE CUSTOMER SET '+vendAttributes+' WHERE vendor_id =:vendor_id';
     let updateBinds = [ven_name, address, city, state, zip, phone1, phone2,fax, contact, Edate, email, keymap, vendor_id];
-    res.send(await updateOP(updateQuery, updateBinds));
+    res.send(await crudOP(updateQuery, updateBinds));
 });
 // DELETE
 app.delete('/vendor',async function(req, res){
@@ -624,7 +529,7 @@ app.delete('/vendor',async function(req, res){
     // Query Creation
     let deleteQuery = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
     let deleteBinds = [vendor_id];
-    res.send(await deleteOP(deleteQuery, deleteBinds));
+    res.send(await crudOP(deleteQuery, deleteBinds));
 });
 
 app.listen(PORT, () => {
