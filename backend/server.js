@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 /* CRUD OPS */
-async function crudOP(query, binds){
+async function crudOP(query, binds, isRead){
     let connection;
     try{
         //OPEN CONNECTION
@@ -39,14 +39,24 @@ async function crudOP(query, binds){
         });
         console.log('[DB]CONNECTION OPEN');
         // EXECUTE QUERY
-        if (binds === undefined){
-            // If NO Binds are given
-            result = await connection.execute(query);
-            console.log(`${result.rowsAffected} Rows Affected`);
+        if (binds === undefined) {
+            if (isRead) {
+                // If NO Binds and IS Reading
+                result = await connection.execute(query);
+            }else{
+                //  If NO Binds and IS NOT Reading
+                result = await connection.execute(query, {autoCommit:true});
+                console.log(`${result.rowsAffected} Rows Affected`);
+            }
         }else{
-            //  If Binds are given
-            result = await connection.execute(query,binds);
-            console.log(`${result.rowsAffected} Rows Affected`);
+            if (isRead) {
+                //  If Binds and IS Reading
+                result = await connection.execute(query,binds);
+            }else{
+                //  If Binds and IS NOT Reading
+                result = await connection.execute(query,binds, {autoCommit:true});
+                console.log(`${result.rowsAffected} Rows Affected`);
+            }
         }
         return result
     }catch(err){
@@ -64,12 +74,20 @@ async function crudOP(query, binds){
         }
     }
 };
+/* Compare and Update */
+function compare_update(oldValue, newValue) {
+    if (oldValue.toUpperCase() == newValue.toUpperCase()) {
+        return oldValue;
+    } else if (oldValue.toUpperCase() != newValue.toUpperCase()) {
+        return newValue;
+    }
+};
 
 /* EMPLOYEE */
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = ":emp_id,:emp_address,:city,:state,:zip,:phone,:datehired,:Lname,:Fname,:sex";
+    const empAttributes = ":emp_id, :emp_address, :city, :state, :zip, :phone, :datehired, :Lname, :Fname, :sex";
     // Values
     let emp_id = req.body.id;
     let emp_address = req.body.address;
@@ -82,27 +100,26 @@ app.post('/employee', async function(req, res){
     let Fname = req.body.firstname;
     let sex = req.body.sex;
     // Query Creation
-    let createQuery = 'INSERT INTO EMPLOYEE VALUES '+'('+empAttributes+')';
-    let createBinds = [[emp_id,emp_address,city,state,zip,phone,datehired,Lname,Fname,sex]];
-    res.send(await crudOP(createQuery, createBinds));
+    let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
+    let binds = [emp_id,emp_address,city,state,zip,phone,datehired,Lname,Fname,sex];
+    res.send(await crudOP(query, binds, false));
 });
 // READ
 app.get('/employee', async function(req, res){
-    // Values
-    let restriction = req.body.restriction; // Search by table attribute
-    let restrictionValue = req.body.restrictionvalue; // Value of attribute
-
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let readQuery = 'SELECT * FROM EMPLOYEE WHERE '+restriction+'=:restrictionValue';
-        let readBinds = [restrictionValue];
+        let query = `SELECT * FROM EMPLOYEE WHERE ${column} = :columnValue`;
+        let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(readQuery,readBinds));
+        res.send(await crudOP(query,binds, true));
     }else{
-        let readQuery = 'SELECT * FROM EMPLOYEE';
+        let query = 'SELECT * FROM EMPLOYEE';
         // Send a response
-        res.send(await crudOP(readQuery));
+        res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
@@ -114,22 +131,22 @@ app.put('/employee', async function(req, res){
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
-    let restrictionValue = emp_id;
-    let readQuery = 'SELECT * FROM EMPLOYEE WHERE emp_id =:restrictionValue'
-    let readBinds = [restrictionValue];
-    let readEmp = await crudOP(readQuery, readBinds);
+    let readQuery = 'SELECT * FROM EMPLOYEE WHERE emp_id = :emp_id'
+    let readBinds = [emp_id];
+    let readEmp = await crudOP(readQuery, readBinds, true);
     let currentEmp = readEmp.rows[0];
     // Store Old
-    let currentAddress = currentEmp[1];
-    let currentCity = currentEmp[2];
-    let currentState = currentEmp[3];
-    let currentZip = currentEmp[4];
-    let currentPhone = currentEmp[5];
-    let currentDateHired = currentEmp[6];
-    let currentLname = currentEmp[7];
-    let currentFname = currentEmp[8];
-    let currentSex = currentEmp[9];
+    let oldAddress = currentEmp[1];
+    let oldCity = currentEmp[2];
+    let oldState = currentEmp[3];
+    let oldZip = currentEmp[4];
+    let oldPhone = currentEmp[5];
+    let oldDateHired = currentEmp[6];
+    let oldLname = currentEmp[7];
+    let oldFname = currentEmp[8];
+    let oldSex = currentEmp[9];
     // Request New
+    let newAddress = req.body.address;
     let newCity = req.body.city;
     let newState = req.body.state;
     let newZip = req.body.zip;
@@ -139,83 +156,41 @@ app.put('/employee', async function(req, res){
     let newFname = req.body.firstname;
     let newSex = req.body.sex;
 
-    // INITAL
-    let emp_address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let datehired = '';
-    let Lname = '';
-    let Fname = '';
-    let sex = '';
-
     /* COMPARE and UPDATE */
-    if (currentAddress.toUpperCase() == newAddress.toUpperCase()){
-        emp_address = currentAddress;
-    }else if (currentAddress.toUpperCase() != newAddress.toUpperCase()){
-        emp_address = newAddress;
-    };
-    if (currentCity.toUpperCase() == newCity.toUpperCase()){
-        city = currentCity;
-    }else if (currentCity.toUpperCase() != newCity.toUpperCase()){
-        city = newCity;
-    };
-    if (currentState.toUpperCase() == newState.toUpperCase()){
-        state = currentState;
-    }else if (currentState.toUpperCase() != newState.toUpperCase()){
-        state = newState;
-    };
-    if (currentZip.toUpperCase() == newZip.toUpperCase()){
-        zip = currentZip;
-    }else if (currentZip.toUpperCase() != newZip.toUpperCase()){
-        zip = newZip;
-    };
-    if (currentPhone.toUpperCase() == newPhone.toUpperCase()){
-        phone = currentPhone;
-    }else if (currentPhone.toUpperCase() != newPhone.toUpperCase()){
-        phone = newPhone;
-    };
-    if (currentDateHired == newDateHired){
-        datehired = currentDateHired;
-    }else if (currentDateHired  != newDateHired){
+    let emp_address = compare_update(oldAddress,newAddress);
+    let city = compare_update(oldCity, newCity);
+    let state = compare_update(oldState, newState);
+    let zip = compare_update(oldZip, newZip);
+    let phone = compare_update(oldPhone, newPhone);
+    let datehired = '';
+    if (oldDateHired == newDateHired){
+        datehired = oldDateHired;
+    }else if (oldDateHired  != newDateHired){
         datehired = newDateHired;
     };
-    if (currentLname.toUpperCase() == newLname.toUpperCase()){
-        Lname = currentLname;
-    }else if (currentLname.toUpperCase() != newLname.toUpperCase()){
-        Lname = newLname;
-    };
-    if (currentFname.toUpperCase() == newFname.toUpperCase()){
-        Fname = currentFname;
-    }else if (currentFname.toUpperCase() != newFname.toUpperCase()){
-        Fname = newFname;
-    };
-    if (currentSex.toUpperCase() == newSex.toUpperCase()){
-        sex = currentSex;
-    }else if (currentSex.toUpperCase() != newSex.toUpperCase()){
-        sex = newAddress;
-    };
+    let Lname = compare_update(oldLname, newLname);
+    let Fname = compare_update(oldFname, newFname);
+    let sex = compare_update(oldSex, newSex);
     // Query Creation 
-    let updateQuery = 'UPDATE EMPLOYEE SET ' +empAttributes+ ' WHERE emp_id = :emp_id';
-    let updateBinds = [emp_address,city,state,zip,phone,datehired,Lname,Fname,sex,emp_id];
-    res.send(await crudOP(updateQuery, updateBinds));
+    let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
+    let binds = [emp_address,city,state,zip,phone,datehired,Lname,Fname,sex,emp_id];
+    res.send(await crudOP(updateQuery, updateBinds, false));
 });
 // DELETE
 app.delete('/employee',async function(req, res){
     // Values
     let emp_id = req.body.id;
     // Query Creation
-    let deleteQuery = 'DELETE FROM EMPLOYEE WHERE emp_id = :emp_id';
-    let deleteBinds = [emp_id];
-    res.send(await crudOP(deleteQuery, deleteBinds));
+    let query = 'DELETE FROM EMPLOYEE WHERE emp_id = :emp_id';
+    let binds = [emp_id];
+    res.send(await crudOP(query, binds, false));
 });
 
 /* CUSTOMER */
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
-    const custAttributes = ':cust_id,:name,:address,:city,:state,:zip,:phone,:Edate,:company,:taxnum';
+    const custAttributes = ':cust_id, :name, :address, :city, :state, :zip, :phone, :Edate, :company, :taxnum';
     // Values
     let cust_id = req.body.id;
     let name = req.body.name;
@@ -228,27 +203,26 @@ app.post('/customer',async function(req, res){
     let company = req.body.company;
     let taxnum = req.body.taxnum;
     // Query Creation
-    let createQuery = 'INSERT INTO CUSTOMER VALUES '+'('+custAttributes+')';
-    let createBinds = [[cust_id,name,address,city,state,zip,phone,Edate,company,taxnum]];
-    res.send(await crudOP(createQuery, createBinds));
+    let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
+    let binds = [cust_id,name,address,city,state,zip,phone,Edate,company,taxnum];
+    res.send(await crudOP(query, binds, false));
 });
 // READ
 app.get('/customer', async function(req, res){
-    // Values
-    let restriction = req.body.restriction; // Search by table attribute
-    let restrictionValue = req.body.restrictionvalue; // Value of attribute
-
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let readQuery = 'SELECT * FROM CUSTOMER WHERE '+restriction+'=:restrictionValue';
-        let readBinds = [restrictionValue];
+        let query = `SELECT * FROM CUSTOMER WHERE ${column} =:columnValue`;
+        let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(readQuery,readBinds));
+        res.send(await crudOP(query,binds, true));
     }else{
-        let readQuery = 'SELECT * FROM CUSTOMER';
+        let query = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await crudOP(readQuery));
+        res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
@@ -256,25 +230,24 @@ app.put('/customer', async function(req, res){
     // Columns
     const custAttributes = "name = :name, address = :address, city = :city, state = :state, zip = :zip, phone = :phone, Edate = :Edate, company = :company, taxnum = :taxnum";
     // Values
-    let cust_id = req.body.id ||'';
+    let cust_id = req.body.id;
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
-    let restrictionValue = cust_id;
-    let readQuery = 'SELECT * FROM CUSTOMER WHERE cust_id = :restrictionValue';
-    let readBinds = [restrictionValue];
-    let readCust = await crudOP(readQuery, readBinds);
+    let readQuery = 'SELECT * FROM CUSTOMER WHERE cust_id = :cust_id';
+    let readBinds = [cust_id];
+    let readCust = await crudOP(readQuery, readBinds, true);
     let currentCust = readCust.rows[0];
     // Store Old
-    let currentName = currentCust[1];
-    let currentAddress = currentCust[2];
-    let currentCity = currentCust[3];
-    let currentState = currentCust[4];
-    let currentZip = currentCust[5];
-    let currentPhone = currentCust[6];
-    let currentEdate = currentCust[7];
-    let currentCompany = currentCust[8];
-    let currentTaxnum = currentCust[9];
+    let oldName = currentCust[1];
+    let oldAddress = currentCust[2];
+    let oldCity = currentCust[3];
+    let oldState = currentCust[4];
+    let oldZip = currentCust[5];
+    let oldPhone = currentCust[6];
+    let oldEdate = currentCust[7];
+    let oldCompany = currentCust[8];
+    let oldTaxnum = currentCust[9];
     // Request New
     let newName = req.body.name;
     let newAddress = req.body.address;
@@ -286,83 +259,41 @@ app.put('/customer', async function(req, res){
     let newCompany = req.body.company;
     let newTaxnum = req.body.taxnum;
 
-    // INITAL
-    let name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone = '';
-    let Edate = '';
-    let company = '';
-    let taxnum = '';
-
     /* COMPARE and UPDATE */
-    if (currentName.toUpperCase() == newName.toUpperCase()){
-        name = currentName;
-    }else if (currentName.toUpperCase() != newName.toUpperCase()){
-        name = newName;
-    };
-    if (currentAddress.toUpperCase() == newAddress.toUpperCase()){
-        address = currentAddress;
-    }else if (currentAddress.toUpperCase() != newAddress.toUpperCase()){
-        address = newAddress;
-    };
-    if (currentCity.toUpperCase() == newCity.toUpperCase()){
-        city = currentCity;
-    }else if (currentCity.toUpperCase() != newCity.toUpperCase()){
-        city = newCity;
-    };
-    if (currentState.toUpperCase() == newState.toUpperCase()){
-        state = currentState;
-    }else if (currentName.toUpperCase() != newState.toUpperCase()){
-        state = newState;
-    };
-    if (currentZip.toUpperCase() == newZip.toUpperCase()){
-        zip = currentZip;
-    }else if (currentZip.toUpperCase() != newZip.toUpperCase()){
-        zip = newZip;
-    };
-    if (currentPhone.toUpperCase() == newPhone.toUpperCase()){
-        phone = currentPhone;
-    }else if (currentPhone.toUpperCase() != newPhone.toUpperCase()){
-        phone = newPhone;
-    };
-    if (currentEdate === newEdate){
+    let name = compare_update(oldName, newName);
+    let address = compare_update(oldAddress,newAddress);
+    let city = compare_update(oldCity, newCity);
+    let state = compare_update(oldState, newState);
+    let zip = compare_update(oldZip, newZip);
+    let phone = compare_update(oldPhone, newPhone);
+    let Edate = '';
+    if (oldEdate === newEdate){
         Edate = currentEdate;
-    }else if (currentEdate != newEdate){
+    }else if (oldEdate != newEdate){
         Edate = newEdate;
     };
-    if (currentCompany.toUpperCase() == newCompany.toUpperCase()){
-        company = currentCompany;
-    }else if (currentCompany.toUpperCase() != newCompany.toUpperCase()){
-        company = newCompany;
-    };
-    if (currentTaxnum.toUpperCase() == newTaxnum.toUpperCase()){
-        taxnum = currentTaxnum;
-    }else if (currentTaxnum.toUpperCase() != newTaxnum.toUpperCase()){
-        taxnum = newTaxnum;
-    };
+    let company = compare_update(oldCompany,newCompany);
+    let taxnum = compare_update(oldTaxnum, newTaxnum);
     // Query Creation
-    let updateQuery = 'UPDATE CUSTOMER SET '+custAttributes+' WHERE cust_id =:cust_id';
-    let updateBinds = [name, address, city, state, zip, phone, Edate, company, taxnum, cust_id];
-    res.send(await crudOP(updateQuery, updateBinds));
+    let query = `UPDATE CUSTOMER SET ${custAttributes} WHERE cust_id =:cust_id`;
+    let binds = [name, address, city, state, zip, phone, Edate, company, taxnum, cust_id];
+    res.send(await crudOP(query, binds, false));
 });
 // DELETE
 app.delete('/customer',async function(req, res){
     // Values
     let cust_id = req.body.id;
     // Query Creation
-    let deleteQuery = 'DELETE FROM CUSTOMER WHERE cust_id = :cust_id';
-    let deleteBinds = [cust_id];
-    res.send(await crudOP(deleteQuery, deleteBinds));
+    let query = 'DELETE FROM CUSTOMER WHERE cust_id = :cust_id';
+    let binds = [cust_id];
+    res.send(await crudOP(query, binds, false));
 });
 
 /* VENDOR */
 // CREATE
 app.post('/vendor',async function(req, res){
     // Column Names
-    const vendAttributes = ':vendor_id,:ven_name,:address,:city,:state,:zip,:phone,:phone2,:fax,:contact,:Edate,:email,:keymap';
+    const vendAttributes = ':vendor_id, :ven_name, :address, :city, :state, :zip, :phone, :phone2, :fax, :contact, :Edate, :email, :keymap';
     // Values
     let vendor_id = req.body.id;
     let ven_name = req.body.name;
@@ -378,27 +309,26 @@ app.post('/vendor',async function(req, res){
     let email = req.body.email;
     let keymap = req.body.keymap;
     // Query Creation
-    let createQuery = 'INSERT INTO VENDOR VALUES '+'('+vendAttributes+')';
-    let createBinds = [[vendor_id,ven_name,address,city,state,zip,phone,phone2,fax,contact,Edate,email,keymap]];
-    res.send(await crudOP(createQuery, createBinds));
+    let query = `INSERT INTO VENDOR VALUES (${vendAttributes})`;
+    let binds = [vendor_id,ven_name,address,city,state,zip,phone,phone2,fax,contact,Edate,email,keymap];
+    res.send(await crudOP(query, binds, false));
 });
 // READ
 app.get('/vendor', async function(req, res){
-    // Values
-    let restriction = req.body.restriction; // Search by table attribute
-    let restrictionValue = req.body.restrictionvalue; // Value of attribute
-
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let readQuery = 'SELECT * FROM VENDOR WHERE '+restriction+'=:restrictionValue';
-        let readBinds = [restrictionValue];
+        let query = `SELECT * FROM VENDOR WHERE ${column} =:columnValue`;
+        let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(readQuery,readBinds));
+        res.send(await crudOP(query,binds, true));
     }else{
-        let readQuery = 'SELECT * FROM CUSTOMER';
+        let query = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await crudOP(readQuery));
+        res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
@@ -410,24 +340,23 @@ app.put('/vendor',async function(req, res){
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
-    let restrictionValue = vendor_id;
-    let readQuery = 'SELCT * FROM VENDOR WHERE vendor_id = :restrictionValue';
-    let readBinds = [restrictionValue];
-    let readVend = await crudOP(readQuery, readBinds);
+    let readQuery = 'SELCT * FROM VENDOR WHERE vendor_id = :vendor_id';
+    let readBinds = [vendor_id];
+    let readVend = await crudOP(readQuery, readBinds, true);
     let currentVend = readVend.rows[0];
     // Store Old
-    let currentName = currentVend[1];
-    let currentAddress = currentVend[2];
-    let currentCity = currentVend[3];
-    let currentState = currentVend[4];
-    let currentZip = currentVend[9];
-    let currentPhone1 = currentVend[5];
-    let currentPhone2 = currentVend[6];
-    let currentFax = currentVend[7];
-    let currentContact = currentVend[8];
-    let currentEdate = currentVend[10];
-    let currentEmail = currentVend[11];
-    let currentKeymap = currentVend[12];
+    let oldName = currentVend[1];
+    let oldAddress = currentVend[2];
+    let oldCity = currentVend[3];
+    let oldState = currentVend[4];
+    let oldZip = currentVend[9];
+    let oldPhone1 = currentVend[5];
+    let oldPhone2 = currentVend[6];
+    let oldFax = currentVend[7];
+    let oldContact = currentVend[8];
+    let oldEdate = currentVend[10];
+    let oldEmail = currentVend[11];
+    let oldKeymap = currentVend[12];
     // Request New
     let newName = req.body.name;
     let newAddress = req.body.address;
@@ -442,94 +371,38 @@ app.put('/vendor',async function(req, res){
     let newEmail = req.body.email;
     let newKeymap = req.body.keymap;
 
-    // INITAL
-    let ven_name = '';
-    let address = '';
-    let city = '';
-    let state = '';
-    let zip = '';
-    let phone1 = '';
-    let phone2 = '';
-    let fax = '';
-    let contact = '';
-    let Edate = '';
-    let email = '';
-    let keymap = '';
-
     /* COMPARE and UPDATE */
-    if (currentName.toUpperCase() == newName.toUpperCase()){
-        ven_name = currentName;
-    }else if (currentName.toUpperCase() != newName.toUpperCase()){
-        ven_name = newName;
-    };
-    if (currentAddress.toUpperCase() == newAddress.toUpperCase()){
-        address = currentAddress;
-    }else if (currentAddress.toUpperCase() != newAddress.toUpperCase()){
-        address = newAddress;
-    };
-    if (currentCity.toUpperCase() == newCity.toUpperCase()){
-        city = currentCity;
-    }else if (currentCity.toUpperCase() != newCity.toUpperCase()){
-        city = newCity;
-    };
-    if (currentState.toUpperCase() == newState.toUpperCase()){
-        state = currentState;
-    }else if (currentName.toUpperCase() != newState.toUpperCase()){
-        state = newState;
-    };
-    if (currentZip.toUpperCase() == newZip.toUpperCase()){
-        zip = currentZip;
-    }else if (currentZip.toUpperCase() != newZip.toUpperCase()){
-        zip = newZip;
-    };
-    if (currentPhone1.toUpperCase() == newPhone1.toUpperCase()){
-        phone1 = currentPhone1;
-    }else if (currentPhone1.toUpperCase() != newPhone1.toUpperCase()){
-        phone1 = newPhone1;
-    };
-    if (currentPhone2.toUpperCase() == newPhone2.toUpperCase()){
-        phone2 = currentPhone2;
-    }else if (currentPhone2.toUpperCase() != newPhone2.toUpperCase()){
-        phone2 = newPhone2;
-    };
-    if (currentFax.toUpperCase() == newFax.toUpperCase()){
-        fax = currentFax;
-    }else if (currentFax.toUpperCase() != newFax.toUpperCase()){
-        fax = newFax;
-    };
-    if (currentContact.toUpperCase() == newContact.toUpperCase()){
-        contact = currentContact;
-    }else if (currentContact.toUpperCase() != newContact.toUpperCase()){
-        contact = newContact;
-    };
-    if (currentEdate === newEdate){
+    let ven_name = compare_update(oldName,newName);
+    let address = compare_update(oldAddress,newAddress);
+    let city = compare_update(oldCity,newCity);
+    let state = compare_update(oldState,newState);
+    let zip = compare_update(oldZip,newZip);
+    let phone1 = compare_update(oldPhone1,newPhone1);
+    let phone2 = compare_update(oldPhone2,newPhone2);
+    let fax = compare_update(oldFax,newFax);
+    let contact = compare_update(oldContact,newContact);
+    let Edate = '';
+    if (oldEdate === newEdate){
         Edate = currentEdate;
-    }else if (currentEdate != newEdate){
+    }else if (oldEdate != newEdate){
         Edate = newEdate;
     };
-    if (currentEmail.toUpperCase() == newEmail.toUpperCase()){
-        email = currentEmail;
-    }else if (currentEmail.toUpperCase() != newEmail.toUpperCase()){
-        email = newEmail;
-    };
-    if (currentKeymap.toUpperCase() == newKeymap.toUpperCase()){
-        keymap = currentKeymap;
-    }else if (currentKeymap.toUpperCase() != newKeymap.toUpperCase()){
-        keymap = newKeymap;
-    };
+    let email = compare_update(oldEmail,newEmail);
+    let keymap = compare_update(oldKeymap,newKeymap);
+
     // Query Creation
-    let updateQuery = 'UPDATE CUSTOMER SET '+vendAttributes+' WHERE vendor_id =:vendor_id';
-    let updateBinds = [ven_name, address, city, state, zip, phone1, phone2,fax, contact, Edate, email, keymap, vendor_id];
-    res.send(await crudOP(updateQuery, updateBinds));
+    let query = `UPDATE CUSTOMER SET ${vendAttributes} WHERE vendor_id =:vendor_id`;
+    let binds = [ven_name, address, city, state, zip, phone1, phone2,fax, contact, Edate, email, keymap, vendor_id];
+    res.send(await crudOP(query, binds, false));
 });
 // DELETE
 app.delete('/vendor',async function(req, res){
     // Values
     let vendor_id = req.body.id;
     // Query Creation
-    let deleteQuery = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
-    let deleteBinds = [vendor_id];
-    res.send(await crudOP(deleteQuery, deleteBinds));
+    let query = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
+    let binds = [vendor_id];
+    res.send(await crudOP(query, binds, false));
 });
 
 app.listen(PORT, () => {
