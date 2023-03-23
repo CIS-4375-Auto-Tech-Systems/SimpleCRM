@@ -185,6 +185,8 @@ app.delete('/employee',async function(req, res){
     let binds = [emp_id];
     res.send(await crudOP(query, binds, false));
 });
+/* EMP_STATUS */
+
 
 /* CUSTOMER */
 // CREATE
@@ -288,6 +290,8 @@ app.delete('/customer',async function(req, res){
     let binds = [cust_id];
     res.send(await crudOP(query, binds, false));
 });
+/* CUST_STATUS */
+
 
 /* VENDOR */
 // CREATE
@@ -404,6 +408,29 @@ app.delete('/vendor',async function(req, res){
     let binds = [vendor_id];
     res.send(await crudOP(query, binds, false));
 });
+/* VENDOR_PART */
+// READ
+
+
+/* PART */
+// READ
+
+
+/* ESTIMATE */
+// READ
+
+
+/* INVOICE */
+// READ
+
+
+/* Order Status */
+// READ
+
+
+/* STATE */
+// READ
+
 
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
