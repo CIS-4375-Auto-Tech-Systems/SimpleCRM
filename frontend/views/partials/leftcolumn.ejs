@@ -1,0 +1,37 @@
+<button type="button" onclick=toggleMenu() class="btn btn-light menu-toggle btn-sm">
+  <i class="bi bi-list"></i>
+</button>
+<script>
+  function toggleMenu() {
+    var menu = document.getElementsByClassName("nav")[0];
+    menu.classList.toggle("hidden");
+  }
+</script>
+<div class="nav">
+<div class="left-column">
+    <div class="logo">
+        <img src="/images/samurai.png" style='max-width:280px' alt="Group Logo">
+
+      </div>  
+      <br>                
+      <div class="nav">
+        <p><strong>Main Menu</strong></p>
+        <a href="/" class="normal-font">
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+        <a href="/createcustomer" class="normal-font">
+          <i class="bi bi-person-plus"></i> Create Customer
+        </a>
+        <a href="/customerlookup" class="normal-font">
+          <i class="bi bi-person"></i> Customer Lookup
+        </a>
+        <p><strong>Preferences</strong></p>
+        <a href="/settings" class="normal-font">
+          <i class="bi bi-speedometer2"></i> Settings
+        </a>
+        <a href="/helpcenter" class="normal-font">
+          <i class="bi bi-question-circle"></i> Help Center
+        </a>            
+      </div>
+  </div>
+  </div>
