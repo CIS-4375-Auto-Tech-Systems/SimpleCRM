@@ -4,7 +4,7 @@ Using [EJS](https://ejs.co/), [Bootstrap](https://getbootstrap.com/), and [Expre
 ```
 npm install
 ```
-## Compiles and hot-reloads for development
+## Project Start
 ```
-npm run dev
+npm start
 ```
