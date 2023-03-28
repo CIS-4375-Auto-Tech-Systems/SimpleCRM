@@ -186,7 +186,24 @@ app.delete('/employee',async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 /* EMP_STATUS */
-
+// READ
+app.get('/employee_status', async function(req, res){
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM EMP_STATUS WHERE ${column} = :columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query,binds, true));
+    }else{
+        let query = 'SELECT * FROM EMP_STATUS';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
 
 /* CUSTOMER */
 // CREATE
@@ -291,7 +308,24 @@ app.delete('/customer',async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 /* CUST_STATUS */
-
+// READ
+app.get('/customer_status', async function(req, res){
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM CUST_STATUS WHERE ${column} =:columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query,binds, true));
+    }else{
+        let query = 'SELECT * FROM CUST_STATUS';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
 
 /* VENDOR */
 // CREATE
@@ -330,7 +364,7 @@ app.get('/vendor', async function(req, res){
         // Send a response
         res.send(await crudOP(query,binds, true));
     }else{
-        let query = 'SELECT * FROM CUSTOMER';
+        let query = 'SELECT * FROM VENDOR';
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
@@ -408,13 +442,45 @@ app.delete('/vendor',async function(req, res){
     let binds = [vendor_id];
     res.send(await crudOP(query, binds, false));
 });
-/* VENDOR_PART */
+/* VENDOR_INV */
 // READ
-
+app.get('/vendor_inventory', async function(req, res){
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM VENDOR_INV WHERE ${column} = :columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query,binds, true));
+    }else{
+        let query = 'SELECT * FROM VENDOR_INV';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
 
 /* PART */
 // READ
-
+app.get('/part', async function(req, res){
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM PART WHERE ${column} =:columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query,binds, true));
+    }else{
+        let query = 'SELECT * FROM PART';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
 
 /* ESTIMATE */
 // READ
@@ -424,13 +490,25 @@ app.delete('/vendor',async function(req, res){
 // READ
 
 
-/* Order Status */
-// READ
-
-
 /* STATE */
 // READ
-
+app.get('/state', async function(req, res){
+    // For WHERE statement
+    let column = req.body.column; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM STATE WHERE ${column} =:columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query,binds, true));
+    }else{
+        let query = 'SELECT * FROM STATE';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
 
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
