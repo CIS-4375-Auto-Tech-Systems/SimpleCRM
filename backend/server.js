@@ -388,7 +388,7 @@ app.put('/vendor',async function(req, res){
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
-    let readQuery = 'SELCT * FROM VENDOR WHERE vendor_id = :vendor_id';
+    let readQuery = 'SELECT * FROM VENDOR WHERE vendor_id = :vendor_id';
     let readBinds = [vendor_id];
     let readVend = await crudOP(readQuery, readBinds, true);
     let currentVend = readVend.rows[0];
