@@ -87,37 +87,37 @@ function compare_update(oldValue, newValue) {
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = ":emp_id, :emp_status_id, :emp_address, :email, :city, :state, :zip, :phone, :datehired, :Lname, :Fname, :sex";
+    const empAttributes = ":emp_id, :emp_status_id, :emp_address, :email, :city, :state, :zip, :phone, :datehired, :lname, :fname, :sex";
     // Values
-    let emp_id = req.body.id;
-    let emp_status = req.body.status;
-    let emp_address = req.body.address;
+    let emp_id = req.body.emp_id;
+    let emp_status_id = req.body.emp_status_id;
+    let emp_address = req.body.emp_address;
     let email = req.body.email;
     let city = req.body.city;
     let state = req.body.state;
     let zip = req.body.zip;
     let phone = req.body.phone;
     let datehired = new Date(req.body.datehired);
-    let Lname = req.body.lastname;
-    let Fname = req.body.firstname;
+    let lname = req.body.lname;
+    let fname = req.body.fname;
     let sex = req.body.sex;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_id,emp_status,emp_address,email,city,state,zip,phone,datehired,Lname,Fname,sex];
+    let binds = [emp_id, emp_status_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex];
     res.send(await crudOP(query, binds, false));
 });
 // READ
 app.get('/employee', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM EMPLOYEE WHERE ${column} = :columnValue`;
+        let query = `SELECT * FROM EMPLOYEE WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM EMPLOYEE';
         // Send a response
@@ -127,9 +127,9 @@ app.get('/employee', async function(req, res){
 // UPDATE
 app.put('/employee', async function(req, res){
     // Columns
-    const empAttributes = "emp_status_id = :emp_status_id, emp_address = :emp_address, email = :email, city = :city, state = :state, zip = :zip, phone = :phone, datehired = :datehired, Lname = :Lname,Fname = :Fname, sex = :sex"
+    const empAttributes = "emp_status_id = :emp_status_id, emp_address = :emp_address, email = :email, city = :city, state = :state, zip = :zip, phone = :phone, datehired = :datehired, lname = :lname, fname = :fname, sex = :sex"
     // Values
-    let emp_id = req.body.id;
+    let emp_id = req.body.emp_id;
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
@@ -138,8 +138,8 @@ app.put('/employee', async function(req, res){
     let readEmp = await crudOP(readQuery, readBinds, true);
     let currentEmp = readEmp.rows[0];
     // Store Old
-    let oldStatus = currentEmp[1];
-    let oldAddress = currentEmp[2];
+    let oldEmp_status_id = currentEmp[1];
+    let oldEmp_address = currentEmp[2];
     let oldEmail = currentEmp[3]
     let oldCity = currentEmp[4];
     let oldState = currentEmp[5];
@@ -150,8 +150,8 @@ app.put('/employee', async function(req, res){
     let oldFname = currentEmp[10];
     let oldSex = currentEmp[11];
     // Request New
-    let newStatus = req.body.status;
-    let newAddress = req.body.address;
+    let newEmp_status_id = req.body.emp_status_id;
+    let newEmp_address = req.body.emp_address;
     let newEmail = req.body.email;
     let newCity = req.body.city;
     let newState = req.body.state;
@@ -163,8 +163,8 @@ app.put('/employee', async function(req, res){
     let newSex = req.body.sex;
 
     /* COMPARE and UPDATE */
-    let status = compare_update(oldStatus, newStatus);
-    let emp_address = compare_update(oldAddress,newAddress);
+    let emp_status_id = compare_update(oldEmp_status_id, newEmp_status_id);
+    let emp_address = compare_update(oldEmp_address, newEmp_address);
     let email = compare_update(oldEmail, newEmail);
     let city = compare_update(oldCity, newCity);
     let state = compare_update(oldState, newState);
@@ -176,18 +176,18 @@ app.put('/employee', async function(req, res){
     }else if (oldDateHired  != newDateHired){
         datehired = newDateHired;
     };
-    let Lname = compare_update(oldLname, newLname);
-    let Fname = compare_update(oldFname, newFname);
+    let lname = compare_update(oldLname, newLname);
+    let fname = compare_update(oldFname, newFname);
     let sex = compare_update(oldSex, newSex);
     // Query Creation 
     let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
-    let binds = [status,emp_address,email,city,state,zip,phone,datehired,Lname,Fname,sex,emp_id];
-    res.send(await crudOP(updateQuery, updateBinds, false));
+    let binds = [emp_status_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex, emp_id];
+    res.send(await crudOP(query, binds, false));
 });
 // DELETE
 app.delete('/employee',async function(req, res){
     // Values
-    let emp_id = req.body.id;
+    let emp_id = req.body.emp_id;
     // Query Creation
     let query = 'DELETE FROM EMPLOYEE WHERE emp_id = :emp_id';
     let binds = [emp_id];
@@ -195,11 +195,11 @@ app.delete('/employee',async function(req, res){
 });
 /* EMP_STATUS */
 // CREATE
-app.post('/employee_status', async function(req, res){
+app.post('/employee-status', async function(req, res){
     // Column Names
     const emp_statusAttributes = ':emp_status_id, :status, :status_desc';
     // Values
-    let emp_status_id = req.body.id;
+    let emp_status_id = req.body.emp_status_id;
     let status = req.body.status;
     let status_desc = req.body.status_desc;
     // Query Creation
@@ -208,17 +208,17 @@ app.post('/employee_status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/employee_status', async function(req, res){
+app.get('/employee-status', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM EMP_STATUS WHERE ${column} = :columnValue`;
+        let query = `SELECT * FROM EMP_STATUS WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM EMP_STATUS';
         // Send a response
@@ -226,11 +226,11 @@ app.get('/employee_status', async function(req, res){
     }
 });
 //UPDATE
-app.put('/employee_status', async function(req, res){
+app.put('/employee-status', async function(req, res){
     // Columns
     const emp_statusAttributes = 'status = :status, status_desc = :status_desc';
     // Values
-    let emp_status_id = req.body.id;
+    let emp_status_id = req.body.emp_status_id;
     // READ COMPARE and UPDATE
     /* READ */
     // Current Values
@@ -249,13 +249,13 @@ app.put('/employee_status', async function(req, res){
     let status_desc = compare_update(oldStatus_desc, newStatus_desc);
     // Query Creation
     let query = `UPDATE EMP_STATUS SET ${emp_statusAttributes} WHERE emp_status_id = :emp_status_id`;
-    let binds = [status,status_desc,emp_status_id];
+    let binds = [status, status_desc, emp_status_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/employee_status', async function(req, res){
+app.delete('/employee-status', async function(req, res){
     // Values
-    let emp_status_id = req.body.id;
+    let emp_status_id = req.body.emp_status_id;
     // Query Creation
     let query = 'DELETE FROM EMPLOYEE WHERE emp_status_id = :emp_status_id';
     let binds = [emp_status_id];
@@ -268,7 +268,7 @@ app.post('/invoice', async function(req, res) {
     // Column
     const invoiceAttributes = ':inv_id, :inv_num, :cust_id, :emp_id, :inv_status_id, :estimate_id, :inv_seq, :ttlamt, :color, :year, :model, :make, :license_num, :vin, :datein, :dateout, :odometer, :desc';
     // Values
-    let inv_id = req.body.id;
+    let inv_id = req.body.inv_id;
     let inv_num = req.body.inv_num;
     let cust_id = req.body.cust_id;
     let emp_id = req.body.emp_id;
@@ -294,12 +294,12 @@ app.post('/invoice', async function(req, res) {
 // READ
 app.get('/invoice', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM INVOICE WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM INVOICE WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query,binds, true));
@@ -312,9 +312,9 @@ app.get('/invoice', async function(req, res){
 // UPDATE
 app.put('/invoice', async function(req, res){
     // Column
-    const invoiceAttributes = ':inv_id, :inv_num, :cust_id, :emp_id, :inv_status_id, :estimate_id, :inv_seq, :ttlamt, :color, :year, :model, :make, :license_num, :vin, :datein, :dateout, :odometer, :desc';
+    const invoiceAttributes = 'inv_id = :inv_id, inv_num = :inv_num, cust_id = :cust_id, emp_id = :emp_id, inv_status_id = :inv_status_id, estimate_id = :estimate_id, inv_seq = :inv_seq, ttlamt = :ttlamt, color = :color, year = :year, model = :model, make = :make, license_num = :license_num, vin = :vin, datein = :datein, dateout = :dateout, odomete = :odometer, desc = :desc';
     // Values
-    let inv_id = req.body.id;
+    let inv_id = req.body.inv_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -379,13 +379,13 @@ app.put('/invoice', async function(req, res){
     let desc = compare_update(oldDesc, newDesc);
     // Query Creation
     let query = `UPDATE INVOICE SET ${invoiceAttributes} WHERE inv_id = :inv_id`;
-    let binds = [inv_num,cust_id,emp_id,inv_status_id,estimate_id,inv_seq,ttlamt,color,year,model,make,license_num,vin,datein,dateout,odometer,desc,inv_id];
+    let binds = [inv_num, cust_id, emp_id, inv_status_id, estimate_id, inv_seq, ttlamt, color, year, model, make, license_num, vin, datein, dateout, odometer, desc, inv_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
 app.delete('/invoice', async function(req, res){
     // Values
-    let inv_id = req.body.id;
+    let inv_id = req.body.inv_id;
     // Query Creation
     let query = 'DELETE FROM INVOICE WHRE inv_id = :inv_id';
     let binds = [inv_id];
@@ -393,29 +393,29 @@ app.delete('/invoice', async function(req, res){
 });
 /* INV_STATUS */
 // CREATE
-app.post('/inventory_status', async function(req, res) {
+app.post('/invoice-status', async function(req, res) {
     // Column Names
     const inventory_statAttributes = ':inv_status_id, :status';
     // Values
-    let inv_status_id = req.body.id;
+    let inv_status_id = req.body.inv_status_id;
     let status = req.body.status;
     // Query Creation
     let query = `INSERT INTO INV_STATUS VALUES (${inventory_statAttributes})`;
-    let binds = [inv_status_id,status];
+    let binds = [inv_status_id, status];
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/inventory_status', async function(req, res){
+app.get('/invoice-status', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM INV_STATUS WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM INV_STATUS WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM INV_STATUS';
         // Send a response
@@ -423,11 +423,11 @@ app.get('/inventory_status', async function(req, res){
     }
 });
 // UPDATE
-app.put('/inventory_status', async function(req, res){
+app.put('/invoice-status', async function(req, res){
     // Columns
-    const inventory_stat = ':status'
+    const inventory_statAttributes = 'status = :status'
     // Values
-    let inv_status_id = req.body.id;
+    let inv_status_id = req.body.inv_status_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -442,14 +442,14 @@ app.put('/inventory_status', async function(req, res){
     /* COMPARE and UPDATE */
     let status = compare_update(oldStatus, newStatus);
     // Query Creation
-    let query = `UPDATE INV_STATUS WHERE inv_status_id = :inv_status_id`;
+    let query = `UPDATE INV_STATUS SET ${inventory_statAttributes} WHERE inv_status_id = :inv_status_id`;
     let binds = [status, inv_status_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/inventory_status', async function(req, res){
+app.delete('/invoice-status', async function(req, res){
     // Values
-    let inv_status_id = req.body.id;
+    let inv_status_id = req.body.inv_status_id;
     // Query Creation
     let query = 'DELETE FROM INV_STATUS WHERE inv_status_id = :inv_status_id';
     let binds = [inv_status_id];
@@ -462,8 +462,8 @@ app.post('/customer',async function(req, res){
     // Column Names
     const custAttributes = ':cust_id, :cust_status_id, :name, :license_num, :lic_address, :lic_city, :lic_state, :zip, :phone, :email, :insurance, :ins_num';
     // Values
-    let cust_id = req.body.id;
-    let cust_status_id = req.body.status;
+    let cust_id = req.body.cust_id;
+    let cust_status_id = req.body.cust_status_id;
     let name = req.body.name;
     let license_num = req.body.license_num;
     let lic_address = req.body.address;
@@ -482,15 +482,15 @@ app.post('/customer',async function(req, res){
 // READ
 app.get('/customer', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM CUSTOMER WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM CUSTOMER WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM CUSTOMER';
         // Send a response
@@ -502,7 +502,7 @@ app.put('/customer', async function(req, res){
     // Columns
     const custAttributes = 'cust_status_id = :cust_status_id, name = :name, license_num = :license_num, lic_address = :lic_address, lic_city = :lic_city, lic_state = :lic_state, zip = :zip, phone = :phone, email = :email, insurance = :insurance, ins_num = :ins_num';
     // Values
-    let cust_id = req.body.id;
+    let cust_id = req.body.cust_id;
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
@@ -511,7 +511,7 @@ app.put('/customer', async function(req, res){
     let readCust = await crudOP(readQuery, readBinds, true);
     let currentCust = readCust.rows[0];
     // Store Old
-    let oldStatus = currentCust[1];
+    let oldCust_status_id = currentCust[1];
     let oldName = currentCust[2];
     let oldLicense_num = currentCust[3];
     let oldLic_address = currentCust[4];
@@ -523,7 +523,7 @@ app.put('/customer', async function(req, res){
     let oldInsurance = currentCust[10];
     let oldIns_num = currentCust[11];
     // Request New
-    let newStatus = req.body.status;
+    let newCust_status_id = req.body.cust_status_id;
     let newName = req.body.name;
     let newLicense_num = req.body.license_num;
     let newLic_address = req.body.lic_address;
@@ -536,7 +536,7 @@ app.put('/customer', async function(req, res){
     let newIns_num = req.body.ins_num;
 
     /* COMPARE and UPDATE */
-    let cust_status_id = compare_update(oldStatus, newStatus);
+    let cust_status_id = compare_update(oldCust_status_id, newCust_status_id);
     let name = compare_update(oldName, newName);
     let license_num = compare_update(oldLicense_num, newLicense_num);
     let lic_address = compare_update(oldLic_address, newLic_address);
@@ -563,11 +563,11 @@ app.delete('/customer',async function(req, res){
 });
 /* CUST_STATUS */
 // CREATE
-app.post('/customer_status', async function(req, res) {
+app.post('/customer-status', async function(req, res) {
     // Column
     const cust_statAttributes = ':cust_status_id, :status, :status_desc';
     // Values
-    let cust_status_id = req.body.id;
+    let cust_status_id = req.body.cust_status_id;
     let status = req.body.status;
     let status_desc = req.body.status_desc;
     // Query Creation
@@ -576,17 +576,17 @@ app.post('/customer_status', async function(req, res) {
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/customer_status', async function(req, res){
+app.get('/customer-status', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM CUST_STATUS WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM CUST_STATUS WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM CUST_STATUS';
         // Send a response
@@ -594,11 +594,11 @@ app.get('/customer_status', async function(req, res){
     }
 });
 // UPDATE
-app.put('/customer_status', async function(req, res){
+app.put('/customer-status', async function(req, res){
     // Columns
     const cust_statAttributes = 'status = :status, status_desc = :status_desc';
     // Values
-    let cust_status_id = req.body.id;
+    let cust_status_id = req.body.cust_status_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -621,9 +621,9 @@ app.put('/customer_status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 //DELETE
-app.delete('/customer_status', async function(req, res){
+app.delete('/customer-status', async function(req, res){
     // Values
-    let cust_status_id = req.body.id;
+    let cust_status_id = req.body.cust_status_id;
     // Query Creation
     let query = 'DELETE FROM CUST_STATUS WHERE cust_status_id = :cust_status_id';
     let binds = [cust_status_id];
@@ -636,7 +636,7 @@ app.post('/estimate', async function(req, res){
     // Column Names
     const estiAttributes = ':estimate_id, :inv_id, :part_id, :part_qty, :total';
     // Values
-    let estimate_id = req.body.id;
+    let estimate_id = req.body.estimate_id;
     let inv_id = req.body.inv_id;
     let part_id = req.body.part_id;
     let part_qty = req.body.part_qty;
@@ -649,15 +649,15 @@ app.post('/estimate', async function(req, res){
 // READ
 app.get('/estimate', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM ESTIMATE WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM ESTIMATE WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM ESTIMATE';
         // Send a response
@@ -669,7 +669,7 @@ app.put('/estimate', async function(req, res){
     // Columns
     const estiAttributes = 'inv_id = :inv_id, part_id = :part_id, part_qty = :part_qty, total = :total';
     // Values
-    let estimate_id = req.body.id;
+    let estimate_id = req.body.estimate_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -700,7 +700,7 @@ app.put('/estimate', async function(req, res){
 // DELETE
 app.delete('/estimate', async function(req, res){
     // Values
-    let estimate_id = req.body.id;
+    let estimate_id = req.body.estimate_id;
     // Query Creation
     let query = 'DELETE FROM ESTIMATE WHERE estimate_id = :estimate_id';
     let binds = [estimate_id];
@@ -713,7 +713,7 @@ app.post('/part', async function(req, res){
     // Column Names
     const partAttributes = ':part_id, :part_name, :part_desc';
     // Values
-    let part_id = req.body.id;
+    let part_id = req.body.part_id;
     let part_name = req.body.part_name;
     let part_desc = req.body.part_desc;
     // Query Creation
@@ -724,15 +724,15 @@ app.post('/part', async function(req, res){
 // READ
 app.get('/part', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM PART WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM PART WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM PART';
         // Send a response
@@ -744,7 +744,7 @@ app.put('/part', async function(req, res){
     // Columns
     const partAttributes = 'part_name = :part_name, part_desc = :part_desc';
     // Values
-    let part_id = req.body.id;
+    let part_id = req.body.part_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -769,7 +769,7 @@ app.put('/part', async function(req, res){
 // DELETE
 app.delete('/part', async function(req, res){
     // Values
-    let part_id = req.body.id;
+    let part_id = req.body.part_id;
     // Query Creation
     let query = 'DELETE FROM PART WHERE part_id = :part_id';
     let binds = [part_id];
@@ -778,11 +778,11 @@ app.delete('/part', async function(req, res){
 
 /* VENDOR_INV */
 // CREATE
-app.post('/vendor_inventory', async function(req, res){
+app.post('/vendor-invoice', async function(req, res){
     // Column
     const vendor_inventAttributes = ':venpart_id, :part_id, :vendor_id, :qty_ordered, :date_ordered, :cost_per_unit, :total_cost';
     // Values
-    let venpart_id = req.body.id;
+    let venpart_id = req.body.venpart_id;
     let part_id = req.body.part_id;
     let vendor_id = req.body.vendor_id;
     let qty_ordered = req.body.qty_ordered;
@@ -795,17 +795,17 @@ app.post('/vendor_inventory', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/vendor_inventory', async function(req, res){
+app.get('/vendor-invoice', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM VENDOR_INV WHERE ${column} = :columnValue`;
+        let query = `SELECT * FROM VENDOR_INV WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM VENDOR_INV';
         // Send a response
@@ -813,11 +813,11 @@ app.get('/vendor_inventory', async function(req, res){
     }
 });
 // UPDATE
-app.put('/vendor_inventory', async function(req, res){
+app.put('/vendor-invoice', async function(req, res){
     // Columns
     const vendor_inventAttributes = 'venpart_id = :venpart_id, part_id = :part_id, vendor_id = :vendor_id, qty_ordered = :qty_ordered, date_ordered = :date_ordered, cost_per_unit = :cost_per_unit, total_cost = :total_cost'
     // Values
-    let venpart_id = req.body.id;
+    let venpart_id = req.body.venpart_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
@@ -852,9 +852,9 @@ app.put('/vendor_inventory', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/vendor_inventory', async function(req, res){
+app.delete('/vendor-invoice', async function(req, res){
     // Values
-    let venpart_id = req.body.id;
+    let venpart_id = req.body.venpart_id;
     // Query Creation
     let query = 'DELETE FROM VENDOR_INV WHERE venpart_id = :venpart_id';
     let binds = [venpart_id];
@@ -867,10 +867,10 @@ app.post('/vendor',async function(req, res){
     // Column Names
     const vendAttributes = ':vendor_id, :state_id, :venpart_id, :ven_name, :address, :city, :phone, :website, :contact_name, :zip, :email, :keymap';
     // Values
-    let vendor_id = req.body.id;
+    let vendor_id = req.body.vendor_id;
     let state_id = req.body.state_id;
     let venpart_id = req.body.venpart_id;
-    let ven_name = req.body.name;
+    let ven_name = req.body.ven_name;
     let address = req.body.address ;
     let city = req.body.city;
     let phone = req.body.phone;
@@ -887,15 +887,15 @@ app.post('/vendor',async function(req, res){
 // READ
 app.get('/vendor', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM VENDOR WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM VENDOR WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
-        res.send(await crudOP(query,binds, true));
+        res.send(await crudOP(query, binds, true));
     }else{
         let query = 'SELECT * FROM VENDOR';
         // Send a response
@@ -907,7 +907,7 @@ app.put('/vendor',async function(req, res){
     // Columns
     const vendAttributes = 'vendor_id = :vendor_id, state_id = :state_id, venpart_id = :venpart_id, ven_name = :ven_name, address = :address, city = :city, phone = :phone, website = :website, contact_name = :contact_name, zip = :zip, email = :email, keymap = :keymap';
     // Values
-    let vendor_id = req.body.id;
+    let vendor_id = req.body.vendor_id;
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
@@ -961,7 +961,7 @@ app.put('/vendor',async function(req, res){
 // DELETE
 app.delete('/vendor',async function(req, res){
     // Values
-    let vendor_id = req.body.id;
+    let vendor_id = req.body.vendor_id;
     // Query Creation
     let query = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
     let binds = [vendor_id];
@@ -985,12 +985,12 @@ app.post('/state', async function(req, res){
 // READ
 app.get('/state', async function(req, res){
     // For WHERE statement
-    let column = req.body.column; // Search by table attribute
+    let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM STATE WHERE ${column} =:columnValue`;
+        let query = `SELECT * FROM STATE WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query,binds, true));
@@ -1005,7 +1005,7 @@ app.put('/state', async function(req, res){
     // Columns
     const stateAttributes = 'state_code = :state_code, state_name = :state_name';
     // Values
-    let state_id = req.body.id;
+    let state_id = req.body.state_id;
     // READ COMPARE and UPDATE
     /*READ*/
     //Current Values
@@ -1030,7 +1030,7 @@ app.put('/state', async function(req, res){
 // DELETE
 app.delete('/state', async function(req, res){
     // Values
-    let state_id = req.body.id;
+    let state_id = req.body.state_id;
     // Query Creation
     let query = 'DELETE FROM STATE WHERE state_id = :state_id';
     let binds = [state_id];

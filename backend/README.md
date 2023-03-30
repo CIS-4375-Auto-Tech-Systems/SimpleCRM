@@ -16,3 +16,5 @@ CONNECTIONSTRING = "COT-CIS4375-03.cougarnet.uh.edu/orclpdb"
 ```
 npm start
 ```
+### REST API Documentation
+https://documenter.getpostman.com/view/23554858/2s93RTSYHv
