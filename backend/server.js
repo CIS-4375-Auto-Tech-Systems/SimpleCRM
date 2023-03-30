@@ -431,7 +431,7 @@ app.put('/vendor',async function(req, res){
     let keymap = compare_update(oldKeymap, newKeymap);
 
     // Query Creation
-    let query = `UPDATE CUSTOMER SET ${vendAttributes} WHERE vendor_id =:vendor_id`;
+    let query = `UPDATE CUSTOMER SET ${vendAttributes} WHERE vendor_id = :vendor_id`;
     let binds = [state_id, venpart_id, ven_name, address, city, phone, website, contact_name, zip, email, keymap, vendor_id];
     res.send(await crudOP(query, binds, false));
 });
@@ -493,6 +493,19 @@ app.get('/part', async function(req, res){
 
 
 /* STATE */
+// CREATE
+app.post('/state', async function(req, res){
+    // Columm Names
+    const stateAttributes = ':state_id, :state_code, :state_name';
+    // Values
+    let state_id = req.body.state_id;
+    let state_code = req.body.state_code;
+    let state_name = req.body.state_name;
+    // Query Creation
+    let query = `INSERT INTO STATE VALUES (${stateAttributes})`;
+    let binds = [state_id, state_code, state_name];
+    res.send(await crudOP(query, binds, false));
+});
 // READ
 app.get('/state', async function(req, res){
     // For WHERE statement
@@ -510,6 +523,33 @@ app.get('/state', async function(req, res){
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
+});
+// UPDATE
+app.put('/state', async function(req, res){
+    // Columns
+    const stateAttributes = 'state_code = :state_code, state_name = :state_name';
+    // Values
+    let state_id = req.body.id;
+    // READ COMPARE and UPDATE
+    /*READ*/
+    //Current Values
+    let readQuery = '';
+    let readBinds = [state_id];
+    let readState = await crudOP(readQuery, readBinds, true);
+    let currentState = readState.rows[0];
+    // Store Old
+    let oldState_code = currentState[1];
+    let oldState_name = currentState[2];
+    // Request New
+    let newState_code = req.body.state_code;
+    let newState_name = req.body.state_name;
+    /* COMPARE and UPDATE */
+    let state_code = compare_update(oldState_code, newState_code);
+    let state_name = compare_update(oldState_name, newState_name);
+    // Query Creation
+    let query = `UPDATE STATE SET ${stateAttributes} WHERE state_id = :state_id`;
+    let binds = [state_code, state_name, state_id];
+    res.send(await crudOP(query, binds, false));
 });
 
 app.listen(PORT, () => {
