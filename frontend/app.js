@@ -32,7 +32,10 @@ app.get('/', function(req, res) {
   app.get('/createcustomer', function(req, res) {
     res.render('createcustomer');
   });
-  
+//temporary nav link here I just wanted to see how it looks ok
+  app.get('/customer', function(req, res) {
+    res.render('customer');
+  });
 
 // start the express application on on port 8080
 app.listen(port, ()=>console.log('Application started listening on port '+port));

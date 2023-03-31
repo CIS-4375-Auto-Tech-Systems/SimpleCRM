@@ -6,7 +6,15 @@ const resultsContainer = document.getElementById('results');
 // Add event listener to search button
 searchButton.addEventListener('click', () => {
   // Get the search query from the search bar input
-  const searchQuery = searchBar.value;
+  const query = searchBar.value.trim();
+  
+  // If the search query is empty, do nothing
+  if (query === "") {
+    return;
+  }
+  
+  // Redirect the user to the customer page with the search query as a parameter
+  window.location.href = `/customerpage?search=${encodeURIComponent(query)}`;});
 
   // Make an AJAX request to the backend to retrieve the customer information
   const xhr = new XMLHttpRequest();
@@ -61,4 +69,3 @@ searchButton.addEventListener('click', () => {
     }
   };
   xhr.send();
-});
