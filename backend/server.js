@@ -93,7 +93,7 @@ app.get('/lookup', async function(req, res){
     res.send(await crudOP(query, binds, true));
 });
 
-/* EMPLOYEE */ //CURRENT
+/* EMPLOYEE */
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
@@ -203,7 +203,7 @@ app.delete('/employee',async function(req, res){
     let binds = [emp_id];
     res.send(await crudOP(query, binds, false));
 });
-/* EMP_STATUS */ //CURRENT
+/* EMP_STATUS */
 // CREATE
 app.post('/employee-status', async function(req, res){
     // Column Names
@@ -272,7 +272,7 @@ app.delete('/employee-status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* SERVICE_ORDER */ //CURRENT
+/* SERVICE_ORDER */
 // CREATE
 app.post('/service-order', async function(req, res) {
     // Column
@@ -376,7 +376,7 @@ app.delete('/service-order', async function(req, res){
     let binds = [order_id];
     res.send(await crudOP(query, binds, false));
 });
-/* ORDER_STATUS */ //CURRENT
+/* ORDER_STATUS */
 // CREATE
 app.post('/order-status', async function(req, res) {
     // Column Names
@@ -440,7 +440,7 @@ app.delete('/order-status', async function(req, res){
     let binds = [order_status_id];
     res.send(await crudOP(query, binds, false));
 });
-/* SERVICE */ // CURRENT
+/* SERVICE */
 // CREATE
 app.post('/service', async function(req, res){
     // Column Name
@@ -509,7 +509,7 @@ app.delete('/service', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* CUSTOMER */ //CURRENT
+/* CUSTOMER */
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
@@ -606,7 +606,7 @@ app.delete('/customer',async function(req, res){
     let binds = [cust_id];
     res.send(await crudOP(query, binds, false));
 });
-/* CUST_STATUS */ //CURRENT
+/* CUST_STATUS */
 // CREATE
 app.post('/customer-status', async function(req, res) {
     // Column
@@ -675,7 +675,7 @@ app.delete('/customer-status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* VEHICLE */ //CURRENT
+/* VEHICLE */
 // CREATE
 app.post('/vehicle', async function(req, res){
     // Column Name
@@ -755,7 +755,7 @@ app.delete('/vehicle', async function(req, res){
     let binds = [vehicle_id];
     res.send(await crudOP(query, binds, false));
 });
-/* VEHICLE_MAKE */ //CURRENT
+/* VEHICLE_MAKE */
 // CREATE
 app.post('/vehicle-make', async function(req, res){
     // Column Name
@@ -819,7 +819,7 @@ app.delete('/vehicle_make', async function(req, res){
     let binds = [make_id];
     res.send(await crudOP(query, binds, false));
 });
-/* VEHICLE_MODEL */ //CURRENT
+/* VEHICLE_MODEL */
 // CREATE
 app.post('/vehicle-model', async function(req, res){
     // Column Name
@@ -888,7 +888,7 @@ app.delete('/vehicle-model', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* STATE */ //CURRENT
+/* STATE */
 // CREATE
 app.post('/state', async function(req, res){
     // Columm Names
