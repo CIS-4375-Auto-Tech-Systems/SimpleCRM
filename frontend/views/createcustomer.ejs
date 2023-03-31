@@ -2,6 +2,7 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
+    
   </head>
   <body>
     <div class="container">
@@ -24,12 +25,12 @@
             <input type="email" class="form-control" id="inputEmail4">
           </div>
           <div class="col-12">
-            <label for="inputAddress" class="form-label">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+            <label for="licensenum" class="form-label">License Number</label>
+            <input type="text" class="form-control" id="licenseNum" 
           </div>
           <div class="col-12">
-            <label for="licensenum" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="licenseNum" placeholder="1234567">
+            <label for="inputAddress" class="form-label">Address</label>
+            <input type="text" class="form-control" id="inputAddress" 
           </div>
           <div class="col-md-6">
             <label for="inputCity" class="form-label">City</label>
@@ -75,10 +76,10 @@
           <%- include('partials/footer.ejs'); %>
         </footer>
       </div>
-    </div>        
+    </div>       
   </body>
+  
 </html>
-
 
 
 
