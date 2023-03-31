@@ -89,6 +89,12 @@ body {
     src: url("/fonts/Samurai.ttf") format("truetype");
   }
   footer {
+    border-top: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 200%;
+    margin-left: -3%;
     font-family: Arial, sans-serif;
   }
   .normal-font {
@@ -98,4 +104,9 @@ body {
     font-family: 'Arial', sans-serif;
     font-size: 16px;
     font-weight: normal;
+  }
+ #clock {
+    font-size: 2em;
+    text-align: center;
+    margin-top: 1em;
   }
