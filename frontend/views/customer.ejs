@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Page</title>
+    <%- include('partials/head.ejs'); %>
+    <link rel="stylesheet" href="/css/customer.css">
+    <script src="/js/customer.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <%- include('partials/leftcolumn.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="content">
+          <div class="customer-info">
+            <div class="profile-photo">
+              <img src="/img/profile-placeholder.png" alt="Profile Photo">
+            </div>
+            <div class="customer-details">
+              <h1>John Doe</h1>
+              <p>Address: 123 Main Street</p>
+              <p>Phone: (555) 555-5555</p>
+              <p>Email: john.doe@example.com</p>
+            </div>
+          </div>
+          <div class="vehicle-info">
+            <h2>Vehicles</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Make</th>
+                  <th>Model</th>
+                  <th>Year</th>
+                  <th>License Plate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Toyota</td>
+                  <td>Camry</td>
+                  <td>2010</td>
+                  <td>ABC123</td>
+                </tr>
+                <tr>
+                  <td>Honda</td>
+                  <td>Accord</td>
+                  <td>2008</td>
+                  <td>DEF456</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="service-history">
+            <h2>Service History</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Date In</th>
+                  <th>Date Out</th>
+                  <th>Total Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Oil Change</td>
+                  <td>03/01/2023</td>
+                  <td>03/01/2023</td>
+                  <td>$29.99</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                    <button class="delete-service-button">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Brake Service</td>
+                  <td>02/01/2023</td>
+                  <td>02/01/2023</td>
+                  <td>$299.99</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                    <button class="delete-service-button">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <footer>
+          <%- include('partials/footer.ejs'); %>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,14 +1,61 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Customer Lookup</title>
     <%- include('partials/head.ejs'); %>
+    <script src="lookup.js"></script>
+    <style>
+      /* Styles for search bar */
+      .bottomrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      
+      #searchBar {
+        border: none;
+        background-color: #f2f2f2;
+        padding: 12px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+        width: 100%;
+        font-size: 16px;
+        color: #333;
+        outline: none;
+      }
+      
+      #searchButton {
+        border: none;
+        background-color: #29d7dd;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      
+      #searchButton:hover {
+        background-color: #128ad4;
+      }
+      
+      #results {
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-        <%- include('partials/leftcolumn.ejs'); %>
+      <%- include('partials/leftcolumn.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">THIS IS THE customerlookup with a form that connects to backend with CRUD, we will also have profile pic</div>
+        <div class="bottomrow">
+          <h1>Customer Lookup</h1>
+          <input type="text" id="searchBar" placeholder="Search customers...">
+          <button id="searchButton">Search</button>
+          <div id="results"></div>
+        </div>
         <footer>
           <%- include('partials/footer.ejs'); %>
         </footer>
