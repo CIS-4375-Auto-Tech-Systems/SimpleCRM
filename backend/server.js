@@ -83,7 +83,17 @@ function compare_update(oldValue, newValue) {
     }
 };
 
-/* EMPLOYEE */
+/* SPECIAL ENDPOINTS */
+/* CUSTOMER LOOKUP */
+// READ
+app.get('/lookup', async function(req, res){
+    // Query Creation
+    let query = '';
+    let binds = [];
+    res.send(await crudOP(query, binds, true));
+});
+
+/* EMPLOYEE */ //CURRENT
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
@@ -193,7 +203,7 @@ app.delete('/employee',async function(req, res){
     let binds = [emp_id];
     res.send(await crudOP(query, binds, false));
 });
-/* EMP_STATUS */
+/* EMP_STATUS */ //CURRENT
 // CREATE
 app.post('/employee-status', async function(req, res){
     // Column Names
@@ -262,150 +272,125 @@ app.delete('/employee-status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* INVOICE */
+/* SERVICE_ORDER */ //CURRENT
 // CREATE
-app.post('/invoice', async function(req, res) {
+app.post('/service-order', async function(req, res) {
     // Column
-    const invoiceAttributes = ':inv_id, :inv_num, :cust_id, :emp_id, :inv_status_id, :estimate_id, :inv_seq, :ttlamt, :color, :year, :model, :make, :license_num, :vin, :datein, :dateout, :odometer, :desc';
+    const service_orderAttributes = ':order_id, :order_num, :cust_id, :vehicle_id, :emp_id, :order_status_id, :service_id, :ttlamt, :datein, :dateout, :odometer, :desc';
     // Values
-    let inv_id = req.body.inv_id;
-    let inv_num = req.body.inv_num;
+    let order_id = req.body.order_id;
+    let order_num = req.body.order_num;
     let cust_id = req.body.cust_id;
+    let vehicle_id = req.body.vehicle_id;
     let emp_id = req.body.emp_id;
-    let inv_status_id = req.body.inv_status_id;
-    let estimate_id = req.body.estimate_id;
-    let inv_seq = req.body.inv_seq;
+    let order_status_id = req.body.order_status_id;
+    let service_id = req.body.service_id;
     let ttlamt = req.body.ttlamt;
-    let color = req.body.color;
-    let year = req.body.year;
-    let model = req.body.model;
-    let make = req.body.make;
-    let license_num = req.body.license_num;
-    let vin = req.body.vin;
     let datein = req.body.datein;
     let dateout = req.body.dateout;
     let odometer = req.body.odometer;
     let desc = req.body.desc;
     // Query Creation
-    let query = `INSERT INTO INVOICE VALUES (${invoiceAttributes})`;
-    let binds = [inv_id, inv_num, cust_id, emp_id, inv_status_id, estimate_id, inv_seq, ttlamt, color, year, model, make, license_num, vin, datein, dateout, odometer, desc];
+    let query = `INSERT INTO INVOICE VALUES (${service_orderAttributes})`;
+    let binds = [order_id, order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, desc];
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/invoice', async function(req, res){
+app.get('/service-order', async function(req, res){
     // For WHERE statement
     let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM INVOICE WHERE ${columnName} = :columnValue`;
+        let query = `SELECT * FROM SERVICE_ORDER WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query,binds, true));
     }else{
-        let query = 'SELECT * FROM INVOICE';
+        let query = 'SELECT * FROM SERVICE_ORDER';
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
-app.put('/invoice', async function(req, res){
+app.put('/service-order', async function(req, res){
     // Column
-    const invoiceAttributes = 'inv_id = :inv_id, inv_num = :inv_num, cust_id = :cust_id, emp_id = :emp_id, inv_status_id = :inv_status_id, estimate_id = :estimate_id, inv_seq = :inv_seq, ttlamt = :ttlamt, color = :color, year = :year, model = :model, make = :make, license_num = :license_num, vin = :vin, datein = :datein, dateout = :dateout, odomete = :odometer, desc = :desc';
+    const service_orderAttributes = 'order_num = :order_num, cust_id = :cust_id, vehicle_id = :vehicle_id, emp_id = :emp_id, order_status_id = :order_status_id, service_id = :service_id, ttlamt = :ttlamt, datein = :datein, dateout = :dateout, odometer = :odometer, desc = :desc';
     // Values
-    let inv_id = req.body.inv_id;
+    let order_id = req.body.order_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
-    let readQuery = 'SELECT * FROM INVOICE WHERE inv_id = :inv_id';
+    let readQuery = 'SELECT * FROM SERVICE_ORDER WHERE order_id = :order_id';
     let readBinds = [inv_id];
-    let readInv = await crudOP(readQuery, readBinds, true);
-    let currentInv = readInv.rows[0];
+    let readOrder = await crudOP(readQuery, readBinds, true);
+    let currentOrder = readOrder.rows[0];
     // Store Old
-    let oldInv_num = currentInv[1];
-    let oldCust_id = currentInv[2];
-    let oldEmp_id = currentInv[3];
-    let oldInv_status_id = currentInv[4];
-    let oldEstimate_id = currentInv[5];
-    let oldInv_seq = currentInv[6];
-    let oldTtlamt = currentInv[7];
-    let oldColor = currentInv[8];
-    let oldYear = currentInv[9];
-    let oldModel = currentInv[10];
-    let oldMake = currentInv[11];
-    let oldLicense_num = currentInv[12];
-    let oldVin = currentInv[13];
-    let oldDatein = currentInv[14];
-    let oldDateout = currentInv[15];
-    let oldOdometer = currentInv[16];
-    let oldDesc = currentInv[17];
+    let oldOrder_num = currentOrder[1];
+    let oldCust_id  = currentOrder[2];
+    let oldVehicle_id  = currentOrder[3];
+    let oldEmp_id  = currentOrder[4];
+    let oldOrder_status_id  = currentOrder[5];
+    let oldService_id  = currentOrder[6];
+    let oldTtlamt  = currentOrder[7];
+    let oldDatein  = currentOrder[8];
+    let oldDateout  = currentOrder[9];
+    let oldOdometer  = currentOrder[10];
+    let oldDesc = currentOrder[11];
     // Request New
-    let newInv_num = req.body.inv_num;
+    let newOrder_num = req.body.order_num;
     let newCust_id = req.body.cust_id;
+    let newVehicle_id = req.body.vehicle_id;
     let newEmp_id = req.body.emp_id;
-    let newInv_status_id = req.body.inv_status_id;
-    let newEstimate_id = req.body.estimate_id;
-    let newInv_seq = req.body.inv_seq;
+    let newOrder_status_id = req.body.order_status_id;
+    let newService_id = req.body.service_id;
     let newTtlamt = req.body.ttlamt;
-    let newColor = req.body.color;
-    let newYear = req.body.year;
-    let newModel = req.body.model;
-    let newMake = req.body.make;
-    let newLicense_num = req.body.license_num;
-    let newVin = req.body.vin;
     let newDatein = req.body.datein;
-    let newDateout = req.body.dateout;
+    let newDateout  = req.body.dateout;
     let newOdometer = req.body.odometer;
-    let newDesc = req.body.desc;
-
+    let newDesc  = req.body.desc;
     /* COMPARE and UPDATE */
-    let inv_num = compare_update(oldInv_num, newInv_num);
+    let order_num = compare_update(oldOrder_num, newOrder_num);
     let cust_id = compare_update(oldCust_id, newCust_id);
+    let vehicle_id = compare_update(oldVehicle_id, newVehicle_id);
     let emp_id = compare_update(oldEmp_id, newEmp_id);
-    let inv_status_id = compare_update(oldInv_status_id, newInv_status_id);
-    let estimate_id = compare_update(oldEstimate_id, newEstimate_id);
-    let inv_seq = compare_update(oldInv_seq, newInv_seq);
+    let order_status_id = compare_update(oldOrder_status_id, newOrder_status_id);
+    let service_id = compare_update(oldService_id, newService_id);
     let ttlamt = compare_update(oldTtlamt, newTtlamt);
-    let color = compare_update(oldColor, newColor);
-    let year = compare_update(oldYear, newYear);
-    let model = compare_update(oldModel, newModel);
-    let make = compare_update(oldMake, newMake);
-    let license_num = compare_update(oldLicense_num, newLicense_num);
-    let vin = compare_update(oldVin, newVin);
     let datein = compare_update(oldDatein, newDatein);
     let dateout = compare_update(oldDateout, newDateout);
     let odometer = compare_update(oldOdometer, newOdometer);
     let desc = compare_update(oldDesc, newDesc);
     // Query Creation
-    let query = `UPDATE INVOICE SET ${invoiceAttributes} WHERE inv_id = :inv_id`;
-    let binds = [inv_num, cust_id, emp_id, inv_status_id, estimate_id, inv_seq, ttlamt, color, year, model, make, license_num, vin, datein, dateout, odometer, desc, inv_id];
+    let query = `UPDATE SERVICE_ORDER SET ${service_orderAttributes} WHERE order_id = :order_id`;
+    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, desc, order_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/invoice', async function(req, res){
+app.delete('/service-order', async function(req, res){
     // Values
-    let inv_id = req.body.inv_id;
+    let order_id = req.body.order_id;
     // Query Creation
-    let query = 'DELETE FROM INVOICE WHRE inv_id = :inv_id';
-    let binds = [inv_id];
+    let query = 'DELETE FROM SERVICE_ORDER WHRE order_id = :order_id';
+    let binds = [order_id];
     res.send(await crudOP(query, binds, false));
 });
-/* INV_STATUS */
+/* ORDER_STATUS */ //CURRENT
 // CREATE
-app.post('/invoice-status', async function(req, res) {
+app.post('/order-status', async function(req, res) {
     // Column Names
-    const inventory_statAttributes = ':inv_status_id, :status';
+    const order_statAttributes = ':order_status_id, :status';
     // Values
-    let inv_status_id = req.body.inv_status_id;
+    let order_status_id = req.body.order_status_id;
     let status = req.body.status;
     // Query Creation
-    let query = `INSERT INTO INV_STATUS VALUES (${inventory_statAttributes})`;
-    let binds = [inv_status_id, status];
+    let query = `INSERT INTO INV_STATUS VALUES (${order_statAttributes})`;
+    let binds = [order_status_id, status];
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/invoice-status', async function(req, res){
+app.get('/order-status', async function(req, res){
     // For WHERE statement
     let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
@@ -423,44 +408,112 @@ app.get('/invoice-status', async function(req, res){
     }
 });
 // UPDATE
-app.put('/invoice-status', async function(req, res){
+app.put('/order-status', async function(req, res){
     // Columns
-    const inventory_statAttributes = 'status = :status'
+    const order_statAttributes = 'status = :status'
     // Values
-    let inv_status_id = req.body.inv_status_id;
+    let order_status_id = req.body.order_status_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
-    let readQuery = 'SELECT * FROM INV_STATUS WHERE inv_status_id = :inv_status_id';
-    let readBinds = [inv_status_id];
-    let readInventory_Stat = await crudOP(readQuery, readBinds, true);
-    let currentInventory = readInventory_Stat.rows[0];
+    let readQuery = 'SELECT * FROM ORDER_STATUS WHERE order_status_id = :order_status_id';
+    let readBinds = [order_status_id];
+    let readOrder_Stat = await crudOP(readQuery, readBinds, true);
+    let currentOrder = readOrder_Stat.rows[0];
     // Store Old
-    let oldStatus = currentInventory[1];
+    let oldStatus = currentOrder[1];
     // Request New
     let newStatus = req.body.status;
     /* COMPARE and UPDATE */
     let status = compare_update(oldStatus, newStatus);
     // Query Creation
-    let query = `UPDATE INV_STATUS SET ${inventory_statAttributes} WHERE inv_status_id = :inv_status_id`;
-    let binds = [status, inv_status_id];
+    let query = `UPDATE ORDER_STATUS SET ${order_statAttributes} WHERE order_status_id = :order_status_id`;
+    let binds = [status, order_status_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/invoice-status', async function(req, res){
+app.delete('/order-status', async function(req, res){
     // Values
-    let inv_status_id = req.body.inv_status_id;
+    let order_status_id = req.body.order_status_id;
     // Query Creation
-    let query = 'DELETE FROM INV_STATUS WHERE inv_status_id = :inv_status_id';
-    let binds = [inv_status_id];
+    let query = 'DELETE FROM ORDER_STATUS WHERE order_status_id = :order_status_id';
+    let binds = [order_status_id];
+    res.send(await crudOP(query, binds, false));
+});
+/* SERVICE */ // CURRENT
+// CREATE
+app.post('/service', async function(req, res){
+    // Column Name
+    const serviceAttributes = ':service_id, :service_name, :price'
+    // Values
+    let service_id = req.body.service_id;
+    let service_name = req.body.service_name;
+    let price = req.body.price;
+    // Query Creation
+    let query = `INSERT INTO SERVICE VALUES (${serviceAttributes})`;
+    let binds = [service_id, service_name, price];
+    res.send(await crudOP(query, binds, false));
+});
+// READ
+app.get('/service', async function(req, res){
+    // For WHERE statement
+    let columnName = req.body.columnName; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM SERVICE WHERE ${columnName} =:columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query, binds, true));
+    }else{
+        let query = 'SELECT * FROM SERVICE';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
+// UPDATE
+app.put('/service', async function(req, res){
+    // Columns
+    const serviceAttributes = 'service_name = :service_name, price = :price';
+    // Values
+    let service_id = req.body.service_id;
+    // READ COMPARE and UPDATE
+    /*READ*/
+    // Current Values
+    let readQuery = 'SELECT * FROM SERVICE WHERE service_id = :service_id';
+    let readBinds = [service_id];
+    let readService = await crudOP(readQuery, readBinds, true);
+    let currentService = readService.rows[0];
+    // Store Old
+    let oldService_name = currentService[1];
+    let oldPrice = currentService[2];
+    // Request New
+    let newService_name = req.body.service_name;
+    let newPrice = req.body.price;
+    /* COMPARE and UPDATE */
+    let service_name = compare_update(oldService_name, newService_name);
+    let price = compare_update(oldPrice, newPrice);
+    // Query Creation
+    let query = `UPDATE SERVICE SET ${serviceAttributes} WHERE service_id = :service_id`;
+    let binds = [service_name, price, service_id];
+    res.send(await crudOP(query, binds, false));
+});
+// DELETE
+app.delete('/service', async function(req, res){
+    // Values
+    let service_id = req.body.service_id;
+    // Query Creation
+    let query = 'DELETE FROM SERVICE WHERE service_id = :service_id';
+    let binds = [service_id];
     res.send(await crudOP(query, binds, false));
 });
 
-/* CUSTOMER */
+/* CUSTOMER */ //CURRENT
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
-    const custAttributes = ':cust_id, :cust_status_id, :name, :license_num, :lic_address, :lic_city, :lic_state, :zip, :phone, :email, :insurance, :ins_num';
+    const custAttributes = ':cust_id, :cust_status_id, :name, :license_num, :lic_address, :lic_city, :lic_state, :zip, :phone, :email';
     // Values
     let cust_id = req.body.cust_id;
     let cust_status_id = req.body.cust_status_id;
@@ -472,11 +525,9 @@ app.post('/customer',async function(req, res){
     let zip = req.body.zip;
     let phone = req.body.phone;
     let email = req.body.email;
-    let insurance = req.body.insurance;
-    let ins_num = req.body.ins_num;
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email, insurance, ins_num];
+    let binds = [cust_id, cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email];
     res.send(await crudOP(query, binds, false));
 });
 // READ
@@ -500,7 +551,7 @@ app.get('/customer', async function(req, res){
 // UPDATE
 app.put('/customer', async function(req, res){
     // Columns
-    const custAttributes = 'cust_status_id = :cust_status_id, name = :name, license_num = :license_num, lic_address = :lic_address, lic_city = :lic_city, lic_state = :lic_state, zip = :zip, phone = :phone, email = :email, insurance = :insurance, ins_num = :ins_num';
+    const custAttributes = 'cust_status_id = :cust_status_id, name = :name, license_num = :license_num, lic_address = :lic_address, lic_city = :lic_city, lic_state = :lic_state, zip = :zip, phone = :phone, email = :email';
     // Values
     let cust_id = req.body.cust_id;
     // READ COMPARE and UPDATE
@@ -520,8 +571,6 @@ app.put('/customer', async function(req, res){
     let oldZip = currentCust[7];
     let oldPhone = currentCust[8];
     let oldEmail = currentCust[9];
-    let oldInsurance = currentCust[10];
-    let oldIns_num = currentCust[11];
     // Request New
     let newCust_status_id = req.body.cust_status_id;
     let newName = req.body.name;
@@ -532,8 +581,6 @@ app.put('/customer', async function(req, res){
     let newZip = req.body.zip;
     let newPhone = req.body.phone;
     let newEmail = req.body.email;
-    let newInsurance = req.body.insurance;
-    let newIns_num = req.body.ins_num;
 
     /* COMPARE and UPDATE */
     let cust_status_id = compare_update(oldCust_status_id, newCust_status_id);
@@ -545,11 +592,9 @@ app.put('/customer', async function(req, res){
     let zip = compare_update(oldZip, newZip);
     let phone = compare_update(oldPhone, newPhone);
     let email = compare_update(oldEmail, newEmail);
-    let insurance = compare_update(oldInsurance, newInsurance);
-    let ins_num = compare_update(oldIns_num, newIns_num);
     // Query Creation
     let query = `UPDATE CUSTOMER SET ${custAttributes} WHERE cust_id = :cust_id`;
-    let binds = [cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email, insurance, ins_num, cust_id];
+    let binds = [cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email, cust_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
@@ -561,7 +606,7 @@ app.delete('/customer',async function(req, res){
     let binds = [cust_id];
     res.send(await crudOP(query, binds, false));
 });
-/* CUST_STATUS */
+/* CUST_STATUS */ //CURRENT
 // CREATE
 app.post('/customer-status', async function(req, res) {
     // Column
@@ -630,345 +675,220 @@ app.delete('/customer-status', async function(req, res){
     res.send(await crudOP(query, binds, false));
 });
 
-/* ESTIMATE */
+/* VEHICLE */ //CURRENT
 // CREATE
-app.post('/estimate', async function(req, res){
-    // Column Names
-    const estiAttributes = ':estimate_id, :inv_id, :part_id, :part_qty, :total';
+app.post('/vehicle', async function(req, res){
+    // Column Name
+    const vehicleAttributes = ':vehicle_id, :model_id, :customer_id, :vin, :license_plate, :year';
     // Values
-    let estimate_id = req.body.estimate_id;
-    let inv_id = req.body.inv_id;
-    let part_id = req.body.part_id;
-    let part_qty = req.body.part_qty;
-    let total = req.body.total;
+    let vehicle_id = req.body.vehicle_id;
+    let model_id = req.body.model_id;
+    let customer_id = req.body.customer_id;
+    let vin = req.body.vin;
+    let license_plate = req.body.license_plate;
+    let year = req.body.year;
     // Query Creation
-    let query = `INSERT INTO ESTIMATE VALUES (${estiAttributes})`;
-    let binds = [estimate_id, inv_id, part_id, part_qty, total];
+    let query = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
+    let binds = [vehicle_id, model_id, customer_id, vin, license_plate, year];
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/estimate', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM ESTIMATE WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM ESTIMATE';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
-});
-// UPDATE
-app.put('/estimate', async function(req, res){
-    // Columns
-    const estiAttributes = 'inv_id = :inv_id, part_id = :part_id, part_qty = :part_qty, total = :total';
-    // Values
-    let estimate_id = req.body.estimate_id;
-    // READ COMPARE and UPDATE
-    /*READ*/
-    // Current Values
-    let readQuery = 'SELECT * FROM ESTIMATE WHERE estimate_id = :estimate_id';
-    let readBinds = [estimate_id];
-    let readEstimate = await crudOP(readQuery, readBinds, true);
-    let currentEstimate = readEstimate.rows[0];
-    // Store Old
-    let oldInv_id = currentEstimate[1];
-    let oldPart_id = currentEstimate[2];
-    let oldPart_qty = currentEstimate[3];
-    let oldTotal = currentEstimate[4];
-    // Request New
-    let newInv_id = req.body.inv_id;
-    let newPart_id = req.body.part_id;
-    let newPart_qty = req.body.part_qty;
-    let newTotal = req.body.total;
-    /* COMPARE and UPDATE */
-    let inv_id = compare_update(oldInv_id, newInv_id);
-    let part_id = compare_update(oldPart_id, newPart_id);
-    let part_qty = compare_update(oldPart_qty, newPart_qty);
-    let total = compare_update(oldTotal, newTotal);
-    // Query Creation
-    let query = `UPDATE ESTIMATE SET ${estiAttributes} WHERE estimate_id = :estimate_id`;
-    let binds = [inv_id, part_id, part_qty, total, estimate_id];
-    res.send(await crudOP(query, binds, false));
-});
-// DELETE
-app.delete('/estimate', async function(req, res){
-    // Values
-    let estimate_id = req.body.estimate_id;
-    // Query Creation
-    let query = 'DELETE FROM ESTIMATE WHERE estimate_id = :estimate_id';
-    let binds = [estimate_id];
-    res.send(await crudOP(query, binds, false));
-});
-
-/* PART */
-// CREATE
-app.post('/part', async function(req, res){
-    // Column Names
-    const partAttributes = ':part_id, :part_name, :part_desc';
-    // Values
-    let part_id = req.body.part_id;
-    let part_name = req.body.part_name;
-    let part_desc = req.body.part_desc;
-    // Query Creation
-    let query = `INSERT INTO PART VALUES (${partAttributes})`;
-    let binds = [part_id, part_name, part_desc];
-    res.send(await crudOP(query, binds, false));
-});
-// READ
-app.get('/part', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM PART WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM PART';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
-});
-// UPDATE
-app.put('/part', async function(req, res){
-    // Columns
-    const partAttributes = 'part_name = :part_name, part_desc = :part_desc';
-    // Values
-    let part_id = req.body.part_id;
-    // READ COMPARE and UPDATE
-    /*READ*/
-    // Current Values
-    let readQuery = 'SELECT * FROM PART WHERE part_id = :part_id';
-    let readBinds = [part_id];
-    let readPart = await crudOP(readQuery, readBinds, true);
-    let currentPart = readPart.rows[0];
-    // Store Old
-    let oldPart_name = currentPart[1];
-    let oldPart_desc = currentPart[2];
-    // Request New
-    let newPart_name = req.body.part_name;
-    let newPart_desc = req.body.part_desc;
-    /* COMPARE and UPDATE */
-    let part_name = compare_update(oldPart_name, newPart_name);
-    let part_desc = compare_update(oldPart_desc, newPart_desc)
-    // Query Creation
-    let query = `UPDATE PART SET ${partAttributes} WHERE part_id = :part_id`;
-    let binds = [part_name, part_desc, part_id];
-    res.send(await crudOP(query, binds, false));
-});
-// DELETE
-app.delete('/part', async function(req, res){
-    // Values
-    let part_id = req.body.part_id;
-    // Query Creation
-    let query = 'DELETE FROM PART WHERE part_id = :part_id';
-    let binds = [part_id];
-    res.send(await crudOP(query, binds, false));
-});
-
-/* VENDOR_INV */
-// CREATE
-app.post('/vendor-invoice', async function(req, res){
-    // Column
-    const vendor_inventAttributes = ':venpart_id, :part_id, :vendor_id, :qty_ordered, :date_ordered, :cost_per_unit, :total_cost';
-    // Values
-    let venpart_id = req.body.venpart_id;
-    let part_id = req.body.part_id;
-    let vendor_id = req.body.vendor_id;
-    let qty_ordered = req.body.qty_ordered;
-    let date_ordered = req.body.date_ordered;
-    let cost_per_unit = req.body.cost_per_unit;
-    let total_cost = req.body.total_cost;
-    // Query Creation
-    let query = `INSERT INTO VENDOR_INV VALUES (${vendor_inventAttributes})`;
-    let binds = [venpart_id, part_id, vendor_id, qty_ordered, date_ordered, cost_per_unit, total_cost];
-    res.send(await crudOP(query, binds, false));
-});
-// READ
-app.get('/vendor-invoice', async function(req, res){
+app.get('/vehicle', async function(req, res){
     // For WHERE statement
     let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
     let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM VENDOR_INV WHERE ${columnName} = :columnValue`;
+        let query = `SELECT * FROM VEHICLE WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query, binds, true));
     }else{
-        let query = 'SELECT * FROM VENDOR_INV';
+        let query = 'SELECT * FROM VEHICLE';
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
-app.put('/vendor-invoice', async function(req, res){
-    // Columns
-    const vendor_inventAttributes = 'venpart_id = :venpart_id, part_id = :part_id, vendor_id = :vendor_id, qty_ordered = :qty_ordered, date_ordered = :date_ordered, cost_per_unit = :cost_per_unit, total_cost = :total_cost'
+app.put('/vehicle', async function(req, res){
+    // Column Names
+    const vehicleAttributes = 'model_id = :model_id, customer_id = :customer_id, vin = :vin, license_plate = :license_plate, year = :year';
     // Values
-    let venpart_id = req.body.venpart_id;
+    let vehicle_id = req.body.vehicle_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
-    let readQuery = 'SELECT * FROM VENDOR_INV WHERE venpart_id = :venpart_id';
-    let readBinds = [venpart_id];
-    let readVend_invent = await crudOP(readQuery, readBinds, true);
-    let currentVend_invent = readVend_invent.rows[0];
+    let readQuery = 'SELECT * FROM VEHICLE WHERE vehicle_id = :vehicle_id';
+    let readBinds = [vehicle_id];
+    let readVehicle= await crudOP(readQuery, readBinds, true);
+    let currentVehicle = readVehicle.rows[0];
     // Store Old
-    let oldPart_id = currentVend_invent[1];
-    let oldVendor_id = currentVend_invent[2];
-    let oldQty_ordered = currentVend_invent[3];
-    let oldDate_ordered = currentVend_invent[4];
-    let oldCost_per_unit = currentVend_invent[5];
-    let oldTotal_cost = currentVend_invent[6];
+    let oldModel_id = currentVehicle[1];
+    let oldCustomer_id = currentVehicle[2];
+    let oldVin = currentVehicle[3];
+    let oldLicense_plate = currentVehicle[4];
+    let oldYear = currentVehicle[5];
     // Request New
-    let newPart_id = req.body.part_id;
-    let newVendor_id = req.body.vendor_id;
-    let newQty_ordered = req.body.qty_ordered;
-    let newDate_ordered = req.body.date_ordered;
-    let newCost_per_unit = req.body.cost_per_unit;
-    let newTotal_cost = req.body.total_cost;
+    let newModel_id = req.body.model_id;
+    let newCustomer_id = req.body.customer_id;
+    let newVin = req.body.vin;
+    let newLicense_plate = req.body.license_plate;
+    let newYear = req.body.year;
     /* COMPARE and UPDATE */
-    let part_id = compare_update(oldPart_id, newPart_id);
-    let vendor_id = compare_update(oldVendor_id, newVendor_id);
-    let qty_ordered = compare_update(oldQty_ordered, newQty_ordered);
-    let date_ordered = compare_update(oldDate_ordered, newDate_ordered);
-    let cost_per_unit = compare_update(oldCost_per_unit, newCost_per_unit);
-    let total_cost = compare_update(oldTotal_cost, newTotal_cost);
+    let model_id = compare_update(oldModel_id, newModel_id);
+    let customer_id = compare_update(oldCustomer_id, newCustomer_id);
+    let vin = compare_update(oldVin, newVin);
+    let license_plate = compare_update(oldLicense_plate, newLicense_plate);
+    let year = compare_update(oldYear, newYear);
     // Query Creation
-    let query = `UPDATE VENDOR_INV SET ${vendor_inventAttributes} WHERE venpart_id = :venpart_id`;
-    let binds = [part_id, vendor_id, qty_ordered, date_ordered, cost_per_unit, total_cost , venpart_id];
+    let query = `UPDATE VEHICLE SET ${vehicleAttributes} WHERE vehicle_id = :vehicle_id`;
+    let binds = [model_id, customer_id, vin, license_plate, year, vehicle_id,];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/vendor-invoice', async function(req, res){
+app.delete('/vehicle', async function(req, res){
     // Values
-    let venpart_id = req.body.venpart_id;
+    let vehicle_id = req.body.vehicle_id;
     // Query Creation
-    let query = 'DELETE FROM VENDOR_INV WHERE venpart_id = :venpart_id';
-    let binds = [venpart_id];
+    let query = 'DELETE FROM VEHICLE WHERE vehicle_id = :vehicle_id';
+    let binds = [vehicle_id];
     res.send(await crudOP(query, binds, false));
 });
-
-/* VENDOR */
+/* VEHICLE_MAKE */ //CURRENT
 // CREATE
-app.post('/vendor',async function(req, res){
-    // Column Names
-    const vendAttributes = ':vendor_id, :state_id, :venpart_id, :ven_name, :address, :city, :phone, :website, :contact_name, :zip, :email, :keymap';
+app.post('/vehicle-make', async function(req, res){
+    // Column Name
+    const vehicle_makeAttributes = ':make_id, :make_name';
     // Values
-    let vendor_id = req.body.vendor_id;
-    let state_id = req.body.state_id;
-    let venpart_id = req.body.venpart_id;
-    let ven_name = req.body.ven_name;
-    let address = req.body.address ;
-    let city = req.body.city;
-    let phone = req.body.phone;
-    let website = req.body.website;
-    let contact_name = req.body.contact_name;
-    let zip = req.body.zip;
-    let email = req.body.email;
-    let keymap = req.body.keymap;
+    let make_id = req.body.make_id;
+    let make_name = req.body.make_name;
     // Query Creation
-    let query = `INSERT INTO VENDOR VALUES (${vendAttributes})`;
-    let binds = [vendor_id, state_id, venpart_id, ven_name, address, city, phone, website, contact_name, zip, email, keymap];
+    let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
+    let binds = [make_id, make_name];
     res.send(await crudOP(query, binds, false));
 });
 // READ
-app.get('/vendor', async function(req, res){
+app.get('/vehicle-make', async function(req, res){
     // For WHERE statement
     let columnName = req.body.columnName; // Search by table attribute
     let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM VENDOR WHERE ${columnName} =:columnValue`;
+        let query = `SELECT * FROM VEHICLE_MAKE WHERE ${columnName} =:columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query, binds, true));
     }else{
-        let query = 'SELECT * FROM VENDOR';
+        let query = 'SELECT * FROM VEHICLE_MAKE';
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
 });
 // UPDATE
-app.put('/vendor',async function(req, res){
-    // Columns
-    const vendAttributes = 'vendor_id = :vendor_id, state_id = :state_id, venpart_id = :venpart_id, ven_name = :ven_name, address = :address, city = :city, phone = :phone, website = :website, contact_name = :contact_name, zip = :zip, email = :email, keymap = :keymap';
+app.put('/vehicle-make', async function(req, res){
+    // Column Names
+    const vehicle_makeAttributes = 'make_name = :make_name';
     // Values
-    let vendor_id = req.body.vendor_id;
+    let make_id = req.body.make_id;
     // READ COMPARE and UPDATE
     /*READ*/
-    //Current Values
-    let readQuery = 'SELECT * FROM VENDOR WHERE vendor_id = :vendor_id';
-    let readBinds = [vendor_id];
-    let readVend = await crudOP(readQuery, readBinds, true);
-    let currentVend = readVend.rows[0];
+    // Current Values
+    let readQuery = 'SELECT * FROM VEHICLE_MAKE WHERE make_id = :make_id';
+    let readBinds = [make_id];
+    let readVehicle_make = await crudOP(readQuery, readBinds, true);
+    let currentVehicle_make = readVehicle_make.rows[0];
     // Store Old
-    let oldState_id = currentVend[1];
-    let oldVenpart_id = currentVend[2];
-    let oldVen_name = currentVend[3];
-    let oldAddress = currentVend[4];
-    let oldCity = currentVend[5];
-    let oldPhone = currentVend[6];
-    let oldWebsite = currentVend[7];
-    let oldContact_name = currentVend[8];
-    let oldZip = currentVend[9];
-    let oldEmail = currentVend[10];
-    let oldKeymap = currentVend[11];
+    let oldMake_name = currentVehicle_make[1];
     // Request New
-    let newState_id = req.body.state_id;
-    let newVenpart_id = req.body.venpart_id;
-    let newVen_name = req.body.name;
-    let newAddress = req.body.address ;
-    let newCity = req.body.city;
-    let newPhone = req.body.phone;
-    let newWebsite = req.body.website;
-    let newContact_name = req.body.contact_name;
-    let newZip = req.body.zip;
-    let newEmail = req.body.email;
-    let newKeymap = req.body.keymap;
-
+    let newMake_name = req.body.status;
     /* COMPARE and UPDATE */
-    let state_id = compare_update(oldState_id, newState_id);
-    let venpart_id = compare_update(oldVenpart_id, newVenpart_id);
-    let ven_name = compare_update(oldVen_name, newVen_name);
-    let address = compare_update(oldAddress, newAddress);
-    let city = compare_update(oldCity, newCity);
-    let phone = compare_update(oldPhone, newPhone);
-    let website = compare_update(oldWebsite, newWebsite);
-    let contact_name = compare_update(oldContact_name, newContact_name);
-    let zip = compare_update(oldZip, newZip);
-    let email = compare_update(oldEmail, newEmail);
-    let keymap = compare_update(oldKeymap, newKeymap);
-
+    let make_name = compare_update(oldMake_name, newMake_name);
     // Query Creation
-    let query = `UPDATE CUSTOMER SET ${vendAttributes} WHERE vendor_id = :vendor_id`;
-    let binds = [state_id, venpart_id, ven_name, address, city, phone, website, contact_name, zip, email, keymap, vendor_id];
+    let query = `UPDATE VEHICLE_MAKE SET ${vehicle_makeAttributes} WHERE make_id = :make_id`;
+    let binds = [make_name, make_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
-app.delete('/vendor',async function(req, res){
+app.delete('/vehicle_make', async function(req, res){
     // Values
-    let vendor_id = req.body.vendor_id;
+    let make_id = req.body.make_id;
     // Query Creation
-    let query = 'DELETE FROM CUSTOMER WHERE vendor_id = :vendor_id';
-    let binds = [vendor_id];
+    let query = 'DELETE FROM VEHICLE_MAKE WHERE make_id = :make_id';
+    let binds = [make_id];
+    res.send(await crudOP(query, binds, false));
+});
+/* VEHICLE_MODEL */ //CURRENT
+// CREATE
+app.post('/vehicle-model', async function(req, res){
+    // Column Name
+    const vehicle_modelAttributes = ':model_id, :make_id, :model';
+    // Values
+    let model_id = req.body.model_id;
+    let make_id = req.body.make_id;
+    let model = req.body.model;
+    // Query Creation
+    let query = `INSERT INTO VEHICLE_MODEL VALUES (${vehicle_modelAttributes})`;
+    let binds = [model_id, make_id, model];
+    res.send(await crudOP(query, binds, false));
+});
+// READ
+app.get('/vehicle-model', async function(req, res){
+    // For WHERE statement
+    let columnName = req.body.columnName; // Search by table attribute
+    let columnValue = req.body.columnValue; // Value of attribute
+    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
+    // Query Creation
+    if (isRestricted){
+        let query = `SELECT * FROM VEHICLE_MODEL WHERE ${columnName} =:columnValue`;
+        let binds = [columnValue];
+        // Send a response
+        res.send(await crudOP(query, binds, true));
+    }else{
+        let query = 'SELECT * FROM VEHICLE_MODEL';
+        // Send a response
+        res.send(await crudOP(query, undefined, true));
+    }
+});
+// UPDATE
+app.put('/vehicle-model', async function(req, res){
+    // Column Names
+    const vehicle_modelAttributes = 'make_id = :make_id, model = :model'
+    // Values
+    let model_id = req.body.model_id;
+    // READ COMPARE and UPDATE
+    /*READ*/
+    // Current Values
+    let readQuery = 'SELECT * FROM VEHICLE_MODEL WHERE model_id = :model_id';
+    let readBinds = [model_id];
+    let readVehicle_model = await crudOP(readQuery, readBinds, true);
+    let currentModel = readVehicle_model.rows[0];
+    // Store Old
+    let oldMake_id =  currentModel[1];
+    let oldModel = currentModel[2];
+    // Request New
+    let newMake_id = req.body.make_id;
+    let newModel = req.body.model;
+    /* COMPARE and UPDATE */
+    let make_id = compare_update(oldMake_id, newMake_id);
+    let model = compare_update(oldModel, newModel);
+    // Query Creation
+    let query = `UPDATE VEHICLE_MODEL SET ${vehicle_modelAttributes} WHERE model_id = :model_id`;
+    let binds = [make_id, model, model_id];
+    res.send(await crudOP(query, binds, false));
+});
+// DELETE
+app.delete('/vehicle-model', async function(req, res){
+    // Values
+    let model_id = req.body.model_id;
+    // Query Creation
+    let query = 'DELETE FROM VEHICLE_MODEL WHERE model_id = :model_id';
+    let binds = [model_id];
     res.send(await crudOP(query, binds, false));
 });
 
-/* STATE */
+/* STATE */ //CURRENT
 // CREATE
 app.post('/state', async function(req, res){
     // Columm Names
