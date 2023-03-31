@@ -19,33 +19,39 @@ body {
     padding: 20px;
     background-color: #FFFFFF;
   }
-  
-  .logo {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  
-  .nav {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .nav a {
-    margin-bottom: 10px;
-    padding: 10px;
-    color: #333;
+/* The side navigation menu */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 250px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 10px;
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    }
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.2s ease-in-out;
+    font-size: 25px;
+    color: #333;
+    display: block;
+    transition: 0.3s ease-in-out;
   }
   
-  .nav a:hover {
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
     background-color: #bfeaff;
-    width:fit-content;
+  }
+  
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    position:fixed;
+    margin-left: 250px;
+    transition: margin-left .5s;
+    padding: 20px;
   }
   
   .right-column {
@@ -82,29 +88,14 @@ body {
     font-family: "Samurai";
     src: url("/fonts/Samurai.ttf") format("truetype");
   }
-  footer span {
+  footer {
     font-family: Arial, sans-serif;
   }
   .normal-font {
     font-family: Arial, sans-serif;
   }
-  @media (max-width: 768px) {
-    .left-column {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 1200px) {
-    .container {
-      min-width: 800px;
-    }
-  }
   .bottomrow {
     font-family: 'Arial', sans-serif;
     font-size: 16px;
     font-weight: normal;
-  }
-  .nav.hidden {
-    display: none;
-    background-color: #bfeaff;
-
   }
