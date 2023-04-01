@@ -97,10 +97,11 @@ app.get('/lookup', async function(req, res){
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = ":emp_id, :emp_status_id, :emp_address, :email, :city, :state, :zip, :phone, :datehired, :lname, :fname, :sex";
+    const empAttributes = ":emp_id, :emp_status_id, :state_id, :emp_address, :email, :city, :state, :zip, :phone, :datehired, :lname, :fname, :sex";
     // Values
     let emp_id = req.body.emp_id;
     let emp_status_id = req.body.emp_status_id;
+    let state_id = req.body.state_id;
     let emp_address = req.body.emp_address;
     let email = req.body.email;
     let city = req.body.city;
@@ -113,7 +114,7 @@ app.post('/employee', async function(req, res){
     let sex = req.body.sex;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_id, emp_status_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex];
+    let binds = [emp_id, emp_status_id, state_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex];
     res.send(await crudOP(query, binds, false));
 });
 // READ
@@ -137,7 +138,7 @@ app.get('/employee', async function(req, res){
 // UPDATE
 app.put('/employee', async function(req, res){
     // Columns
-    const empAttributes = "emp_status_id = :emp_status_id, emp_address = :emp_address, email = :email, city = :city, state = :state, zip = :zip, phone = :phone, datehired = :datehired, lname = :lname, fname = :fname, sex = :sex"
+    const empAttributes = "emp_status_id = :emp_status_id, state_id = :state_id, emp_address = :emp_address, email = :email, city = :city, state = :state, zip = :zip, phone = :phone, datehired = :datehired, lname = :lname, fname = :fname, sex = :sex"
     // Values
     let emp_id = req.body.emp_id;
     // READ COMPARE and UPDATE
@@ -149,18 +150,20 @@ app.put('/employee', async function(req, res){
     let currentEmp = readEmp.rows[0];
     // Store Old
     let oldEmp_status_id = currentEmp[1];
-    let oldEmp_address = currentEmp[2];
-    let oldEmail = currentEmp[3]
-    let oldCity = currentEmp[4];
-    let oldState = currentEmp[5];
-    let oldZip = currentEmp[6];
-    let oldPhone = currentEmp[7];
-    let oldDateHired = currentEmp[8];
-    let oldLname = currentEmp[9];
-    let oldFname = currentEmp[10];
-    let oldSex = currentEmp[11];
+    let oldState_id = currentEmp[2];
+    let oldEmp_address = currentEmp[3];
+    let oldEmail = currentEmp[4];
+    let oldCity = currentEmp[5];
+    let oldState = currentEmp[6];
+    let oldZip = currentEmp[7];
+    let oldPhone = currentEmp[8];
+    let oldDateHired = currentEmp[9];
+    let oldLname = currentEmp[10];
+    let oldFname = currentEmp[11];
+    let oldSex = currentEmp[12];
     // Request New
     let newEmp_status_id = req.body.emp_status_id;
+    let newState_id = req.body.state_id;
     let newEmp_address = req.body.emp_address;
     let newEmail = req.body.email;
     let newCity = req.body.city;
@@ -174,6 +177,7 @@ app.put('/employee', async function(req, res){
 
     /* COMPARE and UPDATE */
     let emp_status_id = compare_update(oldEmp_status_id, newEmp_status_id);
+    let state_id = compare_update(oldState_id, newState_id);
     let emp_address = compare_update(oldEmp_address, newEmp_address);
     let email = compare_update(oldEmail, newEmail);
     let city = compare_update(oldCity, newCity);
@@ -191,7 +195,7 @@ app.put('/employee', async function(req, res){
     let sex = compare_update(oldSex, newSex);
     // Query Creation 
     let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
-    let binds = [emp_status_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex, emp_id];
+    let binds = [emp_status_id, state_id, emp_address, email, city, state, zip, phone, datehired, lname, fname, sex, emp_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
@@ -513,10 +517,11 @@ app.delete('/service', async function(req, res){
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
-    const custAttributes = ':cust_id, :cust_status_id, :name, :license_num, :lic_address, :lic_city, :lic_state, :zip, :phone, :email';
+    const custAttributes = ':cust_id, :cust_status_id, :state_id, :name, :license_num, :lic_address, :lic_city, :lic_state, :zip, :phone, :email';
     // Values
     let cust_id = req.body.cust_id;
     let cust_status_id = req.body.cust_status_id;
+    let state_id = req.body.state_id;
     let name = req.body.name;
     let license_num = req.body.license_num;
     let lic_address = req.body.address;
@@ -527,7 +532,7 @@ app.post('/customer',async function(req, res){
     let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email];
+    let binds = [cust_id, cust_status_id, state_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email];
     res.send(await crudOP(query, binds, false));
 });
 // READ
@@ -551,7 +556,7 @@ app.get('/customer', async function(req, res){
 // UPDATE
 app.put('/customer', async function(req, res){
     // Columns
-    const custAttributes = 'cust_status_id = :cust_status_id, name = :name, license_num = :license_num, lic_address = :lic_address, lic_city = :lic_city, lic_state = :lic_state, zip = :zip, phone = :phone, email = :email';
+    const custAttributes = 'cust_status_id = :cust_status_id, state_id = :state_id, name = :name, license_num = :license_num, lic_address = :lic_address, lic_city = :lic_city, lic_state = :lic_state, zip = :zip, phone = :phone, email = :email';
     // Values
     let cust_id = req.body.cust_id;
     // READ COMPARE and UPDATE
@@ -563,16 +568,18 @@ app.put('/customer', async function(req, res){
     let currentCust = readCust.rows[0];
     // Store Old
     let oldCust_status_id = currentCust[1];
-    let oldName = currentCust[2];
-    let oldLicense_num = currentCust[3];
-    let oldLic_address = currentCust[4];
-    let oldLic_city = currentCust[5];
-    let oldLic_state = currentCust[6];
-    let oldZip = currentCust[7];
-    let oldPhone = currentCust[8];
-    let oldEmail = currentCust[9];
+    let oldState_id = currentCust[2];
+    let oldName = currentCust[3];
+    let oldLicense_num = currentCust[4];
+    let oldLic_address = currentCust[5];
+    let oldLic_city = currentCust[6];
+    let oldLic_state = currentCust[7];
+    let oldZip = currentCust[8];
+    let oldPhone = currentCust[9];
+    let oldEmail = currentCust[10];
     // Request New
     let newCust_status_id = req.body.cust_status_id;
+    let newState_id = req.body.state_id;
     let newName = req.body.name;
     let newLicense_num = req.body.license_num;
     let newLic_address = req.body.lic_address;
@@ -584,6 +591,7 @@ app.put('/customer', async function(req, res){
 
     /* COMPARE and UPDATE */
     let cust_status_id = compare_update(oldCust_status_id, newCust_status_id);
+    let state_id = compare_update(oldState_id, newState_id);
     let name = compare_update(oldName, newName);
     let license_num = compare_update(oldLicense_num, newLicense_num);
     let lic_address = compare_update(oldLic_address, newLic_address);
@@ -594,7 +602,7 @@ app.put('/customer', async function(req, res){
     let email = compare_update(oldEmail, newEmail);
     // Query Creation
     let query = `UPDATE CUSTOMER SET ${custAttributes} WHERE cust_id = :cust_id`;
-    let binds = [cust_status_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email, cust_id];
+    let binds = [cust_status_id, state_id, name, license_num, lic_address, lic_city, lic_state, zip, phone, email, cust_id];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
@@ -679,17 +687,18 @@ app.delete('/customer-status', async function(req, res){
 // CREATE
 app.post('/vehicle', async function(req, res){
     // Column Name
-    const vehicleAttributes = ':vehicle_id, :model_id, :customer_id, :vin, :license_plate, :year';
+    const vehicleAttributes = ':vehicle_id, :cust_id, :model_id, :color, :year, :license_plate, :vin';
     // Values
     let vehicle_id = req.body.vehicle_id;
+    let cust_id = req.body.cust_id;
     let model_id = req.body.model_id;
-    let customer_id = req.body.customer_id;
-    let vin = req.body.vin;
-    let license_plate = req.body.license_plate;
+    let color = req.body.color;
     let year = req.body.year;
+    let license_plate = req.body.license_plate;
+    let vin = req.body.vin;
     // Query Creation
     let query = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let binds = [vehicle_id, model_id, customer_id, vin, license_plate, year];
+    let binds = [vehicle_id, cust_id, model_id, color, year, license_plate, vin];
     res.send(await crudOP(query, binds, false));
 });
 // READ
@@ -713,7 +722,7 @@ app.get('/vehicle', async function(req, res){
 // UPDATE
 app.put('/vehicle', async function(req, res){
     // Column Names
-    const vehicleAttributes = 'model_id = :model_id, customer_id = :customer_id, vin = :vin, license_plate = :license_plate, year = :year';
+    const vehicleAttributes = 'cust_id = :cust_id, model_id = :model_id, color_id, year = :year, license_plate = :license_plate, vin = :vin';
     // Values
     let vehicle_id = req.body.vehicle_id;
     // READ COMPARE and UPDATE
@@ -724,26 +733,29 @@ app.put('/vehicle', async function(req, res){
     let readVehicle= await crudOP(readQuery, readBinds, true);
     let currentVehicle = readVehicle.rows[0];
     // Store Old
-    let oldModel_id = currentVehicle[1];
-    let oldCustomer_id = currentVehicle[2];
-    let oldVin = currentVehicle[3];
-    let oldLicense_plate = currentVehicle[4];
-    let oldYear = currentVehicle[5];
+    let oldCust_id = currentVehicle[1];
+    let oldModel_id = currentVehicle[2];
+    let oldColor = currentVehicle[3];
+    let oldYear = currentVehicle[4];
+    let oldLicense_plate = currentVehicle[5];
+    let oldVin = currentVehicle[6];
     // Request New
+    let newCust_id = req.body.cust_id;
     let newModel_id = req.body.model_id;
-    let newCustomer_id = req.body.customer_id;
-    let newVin = req.body.vin;
-    let newLicense_plate = req.body.license_plate;
+    let newColor = req.body.color;
     let newYear = req.body.year;
+    let newLicense_plate = req.body.license_plate;
+    let newVin = req.body.vin;
     /* COMPARE and UPDATE */
+    let cust_id = compare_update(oldCust_id, newCust_id);
     let model_id = compare_update(oldModel_id, newModel_id);
-    let customer_id = compare_update(oldCustomer_id, newCustomer_id);
-    let vin = compare_update(oldVin, newVin);
-    let license_plate = compare_update(oldLicense_plate, newLicense_plate);
+    let color = compare_update(oldColor, newColor);
     let year = compare_update(oldYear, newYear);
+    let license_plate = compare_update(oldLicense_plate, newLicense_plate);
+    let vin = compare_update(oldVin, newVin);
     // Query Creation
     let query = `UPDATE VEHICLE SET ${vehicleAttributes} WHERE vehicle_id = :vehicle_id`;
-    let binds = [model_id, customer_id, vin, license_plate, year, vehicle_id,];
+    let binds = [cust_id, model_id, color, year, license_plate, vin];
     res.send(await crudOP(query, binds, false));
 });
 // DELETE
