@@ -13,13 +13,13 @@
         <div class="content">
           <div class="customer-info">
             <div class="profile-photo">
-              <img src="/img/profile-placeholder.png" alt="Profile Photo">
+              <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
             </div>
             <div class="customer-details">
-              <h1><%= Customer.name %></h1>
-              <p>Address:<%= customer.address %></p>
-              <p>Phone: <%= customer.phone %></p>
-              <p>Email: <%= customer.email %></p>
+              <h1>Stephane Lutz</h1>
+              <p>Address: 123 deserted ln</p>
+              <p>Phone: (281) 555 - 5555</p>
+              <p>Email: jnae@gmail.com</p>
             </div>
           </div>
           <div class="vehicle-info">
@@ -35,10 +35,10 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><%= vehicle.make %></td>
-                  <td><%= vehicle.model %></td>
-                  <td><%= vehicle.year %></td>
-                  <td><%= vehicle.license_plate %></td>
+                  <td>Hyundai</td>
+                  <td>Elantra</td>
+                  <td>2017</td>
+                  <td>TYY4586</td>
                 </tr>
                 <tr>
                   <td>Honda</td>
@@ -68,7 +68,7 @@
                   <td>03/01/2023</td>
                   <td>$29.99</td>
                   <td>
-                    <button class="edit-service-button">Edit</button>
+                    <button class="edit-service-button" data-service-id="<%= service.id %>">Edit</button>
                     <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>

@@ -5,6 +5,12 @@ const axios =   require('axios');
 const app = express();
 const port = 5173;
 
+/////////////////////////////////////////////////////////////////////////
+//this is for the customer lookup page, still trying
+const FromtheBACK = require('server.js');
+app.use('/lookup', FromtheBACK);
+/////////////////////////////////////////////////////////////////////////
+
 app.set("views", path.resolve(__dirname, "views"));
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine","ejs");
@@ -32,7 +38,7 @@ app.get('/', function(req, res) {
   app.get('/createcustomer', function(req, res) {
     res.render('createcustomer');
   });
-//temporary nav link here I just wanted to see how it looks ok
+//temporary nav link here I just wanted to see how it looks 
   app.get('/customer', function(req, res) {
     res.render('customer');
   });
