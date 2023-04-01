@@ -9,14 +9,72 @@
         <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">THIS IS THE settings which can give the option to change the design of the GUI
-          and access database?
-          create an about me page
+        <div class="bottomrow">
+          <div class="section">
+            <h2>Account Information</h2>
+            <form>
+              <div class="col-md-6">
+                <label for="companyName" class="form-label">Company Name:</label><br>
+                <input type="text" id="companyName" name="companyName" class="form-control"><br>
+              </div>
+              <div class="col-md-6">
+                <label for="sponsorName" class="form-label">Sponsor Name:</label><br>
+                <input type="text" id="sponsorName" name="sponsorName" class="form-control" ><br>
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email:</label><br>
+                <input type="email" id="email" name="email" class="form-control"><br>
+              </div>
+              <div class="col-8">
+                <label for="address" class="form-label">Address:</label><br>
+                <input type="text" id="address" name="address" class="form-control" placeholder="1234 Main St"><br>
+              </div>
+              <div class="col-md-4">
+                  <label for="phone" class="form-label">Phone Number:</label><br>
+                  <input type="tel" id="phone" name="phone" class="form-control" oninput="formatPhoneNumber(this)"><br>
+                </select>
+              </div>
+              <button type="button" onclick="saveAccountSettings()" class="btn btn-primary">Save</button>
+              <button type="button" onclick="changeAccountSettings()" class="btn btn-primary">Change Information</button>
+            </form>
+          </div>
+          <br>
+          <div class="section">
+            <h2>Theme</h2>
+            <p>Choose your preferred theme here.</p>
+            <button onclick="setTheme('theme1')" class="btn btn-primary">Light Mode</button>
+            <button onclick="setTheme('theme4')" class="btn btn-primary">Dark Mode</button>
+            <button onclick="setTheme('theme2')" class="btn btn-primary">Light Green</button>
+            <button onclick="setTheme('theme3')" class="btn btn-primary">Red</button>
+            <button onclick="setRandomTheme()" class="btn btn-primary">Random</button>
+          </div>
+          <br>
+            <div class="section">
+            <h2>Change Font Size </h2>
+            <p>Adjust the font size of your pages to your preference.</p>
+            <button onclick="increaseFontSize()" class="btn btn-primary">Increase Font Size</button>
+            <button onclick="decreaseFontSize()" class="btn btn-primary">Decrease Font Size</button>
+            <button onclick="resetFontSize()" class="btn btn-primary">Reset Font Size</button>
+          </div>
+          <br>
+          <div class="section">
+            <h2>About Us</h2>
+            <br>
+            <h4><em>"Rev up your business with our tech solutions."</em></h4>
+            <img src="/images/GroupLOGO.PNG" alt="Image description" style="float: left; margin-right: 20px; width: 300px; transition: transform 0.5s; border-radius: 10px; border: 2px solid lightblue;">
+            <p><b>Learn more about the site and its creators here.</b></p>
+            <p>Auto Tech Systems provides specialized IT services 
+              to mechanics and automotive workshops, helping them streamline 
+              their operations and increase productivity. Our software solutions are designed to 
+              help mechanics manage their work orders, inventory, and customer 
+              information efficiently. We also offer hardware and network solutions 
+              to ensure that our clients' systems are secure and running smoothly. 
+              Our team of IT experts is dedicated to providing excellent customer 
+              service and technical support to help our clients succeed in their 
+              business.</p>
+          </div>
         </div>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
       </div>
-    </div>        
-  </body>
+    </div>
+  </body>   
 </html>
