@@ -29,7 +29,35 @@ app.get('/', function(req, res) {
     res.render('customerlookup');
   });
   
-  app.get('/createcustomer', function(req, res) {
+  app.get('/createcustomer', async function(req, res) {
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return 'ERROR'
+      }else{
+        return response.data.rows
+      }
+    });
+    const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return 'ERROR'
+      }else{
+        return response.data.rows
+      }
+    });
+    const getMake = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return 'ERROR'
+      }else{
+        return response.data.rows
+      }
+    });
+    console.log(getStates);
+    console.log(getServices);
+    console.log(getMake);
+    
     res.render('createcustomer');
   });
   
