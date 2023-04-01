@@ -1,92 +1,84 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <%- include('partials/head.ejs'); %>
-    
-  </head>
-  <body>
-    <div class="container">
-        <%- include('partials/leftcolumn.ejs'); %>
-      <div class="right-column">
-        <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">this is create customer, so it needs to have a form to connect to the backend</div>
-        <form class="row g-3">
-          <h2>Create Customer Form</h2>
-          <div class="col-md-6">
-            <label for="inputFirstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName">
-          </div>
-          <div class="col-md-6">
-            <label for="inputLastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName">
-          </div>
-          <div class="col-md-6">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4">
-          </div>
-          <div class="col-12">
-            <label for="licensenum" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="licenseNum" 
-          </div>
-          <div class="col-12">
-            <label for="inputAddress" class="form-label">Address</label>
-            <input type="text" class="form-control" id="inputAddress" 
-          </div>
-          <div class="col-md-6">
-            <label for="inputCity" class="form-label">City</label>
-            <input type="text" class="form-control" id="inputCity">
-          </div>
-          <div class="col-md-4">
-            <label for="inputState" class="form-label">State</label>
-            <select id="inputState" class="form-select">
-                <option selected></option>
-              <% states.forEach(function(state){ %>
-                <option value=<%= state[0] %>><%= state[1] %></option>
-              <% }); %>
-            </select>
-          </div>
-          <div class="col-md-2">
-            <label for="inputZip" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
-          </div>
-          <h3>Car Details</h3>
-          <div class="col-md-4">
-            <label for="inputService" class="form-label">Service</label>
-            <select id="inputService" class="form-select">
-                <option selected></option>
-              <% services.forEach(function(service){ %>
-                <option value=<%= service[0] %>><%= service[1] %></option>
-              <% }); %>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="inputMake" class="form-label">Make</label>
-            <select id="inputMake" class="form-select">
-                <option selected></option>
-              <% makes.forEach(function(make){ %>
-                <option value=<%= make[0] %>><%= make[1] %></option>
-              <% }); %>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="inputModel" class="form-label">Model</label>
-            <select id="inputModel" class="form-select">
-              <option ></option>
-              <option>...</option>
-            </select>
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
-      </div>
-    </div>       
-  </body>
-  
+    <head>
+        <%- include('partials/head.ejs'); %>
+    </head>
+    <body>
+        <div class="container">
+            <%- include('partials/leftcolumn.ejs'); %>
+            <div class="right-column">
+                <%- include('partials/header.ejs'); %>
+                <form class="row g-3" method="POST">
+                    <h2>New Customer</h2>
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName"> 
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="license_num" class="form-label">License Number</label>
+                        <input type="text" class="form-control" id="license_num">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="state" class="form-label">State</label>
+                        <select id="state" class="form-select">
+                            <option selected></option>
+                          <% states.forEach(function(state){ %>
+                            <option value=<%= state[0] %>><%= state[1] %></option>
+                          <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="zip" class="form-label">Zip</label>
+                        <input type="text" class="form-control" id="zip">
+                    </div>
+                    <h3>Car Details</h3>
+                    <div class="col-md-6">
+                        <label for="service" class="form-label">Service</label>
+                        <select id="service" class="form-select">
+                            <option selected></option>
+                          <% services.forEach(function(service){ %>
+                            <option value=<%= service[0] %>><%= service[1] %></option>
+                          <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="make" class="form-label">Make</label>
+                        <select id="make" class="form-select">
+                            <option selected></option>
+                          <% makes.forEach(function(make){ %>
+                            <option value=<%= make[0] %>><%= make[1] %></option>
+                          <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="model" class="form-label">Model</label>
+                        <select id="model" class="form-select">
+                          <option selected></option>
+                          <option>...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <footer>
+                    <%- include('partials/footer.ejs'); %>
+                </footer>
+            </div>
+        </div>
+    </body>
 </html>
-
-
-
-
