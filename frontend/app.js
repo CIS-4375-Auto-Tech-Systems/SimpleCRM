@@ -33,7 +33,7 @@ app.get('/', function(req, res) {
     const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
-        return 'ERROR'
+        return [['ERROR','ERROR']]
       }else{
         return response.data.rows
       }
@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
     const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
-        return 'ERROR'
+        return [['ERROR','ERROR']]
       }else{
         return response.data.rows
       }
@@ -49,16 +49,17 @@ app.get('/', function(req, res) {
     const getMake = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
-        return 'ERROR'
+        return [['ERROR','ERROR']]
       }else{
         return response.data.rows
       }
     });
-    console.log(getStates);
-    console.log(getServices);
-    console.log(getMake);
-    
-    res.render('createcustomer');
+
+    res.render('createcustomer', {
+      states: getStates,
+      services: getServices,
+      makes: getMake
+    });
   });
   
 

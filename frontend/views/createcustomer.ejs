@@ -39,8 +39,10 @@
           <div class="col-md-4">
             <label for="inputState" class="form-label">State</label>
             <select id="inputState" class="form-select">
-              <option selected></option>
-              <option>...</option>
+                <option selected></option>
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-2">
@@ -51,15 +53,19 @@
           <div class="col-md-4">
             <label for="inputService" class="form-label">Service</label>
             <select id="inputService" class="form-select">
-              <option selected></option>
-              <option>...</option>
+                <option selected></option>
+              <% services.forEach(function(service){ %>
+                <option value=<%= service[0] %>><%= service[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-4">
             <label for="inputMake" class="form-label">Make</label>
             <select id="inputMake" class="form-select">
-              <option selected></option>
-              <option>...</option>
+                <option selected></option>
+              <% makes.forEach(function(make){ %>
+                <option value=<%= make[0] %>><%= make[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-4">
