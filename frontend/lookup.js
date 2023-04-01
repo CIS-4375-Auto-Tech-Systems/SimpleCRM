@@ -69,3 +69,41 @@ searchButton.addEventListener('click', () => {
     }
   };
   xhr.send();
+
+
+  // Add an event listener for the "Edit" button
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('edit-service-button')) {
+      // Get the service ID from the data attribute
+      const serviceId = e.target.getAttribute('data-service-id');
+      // Redirect the user to the edit service page with the service ID as a parameter
+      window.location.href = '/edit-service?serviceId=' + serviceId;
+    }
+  });
+
+  // Add an event listener for the "Delete" button
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('delete-service-button')) {
+      // Get the service ID from the data attribute
+      const serviceId = e.target.getAttribute('data-service-id');
+      // Confirm with the user that they want to delete the service
+      const confirmDelete = confirm('Are you sure you want to delete this service?');
+      if (confirmDelete) {
+        // Delete the service from the database
+        fetch('/delete-service', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ serviceId: serviceId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Reload the page to show the updated list of services
+          window.location.reload();
+        })
+        .catch(error => console.error(error));
+      }
+    }
+  });
+  
