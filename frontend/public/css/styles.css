@@ -19,19 +19,17 @@ body {
     padding: 20px;
     background-color: #FFFFFF;
   }
-/* The side navigation menu */
 .sidenav {
-    height: 100%; /* 100% Full-height */
-    width: 250px; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
+    height: 100%; 
+    width: 250px; 
+    position: fixed; 
+    z-index: 1; 
+    top: 0; 
     left: 0;
-    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-x: hidden; 
     padding-top: 10px;
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    transition: 0.5s;
     }
-  /* The navigation menu links */
   .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
@@ -41,17 +39,19 @@ body {
     transition: 0.3s ease-in-out;
   }
   
-  /* When you mouse over the navigation links, change their color */
+
   .sidenav a:hover {
     background-color: #bfeaff;
   }
   
-  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  
   #main {
     position:fixed;
     margin-left: 250px;
     transition: margin-left .5s;
     padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
   }
   
   .right-column {
@@ -61,6 +61,7 @@ body {
     width: 200%;
     padding: 20px;
     border-left: 3px solid #ddd;
+    overflow-y: auto;
   }
   .right-column .toprow {
     display: flex;
@@ -73,7 +74,9 @@ body {
   }
   
   .bottomrow {
+    width: 100%;
     height: 100%;
+    margin: 0;
   }
 
   .info {
@@ -88,15 +91,6 @@ body {
     font-family: "Samurai";
     src: url("/fonts/Samurai.ttf") format("truetype");
   }
-  footer {
-    border-top: 3px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 200%;
-    margin-left: -3%;
-    font-family: Arial, sans-serif;
-  }
   .normal-font {
     font-family: Arial, sans-serif;
   }
@@ -105,8 +99,41 @@ body {
     font-size: 16px;
     font-weight: normal;
   }
- #clock {
+  #clock {
     font-size: 2em;
     text-align: center;
     margin-top: 1em;
+  }
+  :root {
+    --background-color: #fff;
+    --text-color: #000;
+  }
+  .theme1 {
+    --background-color: #fff;
+    --text-color: #000;
+  }
+  
+  .theme2 {
+    --background-color: #10e6b7;
+    --text-color: #000;
+  }
+  
+  .theme3 {
+    --background-color: #f00;
+    --text-color: #000;
+  }
+  .theme4 {
+    --background-color: #333;
+    --text-color: #fff;
+    color: #fff;
+  }
+  .theme4 .sidenav a {
+    color: #fff;
+  }
+  .theme5 {
+    --background-color: var(--random-background-color);
+    --text-color: var(--random-text-color);
+  }
+  img:hover {
+    transform: rotate(360deg);
   }
