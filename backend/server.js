@@ -389,7 +389,7 @@ app.post('/order-status', async function(req, res) {
     let order_status_id = req.body.order_status_id;
     let status = req.body.status;
     // Query Creation
-    let query = `INSERT INTO INV_STATUS VALUES (${order_statAttributes})`;
+    let query = `INSERT INTO ORDER_STATUS VALUES (${order_statAttributes})`;
     let binds = [order_status_id, status];
     res.send(await crudOP(query, binds, false));
 });
@@ -401,12 +401,12 @@ app.get('/order-status', async function(req, res){
     let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
     // Query Creation
     if (isRestricted){
-        let query = `SELECT * FROM INV_STATUS WHERE ${columnName} = :columnValue`;
+        let query = `SELECT * FROM ORDER_STATUS WHERE ${columnName} = :columnValue`;
         let binds = [columnValue];
         // Send a response
         res.send(await crudOP(query, binds, true));
     }else{
-        let query = 'SELECT * FROM INV_STATUS';
+        let query = 'SELECT * FROM ORDER_STATUS';
         // Send a response
         res.send(await crudOP(query, undefined, true));
     }
