@@ -76,9 +76,10 @@ async function crudOP(query, binds, isRead){
 };
 /* Compare and Update */
 function compare_update(oldValue, newValue) {
-    if (oldValue.toUpperCase() == newValue.toUpperCase()) {
+    console.log(oldValue, newValue)
+    if (oldValue.toString().toUpperCase() == newValue.toString().toUpperCase()) {
         return oldValue;
-    } else if (oldValue.toUpperCase() != newValue.toUpperCase()) {
+    } else if (oldValue.toString().toUpperCase() != newValue.toString().toUpperCase()) {
         return newValue;
     }
 };
@@ -114,7 +115,13 @@ app.post('/employee', async function(req, res){
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
     let binds = [emp_id, emp_status_id, state_id, fname, lname,emp_address, city, state, zip, phone, datehired, sex];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected employee by ROWID to send back
+    let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/employee', async function(req, res){
@@ -162,8 +169,8 @@ app.put('/employee', async function(req, res){
     // Request New
     let newEmp_status_id = req.body.emp_status_id;
     let newState_id = req.body.state_id;
-    let newFname = req.body.firstname;
-    let newLname = req.body.lastname;
+    let newFname = req.body.fname;
+    let newLname = req.body.lname;
     let newEmp_address = req.body.emp_address;
     let newCity = req.body.city;
     let newState = req.body.state;
@@ -192,7 +199,13 @@ app.put('/employee', async function(req, res){
     // Query Creation 
     let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
     let binds = [emp_status_id, state_id, fname, lname, emp_address, city, state, zip, phone, datehired, sex, emp_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false)
+        // Find Affected employee by ROWID to send back
+    let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/employee',async function(req, res){
@@ -215,7 +228,13 @@ app.post('/employee-status', async function(req, res){
     // Query Creation
     let query = `INSERT INTO EMP_STATUS VALUES (${emp_statusAttributes})`;
     let binds = [emp_status_id, status, status_desc];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected emp_status by ROWID to send back
+    let lastItemQuery = `SELECT * FROM EMP_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/employee-status', async function(req, res){
@@ -260,7 +279,13 @@ app.put('/employee-status', async function(req, res){
     // Query Creation
     let query = `UPDATE EMP_STATUS SET ${emp_statusAttributes} WHERE emp_status_id = :emp_status_id`;
     let binds = [status, status_desc, emp_status_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected emp_status by ROWID to send back
+    let lastItemQuery = `SELECT * FROM EMP_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/employee-status', async function(req, res){
@@ -291,9 +316,15 @@ app.post('/service-order', async function(req, res) {
     let odometer = req.body.odometer;
     let description = req.body.description;
     // Query Creation
-    let query = `INSERT INTO INVOICE VALUES (${service_orderAttributes})`;
+    let query = `INSERT INTO SERVICE_ORDER VALUES (${service_orderAttributes})`;
     let binds = [order_id, order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected service_order by ROWID to send back
+    let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/service-order', async function(req, res){
@@ -365,7 +396,13 @@ app.put('/service-order', async function(req, res){
     // Query Creation
     let query = `UPDATE SERVICE_ORDER SET ${service_orderAttributes} WHERE order_id = :order_id`;
     let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description, order_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected service_order by ROWID to send back
+    let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/service-order', async function(req, res){
@@ -387,7 +424,13 @@ app.post('/order-status', async function(req, res) {
     // Query Creation
     let query = `INSERT INTO ORDER_STATUS VALUES (${order_statAttributes})`;
     let binds = [order_status_id, status];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected order_status by ROWID to send back
+    let lastItemQuery = `SELECT * FROM ORDER_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/order-status', async function(req, res){
@@ -429,7 +472,13 @@ app.put('/order-status', async function(req, res){
     // Query Creation
     let query = `UPDATE ORDER_STATUS SET ${order_statAttributes} WHERE order_status_id = :order_status_id`;
     let binds = [status, order_status_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected employee by order_status to send back
+    let lastItemQuery = `SELECT * FROM ORDER_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/order-status', async function(req, res){
@@ -452,7 +501,13 @@ app.post('/service', async function(req, res){
     // Query Creation
     let query = `INSERT INTO SERVICE VALUES (${serviceAttributes})`;
     let binds = [service_id, service_name, price];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected service by ROWID to send back
+    let lastItemQuery = `SELECT * FROM SERVICE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/service', async function(req, res){
@@ -497,7 +552,13 @@ app.put('/service', async function(req, res){
     // Query Creation
     let query = `UPDATE SERVICE SET ${serviceAttributes} WHERE service_id = :service_id`;
     let binds = [service_name, price, service_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected service by ROWID to send back
+    let lastItemQuery = `SELECT * FROM SERVICE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/service', async function(req, res){
@@ -529,7 +590,13 @@ app.post('/customer',async function(req, res){
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
     let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected customer by ROWID to send back
+    let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/customer', async function(req, res){
@@ -566,12 +633,12 @@ app.put('/customer', async function(req, res){
     let oldCust_status_id = currentCust[1];
     let oldState_id = currentCust[2];
     let oldName = currentCust[3];
-    let oldAddress = currentCust[5];
-    let oldCity = currentCust[6];
-    let oldState = currentCust[7];
-    let oldZip = currentCust[8];
-    let oldPhone = currentCust[9];
-    let oldLicense_num = currentCust[4];
+    let oldAddress = currentCust[4];
+    let oldCity = currentCust[5];
+    let oldState = currentCust[6];
+    let oldZip = currentCust[7];
+    let oldPhone = currentCust[8];
+    let oldLicense_num = currentCust[9];
     let oldEmail = currentCust[10];
     // Request New
     let newCust_status_id = req.body.cust_status_id;
@@ -599,7 +666,13 @@ app.put('/customer', async function(req, res){
     // Query Creation
     let query = `UPDATE CUSTOMER SET ${custAttributes} WHERE cust_id = :cust_id`;
     let binds = [cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email, cust_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected customer by ROWID to send back
+    let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/customer',async function(req, res){
@@ -621,7 +694,13 @@ app.post('/customer-status', async function(req, res) {
     // Query Creation
     let query = `INSERT INTO CUST_STATUS VALUES (${cust_statAttributes})`;
     let binds = [cust_status_id, status];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected customer_status by ROWID to send back
+    let lastItemQuery = `SELECT * FROM CUST_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/customer-status', async function(req, res){
@@ -663,7 +742,13 @@ app.put('/customer-status', async function(req, res){
     // Query Creation
     let query = `UPDATE CUST_STATUS SET ${cust_statAttributes} WHERE cust_status_id = :cust_status_id`;
     let binds = [status, cust_status_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected customer_status by ROWID to send back
+    let lastItemQuery = `SELECT * FROM CUST_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 //DELETE
 app.delete('/customer-status', async function(req, res){
@@ -691,7 +776,13 @@ app.post('/vehicle', async function(req, res){
     // Query Creation
     let query = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
     let binds = [vehicle_id, cust_id, model_id, color, year, license_plate, vin];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/vehicle', async function(req, res){
@@ -748,7 +839,13 @@ app.put('/vehicle', async function(req, res){
     // Query Creation
     let query = `UPDATE VEHICLE SET ${vehicleAttributes} WHERE vehicle_id = :vehicle_id`;
     let binds = [cust_id, model_id, color, year, license_plate, vin];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/vehicle', async function(req, res){
@@ -770,7 +867,13 @@ app.post('/vehicle-make', async function(req, res){
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
     let binds = [make_id, make_name];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle_make by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/vehicle-make', async function(req, res){
@@ -812,7 +915,13 @@ app.put('/vehicle-make', async function(req, res){
     // Query Creation
     let query = `UPDATE VEHICLE_MAKE SET ${vehicle_makeAttributes} WHERE make_id = :make_id`;
     let binds = [make_name, make_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle_make by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/vehicle_make', async function(req, res){
@@ -835,7 +944,13 @@ app.post('/vehicle-model', async function(req, res){
     // Query Creation
     let query = `INSERT INTO VEHICLE_MODEL VALUES (${vehicle_modelAttributes})`;
     let binds = [model_id, make_id, model];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle_make by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/vehicle-model', async function(req, res){
@@ -880,7 +995,13 @@ app.put('/vehicle-model', async function(req, res){
     // Query Creation
     let query = `UPDATE VEHICLE_MODEL SET ${vehicle_modelAttributes} WHERE model_id = :model_id`;
     let binds = [make_id, model, model_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle_model by ROWID to send back
+    let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/vehicle-model', async function(req, res){
@@ -904,7 +1025,13 @@ app.post('/state', async function(req, res){
     // Query Creation
     let query = `INSERT INTO STATE VALUES (${stateAttributes})`;
     let binds = [state_id, state_code, state_name];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected state by ROWID to send back
+    let lastItemQuery = `SELECT * FROM STATE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // READ
 app.get('/state', async function(req, res){
@@ -949,7 +1076,13 @@ app.put('/state', async function(req, res){
     // Query Creation
     let query = `UPDATE STATE SET ${stateAttributes} WHERE state_id = :state_id`;
     let binds = [state_code, state_name, state_id];
-    res.send(await crudOP(query, binds, false));
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected state by ROWID to send back
+    let lastItemQuery = `SELECT * FROM STATE WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItem = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastRowid: lastItem
+    });
 });
 // DELETE
 app.delete('/state', async function(req, res){
