@@ -46,7 +46,7 @@ app.get('/', function(req, res) {
         return response.data.rows
       }
     });
-    const getMake = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
         return [['ERROR','ERROR']]
@@ -54,11 +54,19 @@ app.get('/', function(req, res) {
         return response.data.rows
       }
     });
-
+    const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data.rows
+      }
+    });
     res.render('createcustomer', {
       states: getStates,
       services: getServices,
-      makes: getMake
+      makes: getMakes,
+      models: getModels
     });
   });
   
