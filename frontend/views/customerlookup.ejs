@@ -3,7 +3,7 @@
   <head>
     <title>Customer Lookup</title>
     <%- include('partials/head.ejs'); %>
-    <script src="lookup.js"></script>
+    <!--<script src="lookup.js"></script> -->
     <style>
       /* Styles for search bar */
       .bottomrow {
@@ -52,14 +52,61 @@
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
           <h1>Customer Lookup</h1>
-          <input type="text" id="searchBar" placeholder="Search customers...">
-          <button id="searchButton">Search</button>
-          <div id="results"></div>
+          <!--HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY-->
+          <form action="" method="post">
+            <fieldset>
+              <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
+              <input type="button" id="searchButton" onclick="search()" value="Search">
+            </fieldset>
+          </form>
+          <div id="results">
+            <ul class="list-group" id="customers" style="display: none;">
+              
+            </ul>
+          </div>
         </div>
         <footer>
           <%- include('partials/footer.ejs'); %>
         </footer>
       </div>
-    </div>        
+    </div>
+    <script>
+      function search() {
+        let http = new XMLHttpRequest();
+        let customerList = document.getElementById("customers");
+        customerList.replaceChildren();
+        http.open("POST", "http://localhost:3000/lookup", true);
+        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        var params = "searchValue="+document.getElementById("searchBar").value;
+        http.send(params);
+        http.onload = function(){
+          let customers = JSON.parse(http.responseText);
+          customers.forEach(customer => {
+            let searchResult = document.createElement("li")
+            let customerName = document.createTextNode(customer[3]);
+            searchResult.classList.add("list-group-item");
+            searchResult.setAttribute("id", customer[0]);
+            searchResult.appendChild(customerName);
+            customerList.appendChild(searchResult);
+          });
+          if (customerList.style.display === "none"){
+            customerList.style.display = "block";
+            let newSearch = true;
+          }
+          //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+          // Just showing off browser storage for later:
+          // How to store data
+          let x = document.getElementById("2231").id;
+          sessionStorage.setItem("id", x);
+            // How to get saved Data
+          let data = sessionStorage.getItem("id");
+            // How to delete data
+          sessionStorage.removeItem("id");
+            // How to clear storage
+          sessionStorage.clear();
+        }
+      }
+
+    </script>
   </body>
 </html>

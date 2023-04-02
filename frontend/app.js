@@ -7,8 +7,8 @@ const port = 5173;
 
 /////////////////////////////////////////////////////////////////////////
 //this is for the customer lookup page, still trying
-const FromtheBACK = require('server.js');
-app.use('/lookup', FromtheBACK);
+//const FromtheBACK = require('server.js');
+//app.use('/lookup', FromtheBACK);
 /////////////////////////////////////////////////////////////////////////
 
 app.set("views", path.resolve(__dirname, "views"));
