@@ -119,8 +119,9 @@ app.post('/employee', async function(req, res){
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
     let lastItem = await crudOP(lastItemQuery, undefined, true);
+    let lastRow = lastItem.rows[0][0];
     res.json({ 
-        lastRowid: lastItem
+        lastRowid: lastRow
     });
 });
 // READ
