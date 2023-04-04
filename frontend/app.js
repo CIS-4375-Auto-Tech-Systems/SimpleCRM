@@ -29,8 +29,45 @@ app.get('/', function(req, res) {
     res.render('customerlookup');
   });
   
-  app.get('/createcustomer', function(req, res) {
-    res.render('createcustomer');
+  app.get('/createcustomer', async function(req, res) {
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data.rows
+      }
+    });
+    const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data.rows
+      }
+    });
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data.rows
+      }
+    });
+    const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data.rows
+      }
+    });
+    res.render('createcustomer', {
+      states: getStates,
+      services: getServices,
+      makes: getMakes,
+      models: getModels
+    });
   });
 
   app.get('/reports', function(req, res) {
