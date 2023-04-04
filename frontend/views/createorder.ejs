@@ -1,24 +1,53 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <%- include('partials/head.ejs'); %>
-    </head>
-    <body>
-        <div class="container">
-            <%- include('partials/leftcolumn.ejs'); %>
-            <div class="right-column">
-                <%- include('partials/header.ejs'); %>
-                <form class="row g-3" method="POST">
-                    <h2>New Order Form</h2>
-                    <div class="col-md-6">
-
-                    
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <footer>
-                    <%- include('partials/footer.ejs'); %>
-                </footer>
-            </div>
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <title>Create Order Form</title>
+    <style>
+      form {
+        margin-top: 100%;
+      }
+    </style>
+  </head>
+  <body id="main">
+    <div class="container">
+        <%- include('partials/navbar.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="bottomrow">
+        <form class="row g-3">
+          <h2>Create Order Form</h2>
+          <div class="col-md-6">
+            <label for="inputordernum" class="form-label">Order Number</label>
+            <input type="text" class="form-control" id="ordernum">
+          </div>
+          <div class="col-md-6">
+            <label for="inputtotalamount" class="form-label">Total Amount</label>
+            <input type="text" class="form-control" id="totalamount">
+          </div>
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Date In</label>
+            <input type="email" class="form-control" id="inputEmail4">
+          </div>
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Date Out</label>
+            <input type="email" class="form-control" id="inputEmail4">
+          </div>
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Odometer</label>
+            <input type="email" class="form-control" id="inputEmail4">
+          </div>
+          <div class="col-12">
+            <label for="inputAddress" class="form-label">Description</label>
+            <input type="text" class="form-control" id="inputAddress"
+          </div>
         </div>
-    </body>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>        
+  </body>
 </html>
