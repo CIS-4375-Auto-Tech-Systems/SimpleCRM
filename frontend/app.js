@@ -28,6 +28,10 @@ app.get('/', function(req, res) {
   app.get('/customerlookup', function(req, res) {
     res.render('customerlookup');
   });
+
+  app.get('/createorder', function(req, res) {
+    res.render('createorder');
+  });
   
   app.get('/createcustomer', function(req, res) {
     res.render('createcustomer');
