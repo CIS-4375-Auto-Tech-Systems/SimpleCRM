@@ -137,3 +137,33 @@ body {
   img:hover {
     transform: rotate(360deg);
   }
+  .card-body {
+    color: var(--random-text-color);
+  }
+
+  .card {
+    color: var(--random-text-color);
+  }
+  .box {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  .custom-card {
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .custom-card:hover {
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    background-color: #f7f7f7;
+  }
+  .card-body i {
+  font-size: 2rem;
+}
+
+  .sample-text {
+    display: none;
+  }
+
+  .sample-text.show {
+    display: block;
+  }
