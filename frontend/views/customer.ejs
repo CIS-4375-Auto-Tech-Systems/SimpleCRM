@@ -110,11 +110,44 @@
             const jsonData = await response.json();
             let match = '';
             jsonData.forEach(customer => {
-              if (customer[0] == cust_id){
+              if (customer[0] == id){
                 match = customer;
               }
             });
             return match
+          }
+          async function getVehicle (id) {
+            const response = await fetch("http://localhost:3000/vehicle");
+            const jsonData = await response.json();
+            let match = '';
+            jsonData.forEach(vehicle => {
+              if (vehicle[1] == id){
+                match = vehicle;
+              }
+            });
+            return match;
+          }
+          async function getVehicleModel (id) {
+            const response = await fetch("http://localhost:3000/vehicle-model");
+            const jsonData = await response.json();
+            let match = '';
+            jsonData.forEach(model => {
+              if (model[0] == id){
+                match = vehicle;
+              }
+            });
+            return match;
+          }
+          async function getVehicleMake (id) {
+            const response = await fetch("http://localhost:3000/vehicle-make");
+            const jsonData = await response.json();
+            let match = '';
+            jsonData.forEach(make => {
+              if (make[0] == id){
+                match = vehicle;
+              }
+            });
+            return match;
           }
           async function createPage (custID) {
             /* CUSTOMER */ // customer
@@ -137,7 +170,9 @@
             custEmailEle.textContent = custEmail;
 
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
-            
+            const vehicles = await getVehicle(custID);
+            console.log(vehicles);
+
             // Elements for Vehicle Section
             const makeEle = document.getElementById("vehicleMake");
             const modelEle = document.getElementById("vehicleModel");
