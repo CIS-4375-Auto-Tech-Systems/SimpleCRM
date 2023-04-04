@@ -262,7 +262,8 @@ app.get('/customer', async function(req, res){
     }else{
         let query = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await crudOP(query, undefined, true));
+        const CRUDOP = await crudOP(query, undefined, true)
+        res.send(CRUDOP.rows);
     }
 });
 // UPDATE

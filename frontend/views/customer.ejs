@@ -16,10 +16,10 @@
               <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
             </div>
             <div class="customer-details">
-              <h1>Stephane Lutz</h1>
-              <p>Address: 123 deserted ln</p>
-              <p>Phone: (281) 555 - 5555</p>
-              <p>Email: jnae@gmail.com</p>
+              <h1 id="custName"></h1>
+              <p id="custAddress"></p>
+              <p id="custPhone"></p>
+              <p id="custEmail"></p>
             </div>
           </div>
           <div class="vehicle-info">
@@ -68,7 +68,7 @@
                   <td>03/01/2023</td>
                   <td>$29.99</td>
                   <td>
-                    <button class="edit-service-button" data-service-id="<%= service.id %>">Edit</button>
+                    <button class="edit-service-button">Edit</button>
                     <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>
@@ -78,7 +78,7 @@
                   <td>02/01/2023</td>
                   <td>$299.99</td>
                   <td>
-                    <button class="edit-service-button" data-service-id="<%= service.id %>">Edit</button>
+                    <button class="edit-service-button">Edit</button>
                     <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>
@@ -89,6 +89,72 @@
         <footer>
           <%- include('partials/footer.ejs'); %>
         </footer>
+        <script>
+          document.body.onload = createPage()
+          const sessionStorageControl = {
+            //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+            storeItem(key, value){
+              sessionStorage.setItem(key, value);
+            },
+            readItem(key){
+              return sessionStorage.getItem(key);
+            },
+            removeItem(key){
+              sessionStorage.removeItem(key);
+            }
+          }
+          // Read cust_id from session storage
+          const cust_id = sessionStorageControl.readItem("cust_id");
+          async function getCust (id) {
+            const response = await fetch("http://localhost:3000/customer");
+            const jsonData = await response.json();
+            let match = '';
+            jsonData.forEach(customer => {
+              if (customer[0] == cust_id){
+                match = customer;
+              }
+            });
+            return match
+          }
+          async function createPage (custID) {
+            /* CUSTOMER */ // customer
+            const customer = await getCust(custID);
+            const custId = customer[0];
+            const custName = customer[3];
+            const custAddress = customer[4] || 'No Address Found';
+            const custPhone = customer[8] || 'No Phone Number Found';
+            const custEmail = customer[10] || 'No Email Found';
+
+            // Elements for Customer Section
+            const custNameEle = document.getElementById("custName");
+            const custAddressEle = document.getElementById("custAddress");
+            const custPhoneEle = document.getElementById("custPhone");
+            const custEmailEle = document.getElementById("custEmail");
+            // Add Dynamic Information
+            custNameEle.textContent = custName;
+            custAddressEle.textContent = custAddress;
+            custPhoneEle.textContent = custPhone;
+            custEmailEle.textContent = custEmail;
+
+            /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
+            
+            // Elements for Vehicle Section
+            const makeEle = document.getElementById("vehicleMake");
+            const modelEle = document.getElementById("vehicleModel");
+            const yearEle = document.getElementById("vehicleYear");
+            const plateEle = document.getElementById("vehiclePlate");
+
+            /* SERVICE HISTORY */ //service_order, service,
+
+            // Elements for Serivce History Section
+
+          }
+          createPage(cust_id);
+          // Delete cust_id from session storage when the page is unloaded
+          window.addEventListener('beforeunload', function(event) {
+            sessionStorageControl.removeItem("cust_id");
+          });
+        </script>
       </div>
     </div>
   </body>
