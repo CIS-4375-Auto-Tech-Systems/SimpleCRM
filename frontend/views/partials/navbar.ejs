@@ -148,6 +148,14 @@
   event.target.value = input;
 }
 function setTheme(themeName) {
+  var backgroundColor = localStorage.getItem('background-color');
+  var textColor = localStorage.getItem('text-color');
+
+  if (backgroundColor && textColor) {
+    document.documentElement.style.setProperty('--random-background-color', backgroundColor);
+    document.documentElement.style.setProperty('--random-text-color', textColor);
+  }
+
   localStorage.setItem('theme', themeName);
   document.documentElement.className = themeName;
 }
@@ -157,15 +165,18 @@ var theme = localStorage.getItem('theme');
 if (theme) {
   setTheme(theme);
 }
+
 function setRandomTheme() {
   const hue = Math.floor(Math.random() * 360);
   const saturation = Math.floor(Math.random() * 100);
   const lightness = Math.floor(Math.random() * 100);
   const backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   const textColor = `hsl(${hue}, ${saturation}%, ${100 - lightness}%)`;
-  document.documentElement.style.setProperty('--random-background-color', backgroundColor);
-  document.documentElement.style.setProperty('--random-text-color', textColor);
-  document.documentElement.classList.add('theme5');
+
+  localStorage.setItem('background-color', backgroundColor);
+  localStorage.setItem('text-color', textColor);
+
+  setTheme('theme5');
 }
 // Save font size to local storage
 function saveFontSize(fontSize) {
