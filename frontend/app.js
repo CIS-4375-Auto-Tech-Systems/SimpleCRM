@@ -28,6 +28,10 @@ app.get('/', function(req, res) {
   app.get('/customerlookup', function(req, res) {
     res.render('customerlookup');
   });
+
+  app.get('/createorder', function(req, res) {
+    res.render('createorder');
+  });
   
   app.get('/createcustomer', async function(req, res) {
     const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
