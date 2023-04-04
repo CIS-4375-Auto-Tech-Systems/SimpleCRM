@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('partials/head.ejs'); %>
+    </head>
+    <body>
+        <div class="container">
+            <%- include('partials/leftcolumn.ejs'); %>
+            <div class="right-column">
+                <%- include('partials/header.ejs'); %>
+                <form class="row g-3" method="POST">
+                    <h2>New Order Form</h2>
+                    <div class="col-md-6">
+
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <footer>
+                    <%- include('partials/footer.ejs'); %>
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>
