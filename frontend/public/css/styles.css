@@ -67,7 +67,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 200%;
+    width: 100%;
     padding: 20px;
     border-bottom: 3px solid #ddd;
     margin-left: -3%;
