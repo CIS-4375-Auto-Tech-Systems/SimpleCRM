@@ -69,6 +69,11 @@ app.get('/', function(req, res) {
       models: getModels
     });
   });
+
+  app.get('/reports', function(req, res) {
+    res.render('reports');
+  });
+  
   
 
 // start the express application on on port 8080
