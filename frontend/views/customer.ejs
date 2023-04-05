@@ -144,6 +144,7 @@ th {
             const response = await fetch("http://localhost:3000/vehicle");
             const vehicles = await response.json();
             let match = '';
+            console.log(vehicles);
             vehicles.forEach(vehicle => {
               if (vehicle[1] == custID){
                 match = vehicle;
@@ -195,13 +196,13 @@ th {
             });
             return match
           }
-          async function getServiceStatus (orderStatusID) {
-            const response = await fetch ("http://localhost:3000/service-status");
-            const serviceStatuses = await response.json();
+          async function getOrderStatus (orderStatusID) {
+            const response = await fetch ("http://localhost:3000/order-status");
+            const orderStatuses = await response.json();
             let match = '';
-            serviceStatuses.forEach(service_status => {
-              if (service_status[0] == orderStatusID) {
-                match = service_status;
+            orderStatuses.forEach(order_status => {
+              if (order_status[0] == orderStatusID) {
+                match = order_status;
               }
             });
             return match
@@ -211,7 +212,7 @@ th {
             /* CUSTOMER */ // customer
             // GET customer table
             const customer = await getCust(custID);
-            const custId = customer[0] || 'No Id Found';
+            const custId = customer[0];
             const custName = customer[3] || 'No Name Found';
             const custAddress = customer[4] || 'No Address Found';
             const custPhone = customer[8] || 'No Phone Number Found';
@@ -229,14 +230,22 @@ th {
 
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
             // GET vehicle table
-            const vehicles = await getVehicle(custID);
-            
+            const vehicles = await getVehicle(custId);
+            console.log(vehicles);
+            const vehicleId = vehicles[0];
+            const vehicleColor = vehicles[2] || 'No Color Found';
+            const vehicleModel = vehicles[3];
+            const vehicleYear = vehicles[4] || 'No Year Found';
+            const vehiclePlate = vehicles[5] || 'No Plate Found';
             // GET vehicle_make table
-            const vehicle_make = await getVehicleMake(vehicleID);
-
+            const vehicle_makes = await getVehicleMake(vehicleId);
+            console.log(vehicle_makes);
+            const makeId = vehicle_makes[0];
+            const makeName = vehicle_makes[1] || 'No Make Found';
             // GET vehicle_model table
-            const vehicle_model = await getVehicleModel(make_id);
-
+            const vehicle_models = await getVehicleModel(makeId);
+            console.log(vehicle_models);
+            const vehicle_modelName = vehicle_models[2];
             // Elements for Vehicle Section
             const makeEle = document.getElementById("vehicleMake");
             const modelEle = document.getElementById("vehicleModel");
@@ -247,14 +256,17 @@ th {
 
             /* SERVICE HISTORY */ //service_order, service, service_status
             // GET serivce_order table
-            const serivce_order = await getServiceOrder(custID, vehicle_id);
+            const serivce_order = await getServiceOrder(custId, vehicle_id);
+            console.log(service_order);
+            const order_status_id = serivce_order[5]
+            const service_id = serivce_order[6];
 
             // GET service table
             const service = await getService(service_id);
-
+            console.log(service);
             // GET service_status table
-            const service_status = await getServiceStatus(service_status_id);
-
+            const service_status = await getOrderStatus(order_status_id);
+            console.log(service_status);
             // Elements for Serivce History Section
             const serviceEle = document.getElementById("service");
             const dateInEle = document.getElementById("datein");
