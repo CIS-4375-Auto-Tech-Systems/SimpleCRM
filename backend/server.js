@@ -782,11 +782,49 @@ app.post('/color', async function(req, res){
     });
 });
 // READ
-// READ
 app.get('/color', async function(req, res){
     let query = 'SELECT * FROM COLOR';
     // Send a response
     res.send(await crudOP(query, undefined, true));
+});
+// UPDATE
+app.put('/color', async function(req, res){
+    // Column Names
+    const colorAttributes = 'color = :color';
+    // Values
+    let color_id = req.body.color_id;
+    // READ COMPARE and UPDATE
+    /*READ*/
+    // Current Values
+    let readQuery = 'SELECT * FROM COLOR WHERE make_id = :make_id';
+    let readBinds = [color_id];
+    let readColor = await crudOP(readQuery, readBinds, true);
+    let currentColor= readColor.rows[0];
+    // Store Old
+    let oldColor = currentColor[1];
+    // Request New
+    let newColor = req.body.color;
+    /* COMPARE and UPDATE */
+    let color = compare_update(oldColor, newColor);
+    // Query Creation
+    let query = `UPDATE COLOR SET ${colorAttributes} WHERE color_id = :color_id`;
+    let binds = [color, color_id];
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle_make by ROWID to send back
+    let lastItemQuery = `SELECT * FROM COLOR WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItemId = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastItemId: lastItemId
+    });
+});
+// DELETE
+app.delete('/color', async function(req, res){
+    // Values
+    let color_id = req.body.color;
+    // Query Creation
+    let query = 'DELETE FROM COLOR WHERE color_id = :color_id';
+    let binds = [color_id];
+    res.send(await crudOP(query, binds, false));
 });
 
 /* VEHICLE_MAKE */
