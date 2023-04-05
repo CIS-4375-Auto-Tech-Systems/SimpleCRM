@@ -186,8 +186,8 @@
             /* CUSTOMER */ // customer
             // GET customer table
             const customer = await getCust(custID);
-            const custId = customer[0];
-            const custName = customer[3];
+            const custId = customer[0] || 'No Id Found';
+            const custName = customer[3] || 'No Name Found';
             const custAddress = customer[4] || 'No Address Found';
             const custPhone = customer[8] || 'No Phone Number Found';
             const custEmail = customer[10] || 'No Email Found';
