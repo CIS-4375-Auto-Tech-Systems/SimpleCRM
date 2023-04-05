@@ -4,7 +4,7 @@
     <title>Customer Page</title>
     <%- include('partials/head.ejs'); %>
     <style>
-      table, td, th {
+    table, td, th {
   border-bottom: 1px solid;
   padding: 1%;
 }
@@ -12,13 +12,18 @@
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1%;
 }
 th {
-  background-color: #3ea7d7;
+  background-color: #0e82b7;
   color: white;
 }
+img {
+  border-radius: 100px;
+  margin: 2%;
+}
 
-    </style>
+  </style>
   </head>
   <body id="main">
     <div class="container">
@@ -39,6 +44,8 @@ th {
           </div>
           <div class="vehicle-info">
             <h2>Vehicles</h2>
+            <button type="submit" class="btn btn-primary"> Add Vehicle </button>
+            <br>
             <table>
               <thead>
                 <tr>
@@ -58,7 +65,7 @@ th {
                   <td>TYY4586</td>
                   <td>Black</td>
                   <td>
-                    <button class="edit-service-button">Edit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
                 </tr>
                 <tr>
@@ -68,14 +75,18 @@ th {
                   <td>DEF456</td>
                   <td>Red</td>
                   <td>
-                    <button class="edit-service-button">Edit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <br>
+          <br>
           <div class="service-history">
             <h2>Service History</h2>
+            <button type="submit" class="btn btn-primary"> Add Vehicle </button>
+            <br>
             <table>
               <thead>
                 <tr>
@@ -95,7 +106,7 @@ th {
                   <td>TYY4586</td>
                   <td>$29.99</td>
                   <td>
-                    <button class="edit-service-button">Edit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
                 </tr>
                 <tr>
@@ -105,7 +116,7 @@ th {
                   <td>DEF456</td>
                   <td>$299.99</td>
                   <td>
-                    <button class="edit-service-button">Edit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
                 </tr>
               </tbody>
