@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="container">
-      <%- include('partials/leftcolumn.ejs'); %>
+      <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="content">
@@ -68,7 +68,7 @@
                   <td>03/01/2023</td>
                   <td>$29.99</td>
                   <td>
-                    <button class="edit-service-button" data-service-id="<%= service.id %>">Edit</button>
+                    <button class="edit-service-button">Edit</button>
                     <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>
@@ -78,7 +78,7 @@
                   <td>02/01/2023</td>
                   <td>$299.99</td>
                   <td>
-                    <button class="edit-service-button" data-service-id="<%= service.id %>">Edit</button>
+                    <button class="edit-service-button" >Edit</button>
                     <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>

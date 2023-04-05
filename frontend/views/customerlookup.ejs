@@ -12,7 +12,7 @@
         align-items: center;
         margin-top: 50px;
       }
-      
+
       #searchBar {
         border: none;
         background-color: #f2f2f2;
@@ -25,29 +25,15 @@
         color: #333;
         outline: none;
       }
-      
-      #searchButton {
-        border: none;
-        background-color: #29d7dd;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-      
-      #searchButton:hover {
-        background-color: #128ad4;
-      }
-      
+
       #results {
         margin-top: 20px;
       }
     </style>
   </head>
-  <body>
+  <body id="main">
     <div class="container">
-      <%- include('partials/leftcolumn.ejs'); %>
+      <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
@@ -61,13 +47,9 @@
           </form>
           <div id="results">
             <ul class="list-group" id="customers" style="display: none;">
-              
             </ul>
           </div>
         </div>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
       </div>
     </div>
     <script>
@@ -106,7 +88,6 @@
           sessionStorage.clear();
         }
       }
-
     </script>
   </body>
 </html>

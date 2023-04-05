@@ -1,110 +1,139 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Samurai', sans-serif;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: 'Samurai', sans-serif;
+}
 
-  .container {
-    display: flex;
-    height: 100vh;
-    max-width: 100%;
-  }
-  
+.container {
+  display: flex;
+  height: 100vh;
+  max-width: 100%;
+}
 
-  .left-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 25%;
-    padding: 20px;
-    background-color: #FFFFFF;
-  }
-  
-  .logo {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  
-  .nav {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .nav a {
-    margin-bottom: 10px;
-    padding: 10px;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .nav a:hover {
-    background-color: #bfeaff;
-    width:fit-content;
-  }
-  
-  .right-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 200%;
-    padding: 20px;
-    border-left: 3px solid #ddd;
-  }
-  .right-column .toprow {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 200%;
-    padding: 20px;
-    border-bottom: 3px solid #ddd;
-    margin-left: -3%;
-  }
-  
-  .bottomrow {
-    height: 80%;
-  }
 
-  .info {
-    height: 20%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: 14px;
-    color: #666;
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25%;
+  padding: 20px;
+  background-color: #FFFFFF;
+}
+.sidenav {
+  height: 100%; 
+  width: 250px; 
+  position: fixed; 
+  z-index: 1; 
+  top: 0; 
+  left: 0;
+  overflow-x: hidden; 
+  padding-top: 10px;
+  transition: 0.5s;
   }
-  @font-face {
-    font-family: "Samurai";
-    src: url("/fonts/Samurai.ttf") format("truetype");
-  }
-  footer span {
-    font-family: Arial, sans-serif;
-  }
-  .normal-font {
-    font-family: Arial, sans-serif;
-  }
-  @media (max-width: 768px) {
-    .left-column {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 1200px) {
-    .container {
-      min-width: 800px;
-    }
-  }
-  .bottomrow {
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
-    font-weight: normal;
-  }
-  .nav.hidden {
-    display: none;
-    background-color: #bfeaff;
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #333;
+  display: block;
+  transition: 0.3s ease-in-out;
+}
 
-  }
+
+.sidenav a:hover {
+  background-color: #bfeaff;
+}
+
+
+#main {
+  position:fixed;
+  margin-left: 250px;
+  transition: margin-left .5s;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200%;
+  padding: 20px;
+  border-left: 3px solid #ddd;
+  overflow-y: auto;
+}
+.right-column .toprow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200%;
+  padding: 20px;
+  border-bottom: 3px solid #ddd;
+  margin-left: -3%;
+}
+
+.bottomrow {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.info {
+  height: 20%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+@font-face {
+  font-family: "Samurai";
+  src: url("/fonts/Samurai.ttf") format("truetype");
+}
+.normal-font {
+  font-family: Arial, sans-serif;
+}
+.bottomrow {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+}
+#clock {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 1em;
+}
+:root {
+  --background-color: #fff;
+  --text-color: #000;
+}
+.theme1 {
+  --background-color: #fff;
+  --text-color: #000;
+}
+
+.theme2 {
+  --background-color: #10e6b7;
+  --text-color: #000;
+}
+
+.theme3 {
+  --background-color: #f00;
+  --text-color: #000;
+}
+.theme4 {
+  --background-color: #333;
+  --text-color: #fff;
+  color: #fff;
+}
+.theme4 .sidenav a {
+  color: #fff;
+}
+.theme5 {
+  --background-color: var(--random-background-color);
+  --text-color: var(--random-text-color);
+}
+img:hover {
+  transform: rotate(360deg);
+}
