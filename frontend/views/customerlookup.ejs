@@ -3,7 +3,6 @@
   <head>
     <title>Customer Lookup</title>
     <%- include('partials/head.ejs'); %>
-    <!--<script src="lookup.js"></script> -->
     <style>
       /* Styles for search bar */
       .bottomrow {
@@ -38,7 +37,6 @@
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
           <h1>Customer Lookup</h1>
-          <!--HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY-->
           <form action="" method="post">
             <fieldset>
               <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
@@ -53,10 +51,23 @@
       </div>
     </div>
     <script>
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      }
       function search() {
         let http = new XMLHttpRequest();
         let customerList = document.getElementById("customers");
         customerList.replaceChildren();
+        // HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY
         http.open("POST", "http://localhost:3000/lookup", true);
         http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         var params = "searchValue="+document.getElementById("searchBar").value;
@@ -64,10 +75,12 @@
         http.onload = function(){
           let customers = JSON.parse(http.responseText);
           customers.forEach(customer => {
-            let searchResult = document.createElement("li")
+            let searchResult = document.createElement("a")
             let customerName = document.createTextNode(customer[3]);
             searchResult.classList.add("list-group-item");
-            searchResult.setAttribute("id", customer[0]);
+            searchResult.setAttribute("data-cust_id", customer[0]);
+            searchResult.setAttribute("onclick", "getCust_ID(this.dataset.cust_id)");
+            searchResult.setAttribute("href", "/customer");
             searchResult.appendChild(customerName);
             customerList.appendChild(searchResult);
           });
@@ -75,18 +88,10 @@
             customerList.style.display = "block";
             let newSearch = true;
           }
-          //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
-          // Just showing off browser storage for later:
-          // How to store data
-          let x = document.getElementById("2231").id;
-          sessionStorage.setItem("id", x);
-            // How to get saved Data
-          let data = sessionStorage.getItem("id");
-            // How to delete data
-          sessionStorage.removeItem("id");
-            // How to clear storage
-          sessionStorage.clear();
         }
+      }
+      function getCust_ID(cust_id) {
+        sessionStorageControl.storeItem("cust_id", cust_id);
       }
     </script>
   </body>
