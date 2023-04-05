@@ -577,7 +577,7 @@ app.delete('/service', async function(req, res){
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
-    const custAttributes = ':cust_id, :cust_status_id, :state_id, :name, :address, :city, :state, :zip, :phone, :license_num, :email';
+    const custAttributes = ':cust_id, :cust_status_id, :state_id, :name, :address, :city, :state, :zip, :phone, :email';
     // Values
     let cust_id = req.body.cust_id;
     let cust_status_id = req.body.cust_status_id;
@@ -588,11 +588,10 @@ app.post('/customer',async function(req, res){
     let state = req.body.state;
     let zip = req.body.zip;
     let phone = req.body.phone;
-    let license_num = req.body.license_num;
     let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email];
+    let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, email];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -1100,34 +1099,30 @@ app.delete('/state', async function(req, res){
 
 // Create customer service order
 app.post('/customervehicle', async function(req, res) {
-    //Customer Column Names 
-    const custAttributes = ":cust_id, :cust_status_id, :state_id, :name, :address, :city, :state, :zip, :phone, :license_num, :email";
-    //Customer NOT NULLABLE values
-    let cust_id = req.body.cust_id;
-    let cust_status_id = req.body.cust_status_id;
+        //Customer NOT NULLABLE values
+    let cust_status_id = '1';
     let state_id = req.body.state_id;
     //Customer NULLABLE values
-    let name = req.body.name;
+    let first_name = req.body.first_name;
+    let middle_in = req.body.middle_in || null;
+    let last_name = req.body.last_name;
     let address = req.body.address;
     let city = req.body.city;
-    let state = req.body.state;
     let zip = req.body.zip;
     let phone = req.body.phone;
-    let license_num = req.body.license_num;
     let email = req.body.email;
-    //Vehicle Column Names 
-    const vehicleAttributes = ":vehicle_id, :cust_id, :model_id, :color, :year, :license_plate, :vin"
     //Vehicle NOT NULLABLE values
-    let vehicle_id = req.body.vehicle_id;
     let model_id = req.body.model_id;
     //Vehicle NULLABLE values
-    let color = req.body.color;
+    let color_id = req.body.color_id;
     let year = req.body.year;
     let license_plate = req.body.license_plate;
     let vin = req.body.vin;
+    //Customer Column Names 
+    const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :city, :address, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email];
+    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, city, address, zip, phone, email];
     let CRUDOP = await crudOP(custQuery, binds, false);
     console.log(CRUDOP);
     //Get customer rowID
@@ -1137,9 +1132,11 @@ app.post('/customervehicle', async function(req, res) {
     res.json({
         lastRowID: lastRow
     });
+    //Vehicle Column Names 
+    const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :model_id, :color_id, :year, :license_plate, :state_id, :vin"
     //Vehicle Query
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let vehicleBinds = [vehicle_id, lastRow, model_id, color, year, license_plate, vin];
+    let vehicleBinds = [lastRow, model_id, color_id, year, license_plate, state_id, vin];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
 });
 
