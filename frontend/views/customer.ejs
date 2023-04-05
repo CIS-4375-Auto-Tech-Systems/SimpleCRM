@@ -3,13 +3,29 @@
   <head>
     <title>Customer Page</title>
     <%- include('partials/head.ejs'); %>
+    <style>
+      table, td, th {
+  border-bottom: 1px solid;
+  padding: 1%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th {
+  background-color: #3ea7d7;
+  color: white;
+}
+
+    </style>
   </head>
   <body id="main">
     <div class="container">
       <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="content">
+        <div class="bottomrow">
           <div class="customer-info">
             <div class="profile-photo">
               <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
@@ -30,6 +46,8 @@
                   <th>Model</th>
                   <th>Year</th>
                   <th>plate</th>
+                  <th>Color</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="vehicles">
@@ -38,12 +56,20 @@
                   <td>Elantra</td>
                   <td>2017</td>
                   <td>TYY4586</td>
+                  <td>Black</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                  </td>
                 </tr>
                 <tr>
                   <td>Honda</td>
                   <td>Accord</td>
                   <td>2008</td>
                   <td>DEF456</td>
+                  <td>Red</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -56,6 +82,7 @@
                   <th>Service</th>
                   <th>Date In</th>
                   <th>Date Out</th>
+                  <th>Plate</th>
                   <th>Total Amount</th>
                   <th>Action</th>
                 </tr>
@@ -65,29 +92,30 @@
                   <td>Oil Change</td>
                   <td>03/01/2023</td>
                   <td>03/01/2023</td>
+                  <td>TYY4586</td>
                   <td>$29.99</td>
                   <td>
                     <button class="edit-service-button">Edit</button>
-                    <button class="edit-service-button">Edit</button>
-                    <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>
                 <tr>
                   <td>Brake Service</td>
                   <td>02/01/2023</td>
                   <td>02/01/2023</td>
+                  <td>DEF456</td>
                   <td>$299.99</td>
                   <td>
                     <button class="edit-service-button">Edit</button>
-                    <button class="delete-service-button">Delete</button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <script>
-          const sessionStorageControl = {
+      </div>
+    </div>
+    <script>
+      const sessionStorageControl = {
             //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
             storeItem(key, value){
               sessionStorage.setItem(key, value);
@@ -241,8 +269,6 @@
           window.addEventListener('beforeunload', function(event) {
             sessionStorageControl.removeItem("cust_id");
           });
-        </script>
-      </div>
-    </div>
+    </script>
   </body>
 </html>
