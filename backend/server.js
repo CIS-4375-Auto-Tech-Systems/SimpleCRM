@@ -96,9 +96,8 @@ app.post('/lookup', async function(req, res){{
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = ":emp_id, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :state, :zip, :phone, :datehired, :sex";
+    const empAttributes = "seq_emp.nextval, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :state, :zip, :phone, :datehired, :sex";
     // Values
-    let emp_id = req.body.emp_id;
     let emp_status_id = req.body.emp_status_id;
     let state_id = req.body.state_id;
     let fname = req.body.fname;
@@ -112,7 +111,7 @@ app.post('/employee', async function(req, res){
     let sex = req.body.sex;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_id, emp_status_id, state_id, fname, lname, emp_address, city, state, zip, phone, datehired, sex];
+    let binds = [emp_status_id, state_id, fname, lname, emp_address, city, state, zip, phone, datehired, sex];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -276,9 +275,8 @@ app.delete('/employee-status', async function(req, res){
 // CREATE
 app.post('/service-order', async function(req, res) {
     // Column
-    const service_orderAttributes = ':order_id, :order_num, :cust_id, :vehicle_id, :emp_id, :order_status_id, :service_id, :ttlamt, :datein, :dateout, :odometer, :description';
+    const service_orderAttributes = 'seq_service_order.nextval, :order_num, :cust_id, :vehicle_id, :emp_id, :order_status_id, :service_id, :ttlamt, :datein, :dateout, :odometer, :description';
     // Values
-    let order_id = req.body.order_id;
     let order_num = req.body.order_num;
     let cust_id = req.body.cust_id;
     let vehicle_id = req.body.vehicle_id;
@@ -444,14 +442,13 @@ app.delete('/order-status', async function(req, res){
 // CREATE
 app.post('/service', async function(req, res){
     // Column Name
-    const serviceAttributes = ':service_id, :service_name, :price'
+    const serviceAttributes = 'seq_service.nextval, :service_name, :price'
     // Values
-    let service_id = req.body.service_id;
     let service_name = req.body.service_name;
     let price = req.body.price;
     // Query Creation
     let query = `INSERT INTO SERVICE VALUES (${serviceAttributes})`;
-    let binds = [service_id, service_name, price];
+    let binds = [service_name, price];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -513,9 +510,8 @@ app.delete('/service', async function(req, res){
 // CREATE
 app.post('/customer',async function(req, res){
     // Column Names
-    const custAttributes = ':cust_id, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :address, :city, :zip, :phone, :email';
+    const custAttributes = 'seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :address, :city, :zip, :phone, :email';
     // Values
-    let cust_id = req.body.cust_id;
     let cust_status_id = req.body.cust_status_id;
     let state_id = req.body.state_id;
     let first_name = req.body.first_name;
@@ -528,7 +524,7 @@ app.post('/customer',async function(req, res){
     let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email];
+    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -680,9 +676,8 @@ app.delete('/customer-status', async function(req, res){
 // CREATE
 app.post('/vehicle', async function(req, res){
     // Column Name
-    const vehicleAttributes = ':vehicle_id, :cust_id, :color_id, :model_id, :year, :license_plate, :state_id, :vin';
+    const vehicleAttributes = 'seq_vehicle.nextval, :cust_id, :color_id, :model_id, :year, :license_plate, :state_id, :vin';
     // Values
-    let vehicle_id = req.body.vehicle_id;
     let cust_id = req.body.cust_id;
     let color_id = req.body.color_id;
     let model_id = req.body.model_id;
@@ -692,7 +687,7 @@ app.post('/vehicle', async function(req, res){
     let vin = req.body.vin;
     // Query Creation
     let query = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let binds = [vehicle_id, cust_id, color_id, model_id, year, license_plate, state_id, vin];
+    let binds = [cust_id, color_id, model_id, year, license_plate, state_id, vin];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE WHERE ROWID = '${CRUDOP.lastRowid}'`;
