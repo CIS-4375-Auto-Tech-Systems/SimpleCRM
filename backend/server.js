@@ -1000,7 +1000,7 @@ app.post('/customervehicle', async function(req, res) {
     const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :model_id, :color_id, :year, :license_plate, :state_id, :vin"
     //Vehicle Query
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let vehicleBinds = [vehicle_id, lastRow, model_id, color, year, license_plate, vin];
+    let vehicleBinds = [lastRowId, model_id, color, year, license_plate, vin];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
 });
 app.listen(PORT, () => {
