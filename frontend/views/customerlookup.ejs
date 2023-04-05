@@ -52,7 +52,6 @@
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
           <h1>Customer Lookup</h1>
-          <!--HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY-->
           <form action="" method="post">
             <fieldset>
               <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
@@ -87,6 +86,7 @@
         let http = new XMLHttpRequest();
         let customerList = document.getElementById("customers");
         customerList.replaceChildren();
+        // HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY
         http.open("POST", "http://localhost:3000/lookup", true);
         http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         var params = "searchValue="+document.getElementById("searchBar").value;

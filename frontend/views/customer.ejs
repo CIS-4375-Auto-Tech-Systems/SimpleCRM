@@ -33,7 +33,7 @@
                   <th>plate</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="vehicles">
                 <tr>
                   <td>Hyundai</td>
                   <td>Elantra</td>
@@ -61,7 +61,7 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="services">
                 <tr>
                   <td>Oil Change</td>
                   <td>03/01/2023</td>
@@ -90,7 +90,6 @@
           <%- include('partials/footer.ejs'); %>
         </footer>
         <script>
-          document.body.onload = createPage()
           const sessionStorageControl = {
             //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
             storeItem(key, value){
@@ -105,59 +104,93 @@
           }
           // Read cust_id from session storage
           const cust_id = sessionStorageControl.readItem("cust_id");
-          async function getCust (id) {
+          async function getCust (custID) {
             const response = await fetch("http://localhost:3000/customer");
-            const jsonData = await response.json();
+            const customers = await response.json();
             let match = '';
-            jsonData.forEach(customer => {
-              if (customer[0] == id){
+            customers.forEach(customer => {
+              if (customer[0] == custID){
                 match = customer;
               }
             });
             return match
           }
-          async function getVehicle (id) {
+          async function getVehicle (custID) {
             const response = await fetch("http://localhost:3000/vehicle");
-            const jsonData = await response.json();
+            const vehicles = await response.json();
             let match = '';
-            jsonData.forEach(vehicle => {
-              if (vehicle[1] == id){
+            vehicles.forEach(vehicle => {
+              if (vehicle[1] == custID){
                 match = vehicle;
               }
             });
-            return match;
+            return match
           }
-          async function getVehicleModel (id) {
+          async function getVehicleModel (modelID) {
             const response = await fetch("http://localhost:3000/vehicle-model");
-            const jsonData = await response.json();
+            const models = await response.json();
             let match = '';
-            jsonData.forEach(model => {
+            models.forEach(model => {
               if (model[0] == id){
-                match = vehicle;
+                match = model;
               }
             });
-            return match;
+            return match
           }
-          async function getVehicleMake (id) {
+          async function getVehicleMake (makeID) {
             const response = await fetch("http://localhost:3000/vehicle-make");
-            const jsonData = await response.json();
+            const makes = await response.json();
             let match = '';
-            jsonData.forEach(make => {
-              if (make[0] == id){
-                match = vehicle;
+            makes.forEach(make => {
+              if (make[0] == makeID){
+                match = make;
               }
             });
-            return match;
+            return match
           }
+          async function getServiceOrder (custID, carID) {
+            const reponse = await fetch("http://localhost:3000/service-order");
+            const orders = await resposne.json();
+            let match = '';
+            orders.forEach(serviceOrder => {
+              if (serviceOrder[3] == custID && serviceOrder[4] == carID){
+                match = serviceOrder;
+              }
+            });
+            return match
+          }
+          async function getService (serviceID) {
+            const response = await fetch("http://localhost:3000/service");
+            const services = await response.json();
+            let match = '';
+            services.forEach(service => {
+              if (service[0] == serviceID){
+                match = service;
+              }
+            });
+            return match
+          }
+          async function getServiceStatus (orderStatusID) {
+            const response = await fetch ("http://localhost:3000/service-status");
+            const serviceStatuses = await response.json();
+            let match = '';
+            serviceStatuses.forEach(service_status => {
+              if (service_status[0] == orderStatusID) {
+                match = service_status;
+              }
+            });
+            return match
+          }
+
           async function createPage (custID) {
             /* CUSTOMER */ // customer
+            // GET customer table
             const customer = await getCust(custID);
             const custId = customer[0];
             const custName = customer[3];
             const custAddress = customer[4] || 'No Address Found';
             const custPhone = customer[8] || 'No Phone Number Found';
             const custEmail = customer[10] || 'No Email Found';
-
             // Elements for Customer Section
             const custNameEle = document.getElementById("custName");
             const custAddressEle = document.getElementById("custAddress");
@@ -170,18 +203,40 @@
             custEmailEle.textContent = custEmail;
 
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
+            // GET vehicle table
             const vehicles = await getVehicle(custID);
-            console.log(vehicles);
+            
+            // GET vehicle_make table
+            const vehicle_make = await getVehicleMake(vehicleID);
+
+            // GET vehicle_model table
+            const vehicle_model = await getVehicleModel(make_id);
 
             // Elements for Vehicle Section
             const makeEle = document.getElementById("vehicleMake");
             const modelEle = document.getElementById("vehicleModel");
             const yearEle = document.getElementById("vehicleYear");
             const plateEle = document.getElementById("vehiclePlate");
+            // Add Dynamic Information ---like customerlookup.ejs
 
-            /* SERVICE HISTORY */ //service_order, service,
+
+            /* SERVICE HISTORY */ //service_order, service, service_status
+            // GET serivce_order table
+            const serivce_order = await getServiceOrder(custID, vehicle_id);
+
+            // GET service table
+            const service = await getService(service_id);
+
+            // GET service_status table
+            const service_status = await getServiceStatus(service_status_id);
 
             // Elements for Serivce History Section
+            const serviceEle = document.getElementById("service");
+            const dateInEle = document.getElementById("datein");
+            const dateOutEle = document.getElementById("dateout");
+            const totalEle = document.getElementById("totalEle");
+            const actionEle = document.getElementById("action");
+            // Add Dynamic Information ---like customerlookup.ejs
 
           }
           createPage(cust_id);
