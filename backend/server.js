@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const oracledb = require('oracledb');
 const fs = require("fs");
+const bodyParser = require('body-parser');
 // dotenv
 require("dotenv").config();
 // Express
@@ -52,14 +53,9 @@ async function crudOP(query, binds, isRead){
                 console.log(`${result.rowsAffected} Rows Affected`);
             }
         }else{
-            if (isRead) {
-                //  If Binds and IS Reading
-                result = await connection.execute(query,binds);
-            }else{
-                //  If Binds and IS NOT Reading
-                result = await connection.execute(query,binds, {autoCommit:true});
-                console.log(`${result.rowsAffected} Rows Affected`);
-            }
+            //  If Binds and IS NOT Reading
+            result = await connection.execute(query,binds, {autoCommit:true});
+            console.log(`${result.rowsAffected} Rows Affected`);
         }
         return result
     }catch(err){
@@ -128,21 +124,9 @@ app.post('/employee', async function(req, res){
 });
 // READ
 app.get('/employee', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM EMPLOYEE WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM EMPLOYEE';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM EMPLOYEE';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/employee', async function(req, res){
@@ -241,21 +225,9 @@ app.post('/employee-status', async function(req, res){
 });
 // READ
 app.get('/employee-status', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM EMP_STATUS WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
         let query = 'SELECT * FROM EMP_STATUS';
         // Send a response
         res.send(await crudOP(query, undefined, true));
-    }
 });
 //UPDATE
 app.put('/employee-status', async function(req, res){
@@ -331,21 +303,9 @@ app.post('/service-order', async function(req, res) {
 });
 // READ
 app.get('/service-order', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM SERVICE_ORDER WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query,binds, true));
-    }else{
         let query = 'SELECT * FROM SERVICE_ORDER';
         // Send a response
         res.send(await crudOP(query, undefined, true));
-    }
 });
 // UPDATE
 app.put('/service-order', async function(req, res){
@@ -437,21 +397,9 @@ app.post('/order-status', async function(req, res) {
 });
 // READ
 app.get('/order-status', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM ORDER_STATUS WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM ORDER_STATUS';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM ORDER_STATUS';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/order-status', async function(req, res){
@@ -514,21 +462,9 @@ app.post('/service', async function(req, res){
 });
 // READ
 app.get('/service', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM SERVICE WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM SERVICE';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM SERVICE';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/service', async function(req, res){
@@ -602,22 +538,10 @@ app.post('/customer',async function(req, res){
 });
 // READ
 app.get('/customer', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM CUSTOMER WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM CUSTOMER';
-        // Send a response
-        const CRUDOP = await crudOP(query, undefined, true)
-        res.send(CRUDOP.rows);
-    }
+    let query = 'SELECT * FROM CUSTOMER';
+    // Send a response
+    const CRUDOP = await crudOP(query, undefined, true)
+    res.send(CRUDOP.rows);
 });
 // UPDATE
 app.put('/customer', async function(req, res){
@@ -707,21 +631,9 @@ app.post('/customer-status', async function(req, res) {
 });
 // READ
 app.get('/customer-status', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM CUST_STATUS WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM CUST_STATUS';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM CUST_STATUS';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/customer-status', async function(req, res){
@@ -789,21 +701,9 @@ app.post('/vehicle', async function(req, res){
 });
 // READ
 app.get('/vehicle', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM VEHICLE WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM VEHICLE';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM VEHICLE';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/vehicle', async function(req, res){
@@ -880,21 +780,9 @@ app.post('/vehicle-make', async function(req, res){
 });
 // READ
 app.get('/vehicle-make', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM VEHICLE_MAKE WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
-        let query = 'SELECT * FROM VEHICLE_MAKE';
-        // Send a response
-        res.send(await crudOP(query, undefined, true));
-    }
+    let query = 'SELECT * FROM VEHICLE_MAKE';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
 });
 // UPDATE
 app.put('/vehicle-make', async function(req, res){
@@ -957,21 +845,9 @@ app.post('/vehicle-model', async function(req, res){
 });
 // READ
 app.get('/vehicle-model', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted || false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM VEHICLE_MODEL WHERE ${columnName} =:columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query, binds, true));
-    }else{
         let query = 'SELECT * FROM VEHICLE_MODEL';
         // Send a response
         res.send(await crudOP(query, undefined, true));
-    }
 });
 // UPDATE
 app.put('/vehicle-model', async function(req, res){
@@ -1038,21 +914,9 @@ app.post('/state', async function(req, res){
 });
 // READ
 app.get('/state', async function(req, res){
-    // For WHERE statement
-    let columnName = req.body.columnName; // Search by table attribute
-    let columnValue = req.body.columnValue; // Value of attribute
-    let isRestricted = req.body.isRestricted ||false; // (true = Where IS needed)/(false = WHERE IS NOT needed)
-    // Query Creation
-    if (isRestricted){
-        let query = `SELECT * FROM STATE WHERE ${columnName} = :columnValue`;
-        let binds = [columnValue];
-        // Send a response
-        res.send(await crudOP(query,binds, true));
-    }else{
         let query = 'SELECT * FROM STATE';
         // Send a response
         res.send(await crudOP(query, undefined, true));
-    }
 });
 // UPDATE
 app.put('/state', async function(req, res){
@@ -1122,24 +986,23 @@ app.post('/customervehicle', async function(req, res) {
     const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :city, :address, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, city, address, zip, phone, email];
+    let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email];
     let CRUDOP = await crudOP(custQuery, binds, false);
     console.log(CRUDOP);
     //Get customer rowID
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
     let lastItem = await crudOP(lastItemQuery, undefined, true);
-    let lastRow = lastItem.rows[0][0];
+    let lastRowId = lastItem.rows[0][0];
     res.json({
-        lastRowID: lastRow
+        lastRowID: lastRowId
     });
     //Vehicle Column Names 
     const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :model_id, :color_id, :year, :license_plate, :state_id, :vin"
     //Vehicle Query
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let vehicleBinds = [lastRow, model_id, color_id, year, license_plate, state_id, vin];
+    let vehicleBinds = [vehicle_id, lastRow, model_id, color, year, license_plate, vin];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
 });
-
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
 });
