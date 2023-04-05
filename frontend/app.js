@@ -104,6 +104,10 @@ app.get('/', async function(req, res) {
     res.render('customerlookup');
   });
   
+  app.get('/customer', function(req, res){
+    res.render('customer');
+  });
+
   app.get('/createcustomer', async function(req, res) {
     const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
       if (response.data == 'FAILURE'){
