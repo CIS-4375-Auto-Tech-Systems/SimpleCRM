@@ -1,5 +1,6 @@
 // oracledb
 const express = require("express");
+const cors = require("cors");
 const oracledb = require('oracledb');
 const fs = require("fs");
 // dotenv
@@ -26,6 +27,8 @@ if (libPath && fs.existsSync(libPath)) {
 //declare port number for the api
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 /* CRUD OPS */
 async function crudOP(query, binds, isRead){
@@ -85,14 +88,13 @@ function compare_update(oldValue, newValue) {
 };
 
 /* SPECIAL ENDPOINTS */
-/* CUSTOMER LOOKUP */
-// READ
-app.get('/lookup', async function(req, res){
-    // Query Creation
-    let query = '';
-    let binds = [];
-    res.send(await crudOP(query, binds, true));
-});
+app.post('/lookup', async function(req, res){{
+    let query = `SELECT * FROM CUSTOMER WHERE name = :searchValue`;
+    let binds = [req.body.searchValue];
+    // Send a response
+    const CRUDOP = await crudOP(query,binds, true);
+    res.send(CRUDOP.rows);
+}});
 
 /* EMPLOYEE */
 // CREATE
@@ -614,7 +616,8 @@ app.get('/customer', async function(req, res){
     }else{
         let query = 'SELECT * FROM CUSTOMER';
         // Send a response
-        res.send(await crudOP(query, undefined, true));
+        const CRUDOP = await crudOP(query, undefined, true)
+        res.send(CRUDOP.rows);
     }
 });
 // UPDATE

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Page</title>
+    <%- include('partials/head.ejs'); %>
+  </head>
+  <body>
+    <div class="container">
+      <%- include('partials/navbar.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="content">
+          <div class="customer-info">
+            <div class="profile-photo">
+              <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
+            </div>
+            <div class="customer-details">
+              <h1 id="custName"></h1>
+              <p id="custAddress"></p>
+              <p id="custPhone"></p>
+              <p id="custEmail"></p>
+            </div>
+          </div>
+          <div class="vehicle-info">
+            <h2>Vehicles</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Make</th>
+                  <th>Model</th>
+                  <th>Year</th>
+                  <th>plate</th>
+                </tr>
+              </thead>
+              <tbody id="vehicles">
+                <tr>
+                  <td>Hyundai</td>
+                  <td>Elantra</td>
+                  <td>2017</td>
+                  <td>TYY4586</td>
+                </tr>
+                <tr>
+                  <td>Honda</td>
+                  <td>Accord</td>
+                  <td>2008</td>
+                  <td>DEF456</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="service-history">
+            <h2>Service History</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Date In</th>
+                  <th>Date Out</th>
+                  <th>Total Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="services">
+                <tr>
+                  <td>Oil Change</td>
+                  <td>03/01/2023</td>
+                  <td>03/01/2023</td>
+                  <td>$29.99</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                    <button class="edit-service-button">Edit</button>
+                    <button class="delete-service-button">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Brake Service</td>
+                  <td>02/01/2023</td>
+                  <td>02/01/2023</td>
+                  <td>$299.99</td>
+                  <td>
+                    <button class="edit-service-button">Edit</button>
+                    <button class="delete-service-button">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <footer>
+          <%- include('partials/footer.ejs'); %>
+        </footer>
+        <script>
+          const sessionStorageControl = {
+            //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+            storeItem(key, value){
+              sessionStorage.setItem(key, value);
+            },
+            readItem(key){
+              return sessionStorage.getItem(key);
+            },
+            removeItem(key){
+              sessionStorage.removeItem(key);
+            }
+          }
+          // Read cust_id from session storage
+          const cust_id = sessionStorageControl.readItem("cust_id");
+          async function getCust (custID) {
+            const response = await fetch("http://localhost:3000/customer");
+            const customers = await response.json();
+            let match = '';
+            customers.forEach(customer => {
+              if (customer[0] == custID){
+                match = customer;
+              }
+            });
+            return match
+          }
+          async function getVehicle (custID) {
+            const response = await fetch("http://localhost:3000/vehicle");
+            const vehicles = await response.json();
+            let match = '';
+            vehicles.forEach(vehicle => {
+              if (vehicle[1] == custID){
+                match = vehicle;
+              }
+            });
+            return match
+          }
+          async function getVehicleModel (modelID) {
+            const response = await fetch("http://localhost:3000/vehicle-model");
+            const models = await response.json();
+            let match = '';
+            models.forEach(model => {
+              if (model[0] == id){
+                match = model;
+              }
+            });
+            return match
+          }
+          async function getVehicleMake (makeID) {
+            const response = await fetch("http://localhost:3000/vehicle-make");
+            const makes = await response.json();
+            let match = '';
+            makes.forEach(make => {
+              if (make[0] == makeID){
+                match = make;
+              }
+            });
+            return match
+          }
+          async function getServiceOrder (custID, carID) {
+            const reponse = await fetch("http://localhost:3000/service-order");
+            const orders = await resposne.json();
+            let match = '';
+            orders.forEach(serviceOrder => {
+              if (serviceOrder[3] == custID && serviceOrder[4] == carID){
+                match = serviceOrder;
+              }
+            });
+            return match
+          }
+          async function getService (serviceID) {
+            const response = await fetch("http://localhost:3000/service");
+            const services = await response.json();
+            let match = '';
+            services.forEach(service => {
+              if (service[0] == serviceID){
+                match = service;
+              }
+            });
+            return match
+          }
+          async function getServiceStatus (orderStatusID) {
+            const response = await fetch ("http://localhost:3000/service-status");
+            const serviceStatuses = await response.json();
+            let match = '';
+            serviceStatuses.forEach(service_status => {
+              if (service_status[0] == orderStatusID) {
+                match = service_status;
+              }
+            });
+            return match
+          }
+
+          async function createPage (custID) {
+            /* CUSTOMER */ // customer
+            // GET customer table
+            const customer = await getCust(custID);
+            const custId = customer[0] || 'No Id Found';
+            const custName = customer[3] || 'No Name Found';
+            const custAddress = customer[4] || 'No Address Found';
+            const custPhone = customer[8] || 'No Phone Number Found';
+            const custEmail = customer[10] || 'No Email Found';
+            // Elements for Customer Section
+            const custNameEle = document.getElementById("custName");
+            const custAddressEle = document.getElementById("custAddress");
+            const custPhoneEle = document.getElementById("custPhone");
+            const custEmailEle = document.getElementById("custEmail");
+            // Add Dynamic Information
+            custNameEle.textContent = custName;
+            custAddressEle.textContent = custAddress;
+            custPhoneEle.textContent = custPhone;
+            custEmailEle.textContent = custEmail;
+
+            /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
+            // GET vehicle table
+            const vehicles = await getVehicle(custID);
+            
+            // GET vehicle_make table
+            const vehicle_make = await getVehicleMake(vehicleID);
+
+            // GET vehicle_model table
+            const vehicle_model = await getVehicleModel(make_id);
+
+            // Elements for Vehicle Section
+            const makeEle = document.getElementById("vehicleMake");
+            const modelEle = document.getElementById("vehicleModel");
+            const yearEle = document.getElementById("vehicleYear");
+            const plateEle = document.getElementById("vehiclePlate");
+            // Add Dynamic Information ---like customerlookup.ejs
+
+
+            /* SERVICE HISTORY */ //service_order, service, service_status
+            // GET serivce_order table
+            const serivce_order = await getServiceOrder(custID, vehicle_id);
+
+            // GET service table
+            const service = await getService(service_id);
+
+            // GET service_status table
+            const service_status = await getServiceStatus(service_status_id);
+
+            // Elements for Serivce History Section
+            const serviceEle = document.getElementById("service");
+            const dateInEle = document.getElementById("datein");
+            const dateOutEle = document.getElementById("dateout");
+            const totalEle = document.getElementById("totalEle");
+            const actionEle = document.getElementById("action");
+            // Add Dynamic Information ---like customerlookup.ejs
+
+          }
+          createPage(cust_id);
+          // Delete cust_id from session storage when the page is unloaded
+          window.addEventListener('beforeunload', function(event) {
+            sessionStorageControl.removeItem("cust_id");
+          });
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
