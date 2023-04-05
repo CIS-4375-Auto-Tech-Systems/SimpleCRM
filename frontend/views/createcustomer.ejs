@@ -16,33 +16,34 @@
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
         <form class="row g-3" method="POST">
-          <h2>Create Customer Form</h2><p>* Indicates field is required</p>
-          <div class="col-md-4">
+          <h2>Create Customer Form</h2><p>! Indicates field is required</p>
+          <div class="col-md-3">
             <label for="inputFirstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" required>
+            <input type="text" style="font-size:16px" class="form-control" id="firstName" required>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <label for="inputMI" class="form-label">Middle Initial</label>
-            <input type="text" min="0" max="1"class="form-control" id="MI">
+            <input type="text" minlength="0" maxlength="1"class="form-control" id="MI">
           </div>
           <div class="col-md-4">
             <label for="inputLastName" class="form-label">Last Name</label>
             <input type="text" class="form-control" id="lastName" required>
           </div>
-          <div class="col-md-6">
+          <div></div>
+          <div class="col-md-4">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="inputEmail4"required>
           </div>
-          <div class="col-6">
+          <div class="col-4">
             <label for="address" class="form-label">Address</label>
             <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"required>
           </div>
-
-          <div class="col-md-6">
+          <div></div>
+          <div class="col-md-3">
             <label for="city" class="form-label">City</label>
             <input type="text" class="form-control" id="inputCity"required>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <label for="state" class="form-label">State</label>
             <select id="state" class="form-select"required>
               <option selected></option>
@@ -51,26 +52,24 @@
               <% }); %>
             </select>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <label for="zip" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
+            <input type="text" maxlength="5" class="form-control" id="inputZip" required>
           </div>
           <h3>Car Details</h3>
-          <div class="col-md-6">
+          <div class="col-md-3">
             <label for="color" class="form-label">Color</label>
-            <select id="color" class="form-select"required>
-              <option selected></option>
-            </select>
-          </div>
-          <div class="col-md-2">
-            <label for="city" class="form-label">Year</label>
-            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control"required />
-          </div>
-          <div class="col-md-6">
-            <label for="city" class="form-label">Vin Number</label>
             <input type="text" class="form-control" id="inputCity"required>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
+            <label for="Year" class="form-label">Year</label>
+            <input type="number" maxlength="4" min="1900" max="2099" step="1" value="2016" class="form-control"required />
+          </div>
+          <div class="col-md-2">
+            <label for="VinNum" class="form-label">Vin Number</label>
+            <input type="text" minlength="11" maxlength="17"class="form-control" id="VinNum"required>
+          </div>          <div></div>
+          <div class="col-md-2">
             <label for="service" class="form-label">Service</label>
             <select id="service" class="form-select"required>
               <option selected></option>
@@ -79,7 +78,7 @@
               <% }); %>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <label for="make" class="form-label">Make</label>
             <select id="make" class="form-select" onchange="myFunction()" required>
               <option selected></option>
@@ -88,7 +87,7 @@
               <% }); %>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <label for="model" class="form-label">Model</label>
             <select id="model" class="form-select"required>
               <option ></option>
