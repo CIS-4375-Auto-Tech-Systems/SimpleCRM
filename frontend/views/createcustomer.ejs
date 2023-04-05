@@ -19,23 +19,23 @@
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
-        <form class="row g-3" method="POST">
+        <form class="row g-3" method="POST" action="http://localhost:3000/customervehicle">
           <h2>Create Customer Form</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-2">
             <label for="inputFirstName" class="form-label">First Name<span class="required">*</span></label>
-            <input type="text" class="form-control" id="firstName" required>
+            <input type="text" class="form-control" id="firstName" name="first_name" required>
           </div>
           <div class="col-md-1">
             <label for="inputMI" class="form-label">Middle Initial</label>
-            <input type="text" min="0" max="1"class="form-control" id="MI">
+            <input type="text" min="0" max="1"class="form-control" id="MI" name="middle_in">
           </div>
           <div class="col-md-2">
             <label for="inputLastName" class="form-label">Last Name<span class="required">*</span></label>
-            <input type="text" class="form-control" id="lastName" required>
+            <input type="text" class="form-control" id="lastName" name="last_name" required>
           </div>
           <div class="col-md-2">
             <label for="tel" class="form-label">Phone Number<span class="required">*</span></label>
-            <input type="tel" class="form-control" id="inputPhone"  name="tel" oninput="formatPhoneNumber(this)" required>
+            <input type="tel" class="form-control" id="inputPhone"  name="phone" oninput="formatPhoneNumber(this)" required>
           </div>
           <div class="col-md-4">
             <label for="email" class="form-label">Email<span class="required">*</span></label>
@@ -43,16 +43,16 @@
           </div>
           <div class="col-4">
             <label for="address" class="form-label">Address<span class="required">*</span></label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"required>
+            <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St"required>
           </div>
 
           <div class="col-md-2">
             <label for="city" class="form-label">City<span class="required">*</span></label>
-            <input type="text" class="form-control" id="inputCity"required>
+            <input type="text" class="form-control" id="inputCity" name="city" required>
           </div>
           <div class="col-md-2">
             <label for="state" class="form-label">State<span class="required">*</span></label>
-            <select id="state" class="form-select"required>
+            <select id="state" class="form-select" name="state_id" required>
               <option selected></option>
               <% states.forEach(function(state){ %>
                 <option value=<%= state[0] %>><%= state[2] %></option>
@@ -61,12 +61,12 @@
           </div>
           <div class="col-md-1">
             <label for="zip" class="form-label">Zip<span class="required">*</span></label>
-            <input type="text" class="form-control" id="inputZip">
+            <input type="text" class="form-control" id="inputZip" name="zip">
           </div>
           <h3>Car Details</h3>
           <div class="col-md-2">
             <label for="color" class="form-label">Color<span class="required">*</span></label>
-            <select id="color" class="form-select"required>
+            <select id="color" class="form-select" name="color_id" required>
               <option selected></option>
               <% color.forEach(function(color){ %>
                 <option value=<%= color[0] %>><%= color[1] %></option>
@@ -75,24 +75,15 @@
           </div>
           <div class="col-md-1">
             <label for="city" class="form-label">Year<span class="required">*</span></label>
-            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control"required />
+            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control" name="year" required />
           </div>
           <div class="col-md-2">
             <label for="vinnumber" class="form-label">Vin Number<span class="required">*</span></label>
-            <input type="text" class="form-control" id="vinnumber"  maxlength="17" required>
+            <input type="text" class="form-control" id="vinnumber"  maxlength="17" name="vin" required>
           </div>
           <div class="col-md-2">
             <label for="licenseplate" class="form-label">License Plate Number<span class="required">*</span></label>
-            <input type="text" class="form-control" id="inputLicensePlate"  maxlength="7" required>
-          </div>
-          <div class="col-md-4">
-            <label for="service" class="form-label">Service<span class="required">*</span></label>
-            <select id="service" class="form-select"required>
-              <option selected></option>
-              <% services.forEach(function(service){ %>
-                <option value=<%= service[0] %>><%= service[1] %></option>
-              <% }); %>
-            </select>
+            <input type="text" class="form-control" id="inputLicensePlate"  maxlength="7" name="license_plate" required>
           </div>
           <div class="col-md-2">
             <label for="make" class="form-label">Make<span class="required">*</span></label>
@@ -105,7 +96,7 @@
           </div>
           <div class="col-md-2">
             <label for="model" class="form-label">Model<span class="required">*</span></label>
-            <select id="model" class="form-select"required>
+            <select id="model" class="form-select" name="model_id" required>
               <option ></option>
               <% models.forEach(function(model){ %>
                 <option data-make_id =<%=model[1]%> value=<%= model[0] %>><%= model[2] %></option>

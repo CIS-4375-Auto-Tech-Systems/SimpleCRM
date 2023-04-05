@@ -1046,25 +1046,25 @@ app.post('/customervehicle', async function(req, res) {
     let license_plate = req.body.license_plate;
     let vin = req.body.vin;
     //Customer Column Names 
-    const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :city, :address, :zip, :phone, :email";
+    const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :address, :city, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, state_id, first_name, middle_in, last_name, address, city, state, zip, phone, email];
-    let CRUDOP = await crudOP(custQuery, binds, false);
-    console.log(CRUDOP);
+    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email];
+    let custCRUDOP = await crudOP(custQuery, binds, false);
     //Get customer rowID
-    let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${custCRUDOP.lastRowid}'`;
     let lastItem = await crudOP(lastItemQuery, undefined, true);
     let lastRowId = lastItem.rows[0][0];
-    res.json({
-        lastRowID: lastRowId
-    });
     //Vehicle Column Names 
-    const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :model_id, :color_id, :year, :license_plate, :state_id, :vin"
+    const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :color_id, :model_id, :year, :license_plate, :state_id, :vin"
     //Vehicle Query
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let vehicleBinds = [lastRowId, model_id, color, year, license_plate, vin];
+    let vehicleBinds = [lastRowId, color_id, model_id, year, license_plate, state_id, vin];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
+    let completeResponse = vehicleCRUDOP.rows[0][0];
+    res.json({
+        lastRowID: completeResponse
+    });
 });
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
