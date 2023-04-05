@@ -10,6 +10,7 @@
         flex-direction: column;
         align-items: center;
         margin-top: 50px;
+        width: 100%;
       }
 
       #searchBar {
@@ -43,7 +44,7 @@
           <form action="" method="post">
             <fieldset>
               <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
-              <input type="button" id="searchButton" onclick="search()" value="Search">
+              <input type="submit" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
             </fieldset>
           </form>
           <div id="results">
