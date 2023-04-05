@@ -85,7 +85,7 @@ function compare_update(oldValue, newValue) {
 
 /* SPECIAL ENDPOINTS */
 app.post('/lookup', async function(req, res){{
-    let query = `SELECT * FROM CUSTOMER WHERE name = :searchValue`;
+    let query = `SELECT * FROM CUSTOMER WHERE first_name = :searchValue`;
     let binds = [req.body.searchValue];
     // Send a response
     const CRUDOP = await crudOP(query,binds, true);
