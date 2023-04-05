@@ -764,6 +764,31 @@ app.delete('/vehicle', async function(req, res){
     let binds = [vehicle_id];
     res.send(await crudOP(query, binds, false));
 });
+app.post('/color', async function(req, res){
+    // Column name
+    const colorAttrubutes = ':color_id, :color';
+    // Values
+    let color_id = req.body.color;
+    let color = req.body.color;
+    // Query Creation
+    let query = `INSERT INTO COLOR VALUES (${colorAttrubutes})`;
+    let binds = [color_id, color];
+    let CRUDOP = await crudOP(query, binds, false);
+        // Find Affected vehicle by ROWID to send back
+    let lastItemQuery = `SELECT * FROM COLOR WHERE ROWID = '${CRUDOP.lastRowid}'`;
+    let lastItemId = await crudOP(lastItemQuery, undefined, true);
+    res.json({ 
+        lastItemId: lastItemId
+    });
+});
+// READ
+// READ
+app.get('/color', async function(req, res){
+    let query = 'SELECT * FROM COLOR';
+    // Send a response
+    res.send(await crudOP(query, undefined, true));
+});
+
 /* VEHICLE_MAKE */
 // CREATE
 app.post('/vehicle-make', async function(req, res){
@@ -991,7 +1016,7 @@ app.post('/customervehicle', async function(req, res) {
     const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :city, :address, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_id, cust_status_id, state_id, name, address, city, state, zip, phone, license_num, email];
+    let binds = [cust_id, cust_status_id, state_id, first_name, middle_in, last_name, address, city, state, zip, phone, email];
     let CRUDOP = await crudOP(custQuery, binds, false);
     console.log(CRUDOP);
     //Get customer rowID
