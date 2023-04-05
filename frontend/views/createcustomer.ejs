@@ -2,85 +2,123 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
-    
+    <title>Create Customer Form</title>
+    <style>
+      form {
+        margin-top: 100%;
+      }
+    </style>
   </head>
-  <body>
+  <body id="main">
     <div class="container">
-        <%- include('partials/leftcolumn.ejs'); %>
+        <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">this is create customer, so it needs to have a form to connect to the backend</div>
-        <form class="row g-3">
-          <h2>Create Customer Form</h2>
-          <div class="col-md-6">
+        <div class="bottomrow">
+        <form class="row g-3" method="POST">
+          <h2>Create Customer Form</h2><p>! Indicates field is required</p>
+          <div class="col-md-3">
             <label for="inputFirstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName">
+            <input type="text" style="font-size:16px" class="form-control" id="firstName" required>
           </div>
-          <div class="col-md-6">
-            <label for="inputLastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName">
-          </div>
-          <div class="col-md-6">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4">
-          </div>
-          <div class="col-12">
-            <label for="licensenum" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="licenseNum" 
-          </div>
-          <div class="col-12">
-            <label for="inputAddress" class="form-label">Address</label>
-            <input type="text" class="form-control" id="inputAddress" 
-          </div>
-          <div class="col-md-6">
-            <label for="inputCity" class="form-label">City</label>
-            <input type="text" class="form-control" id="inputCity">
+          <div class="col-md-1">
+            <label for="inputMI" class="form-label">Middle Initial</label>
+            <input type="text" minlength="0" maxlength="1"class="form-control" id="MI">
           </div>
           <div class="col-md-4">
-            <label for="inputState" class="form-label">State</label>
-            <select id="inputState" class="form-select">
+            <label for="inputLastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" required>
+          </div>
+          <div></div>
+          <div class="col-md-4">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail4"required>
+          </div>
+          <div class="col-4">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"required>
+          </div>
+          <div></div>
+          <div class="col-md-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="inputCity"required>
+          </div>
+          <div class="col-md-2">
+            <label for="state" class="form-label">State</label>
+            <select id="state" class="form-select"required>
               <option selected></option>
-              <option>...</option>
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[2] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="zip" class="form-label">Zip</label>
+            <input type="text" maxlength="5" class="form-control" id="inputZip" required>
+          </div>
+          <h3>Car Details</h3>
+          <div class="col-md-3">
+            <label for="color" class="form-label">Color</label>
+            <input type="text" class="form-control" id="inputCity"required>
+          </div>
+          <div class="col-md-2">
+            <label for="Year" class="form-label">Year</label>
+            <input type="number" maxlength="4" min="1900" max="2099" step="1" value="2016" class="form-control"required />
+          </div>
+          <div class="col-md-2">
+            <label for="VinNum" class="form-label">Vin Number</label>
+            <input type="text" minlength="11" maxlength="17"class="form-control" id="VinNum"required>
+          </div>          <div></div>
+          <div class="col-md-2">
+            <label for="service" class="form-label">Service</label>
+            <select id="service" class="form-select"required>
+              <option selected></option>
+              <% services.forEach(function(service){ %>
+                <option value=<%= service[0] %>><%= service[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-2">
-            <label for="inputZip" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
-          </div>
-          <h3>Car Details</h3>
-          <div class="col-md-4">
-            <label for="inputService" class="form-label">Service</label>
-            <select id="inputService" class="form-select">
+            <label for="make" class="form-label">Make</label>
+            <select id="make" class="form-select" onchange="myFunction()" required>
               <option selected></option>
-              <option>...</option>
+              <% makes.forEach(function(make){ %>
+                <option value=<%= make[0] %>><%= make[1] %></option>
+              <% }); %>
             </select>
           </div>
-          <div class="col-md-4">
-            <label for="inputMake" class="form-label">Make</label>
-            <select id="inputMake" class="form-select">
-              <option selected></option>
-              <option>...</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="inputModel" class="form-label">Model</label>
-            <select id="inputModel" class="form-select">
+          <div class="col-md-2">
+            <label for="model" class="form-label">Model</label>
+            <select id="model" class="form-select"required>
               <option ></option>
-              <option>...</option>
+              <% models.forEach(function(model){ %>
+                <option data-make_id =<%=model[1]%> value=<%= model[0] %>><%= model[2] %></option>
+              <% }); %>
             </select>
+            <br>
+            <script>
+              function myFunction(){
+                  let makeValue = document.getElementById("make").value;
+                  let x=document.getElementById("model").options;
+                  for (let i=0; i<x.length; i++){
+                      x[i].removeAttribute("hidden");
+                  }
+                  for (let i=0; i<x.length; i++){
+                      if (makeValue == x[i].dataset.make_id){
+                          console.log(makeValue);
+                          console.log(x[i]);
+                      }else{
+                          x[i].setAttribute("hidden", "hidden");
+                      }
+                  }
+              };
+          </script>
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </form>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
       </div>
-    </div>       
+    </div>
+    </div>        
   </body>
-  
 </html>
-
-
-
-
