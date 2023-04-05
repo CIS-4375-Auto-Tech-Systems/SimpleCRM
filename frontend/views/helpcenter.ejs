@@ -2,17 +2,140 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
+    <title>Help Center</title>
+    <script>
+    function showSampleText(category) {
+  let sampleText = '';
+  let sampleTextTitle = '';
+  switch(category) {
+    case 'assistance':
+      sampleText = 'Currently we do not have a Call center but be sure to email autotechsolutionsUH@gmail.com and we will get back to you as soon as we can.';
+      sampleTextTitle = 'Assistance';
+      break;
+    case 'user-guides':
+      sampleText = 'Dashboard shows you the overview of the records that is listed in the interface.  Create Customer is needed when the customer is not in the system at all and needs to add their order information and personal information including their vehicle information.  Customer Lookup is a profile search of all customers in the database with all the infomation that we received from them.  Reports will have all the analytics of the data.  Settings has all the preferences in case you want to change the theme or font size.';
+      sampleTextTitle = 'User Guides';
+      break;
+    case 'developers':
+      sampleText = 'The developers of this interface are MJ Hamed, Donna Huynh, Stephane Lutz, Marianel Liga, Xxavier Williams, Shar Iqbal, Wakif Ferdous and Taqi Syed';
+      sampleTextTitle = 'Developers';
+      break;
+    default:
+      sampleText = '';
+      sampleTextTitle = '';
+  }
+  // Set the content of the modal
+  document.getElementById('sampleTextModalLabel').innerHTML = sampleTextTitle;
+  document.getElementById('sampleTextModalBody').innerHTML = sampleText;
+  // Show the modal
+  $('#sampleTextModal').modal('show');
+}
+    </script>
+    
   </head>
-  <body>
+  <body id="main">
     <div class="container">
-        <%- include('partials/leftcolumn.ejs'); %>
+        <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">THIS IS THE help center with our groups information and probably a user manual</div>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
-      </div>
-    </div>        
+        <div class="bottomrow">
+          <h2>Help Center</h2>
+          <br>
+          <h2><center>Frequently Asked Questions</center></h2>
+          <br>
+          <div class="accordion" id="faqAccordion">
+            <div class="card">
+              <div class="card-header card-link" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <h3 class="mb-0">
+                  How do I add a vehicle for my customer?
+                </h3>
+              </div>
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqAccordion">
+                <div class="card-body">
+                  We offer a 30-day money-back guarantee on all products. If you are not satisfied with your purchase for any reason, please contact us to initiate the return process.
+                </div>
+              </div>
+            </div>
+      
+            <div class="card">
+              <div class="card-header card-link" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <h3 class="mb-0">
+                  What happens if there is a new model for a car?
+                </h3>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+                <div class="card-body">
+                  Once your order has shipped, you will receive a tracking number via email. You can use this number to track your package on our website or on the carrier's website.
+                </div>
+              </div>
+            </div>
+      
+            <div class="card">
+              <div class="card-header card-link" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <h3 class="mb-0">
+                  What if there is not a vehicle information listed in the menu?
+                </h3>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                <div class="card-body">
+                  We accept all major credit cards, PayPal, and bank transfers. Please note that some payment methods may not be available in all regions.
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-md-4">
+                <div class="card custom-card shadow" onclick="showSampleText('assistance')">
+                  <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                    <i class="bi bi-question-octagon-fill"></i>
+                    <h3 class="card-title">Assistance</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card custom-card shadow" onclick="showSampleText('user-guides')">
+                  <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                    <i class="bi bi-book"></i>
+                    <h3 class="card-title">User Guides</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card custom-card shadow" onclick="showSampleText('developers')">
+                  <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                    <i class="bi bi-code-slash"></i>
+                    <h3 class="card-title">Developers</h3>
+                  </div>
+                </div>
+              </div>
+          <div class="modal fade" id="sampleTextModal" tabindex="-1" role="dialog" aria-labelledby="sampleTextModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="sampleTextModalLabel"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" id="sampleTextModalBody">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+                  
+          <div class="still-have-questions">
+            <h2><center>Still have questions?</center></h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/925/925025.png" alt="icon" style="width: 100px; height: 100px;">
+            <h3>Contact us at <a href="mailto:autotechsolutionsUH@gmail.com">autotechsolutionsUH@gmail.com</a></h3>
+          </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    </div>
+    </div>      
   </body>
 </html>
