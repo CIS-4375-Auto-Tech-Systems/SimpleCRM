@@ -22,6 +22,7 @@
         <form class="row g-3" method="POST" action="http://localhost:3000/customervehicle">
           <h2>Create Customer Form</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-2">
+            <!-- the name attribute is used to create a request so please use it-->
             <label for="inputFirstName" class="form-label">First Name<span class="required">*</span></label>
             <input type="text" class="form-control" id="firstName" name="first_name" required>
           </div>
@@ -35,11 +36,11 @@
           </div>
           <div class="col-md-2">
             <label for="tel" class="form-label">Phone Number<span class="required">*</span></label>
-            <input type="tel" class="form-control" id="inputPhone"  name="phone" oninput="formatPhoneNumber(this)" required>
+            <input type="tel" class="form-control" id="inputPhone" name="phone" placeholder="1234567890" minlength="10" maxlength="10" required>
           </div>
           <div class="col-md-4">
             <label for="email" class="form-label">Email<span class="required">*</span></label>
-            <input type="email" class="form-control" id="inputEmail"  name="email"required>
+            <input type="email" class="form-control" id="inputEmail"  name="email" required>
           </div>
           <div class="col-4">
             <label for="address" class="form-label">Address<span class="required">*</span></label>
@@ -54,6 +55,7 @@
             <label for="state" class="form-label">State<span class="required">*</span></label>
             <select id="state" class="form-select" name="state_id" required>
               <option selected></option>
+              <!--The value of the option is what is part of the request-->
               <% states.forEach(function(state){ %>
                 <option value=<%= state[0] %>><%= state[2] %></option>
               <% }); %>
