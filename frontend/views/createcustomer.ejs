@@ -2,47 +2,124 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
-    <meta charset="UTF-8">
     <title>Create Customer Form</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      form {
+        margin-top: 100%;
+      }
+    </style>
   </head>
-  <body>
-    
+  <body id="main">
     <div class="container">
-        <%- include('partials/leftcolumn.ejs'); %>
+        <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">this is create customer, so it needs to have a form to connect to the backend</div>
-        
-      <h1>Create Customer Form</h1>
-      <form>
-          <div class="form-group">
-              <label for="name">Name:</label>
-              <input type="text" class="form-control" id="name" placeholder="Enter name">
+        <div class="bottomrow">
+        <form class="row g-3" method="POST">
+          <h2>Create Customer Form</h2><p>* Indicates field is required</p>
+          <div class="col-md-4">
+            <label for="inputFirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" required>
           </div>
-          <div class="form-group">
-              <label for="email">Email:</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email">
+          <div class="col-md-2">
+            <label for="inputMI" class="form-label">Middle Initial</label>
+            <input type="text" min="0" max="1"class="form-control" id="MI">
           </div>
-          <div class="form-group">
-              <label for="phone">Phone:</label>
-              <input type="tel" class="form-control" id="phone" placeholder="Enter phone number">
+          <div class="col-md-4">
+            <label for="inputLastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" required>
           </div>
-          <div class="form-group">
-              <label for="address">Address:</label>
-              <textarea class="form-control" id="address" rows="3" placeholder="Enter address"></textarea>
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail4"required>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+          <div class="col-6">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"required>
+          </div>
 
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <footer>
-          <%- include('partials/footer.ejs'); %>
-        </footer>
+          <div class="col-md-6">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="inputCity"required>
+          </div>
+          <div class="col-md-4">
+            <label for="state" class="form-label">State</label>
+            <select id="state" class="form-select"required>
+              <option selected></option>
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[2] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="zip" class="form-label">Zip</label>
+            <input type="text" class="form-control" id="inputZip">
+          </div>
+          <h3>Car Details</h3>
+          <div class="col-md-6">
+            <label for="color" class="form-label">Color</label>
+            <select id="color" class="form-select"required>
+              <option selected></option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="city" class="form-label">Year</label>
+            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control"required />
+          </div>
+          <div class="col-md-6">
+            <label for="city" class="form-label">Vin Number</label>
+            <input type="text" class="form-control" id="inputCity"required>
+          </div>
+          <div class="col-md-4">
+            <label for="service" class="form-label">Service</label>
+            <select id="service" class="form-select"required>
+              <option selected></option>
+              <% services.forEach(function(service){ %>
+                <option value=<%= service[0] %>><%= service[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="make" class="form-label">Make</label>
+            <select id="make" class="form-select" onchange="myFunction()" required>
+              <option selected></option>
+              <% makes.forEach(function(make){ %>
+                <option value=<%= make[0] %>><%= make[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="model" class="form-label">Model</label>
+            <select id="model" class="form-select"required>
+              <option ></option>
+              <% models.forEach(function(model){ %>
+                <option data-make_id =<%=model[1]%> value=<%= model[0] %>><%= model[2] %></option>
+              <% }); %>
+            </select>
+            <br>
+            <script>
+              function myFunction(){
+                  let makeValue = document.getElementById("make").value;
+                  let x=document.getElementById("model").options;
+                  for (let i=0; i<x.length; i++){
+                      x[i].removeAttribute("hidden");
+                  }
+                  for (let i=0; i<x.length; i++){
+                      if (makeValue == x[i].dataset.make_id){
+                          console.log(makeValue);
+                          console.log(x[i]);
+                      }else{
+                          x[i].setAttribute("hidden", "hidden");
+                      }
+                  }
+              };
+          </script>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
       </div>
+    </div>
     </div>        
   </body>
 </html>

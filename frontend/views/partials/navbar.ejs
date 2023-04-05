@@ -1,227 +1,233 @@
 <div id="mySidenav" class="sidenav">
-  <img src="/images/samurai.png" style="max-width: 90%;">
-  <strong>Main Menu</strong>
-  <a href="/" class="normal-font">
-      <i class="bi bi-speedometer2">Dashboard</i>
+    <img src="/images/samurai.png" style="max-width: 90%;">
+    <strong>Main Menu</strong>
+    <a href="/" class="normal-font">
+        <i class="bi bi-speedometer2">Dashboard</i>
+    </a>
+    <a href="/createorder" class="normal-font">
+        <i class="bi bi-person-plus"></i> Create Order
+    </a>
+    <a href="/createcustomer" class="normal-font">
+        <i class="bi bi-person-plus">Create Customer</i>
+    </a>
+    <a href="/customerlookup" class="normal-font">
+        <i class="bi bi-person">Customer Lookup</i> 
+    </a>
+    <a href="/reports" class="normal-font">
+      <i class="bi bi-file-bar-graph">Reports</i> 
   </a>
-  <a href="/createcustomer" class="normal-font">
-      <i class="bi bi-person-plus">Create Customer</i>
-  </a>
-  <a href="/customerlookup" class="normal-font">
-      <i class="bi bi-person">Customer Lookup</i> 
-  </a>
-  <strong>Preferences</strong>
-  <a href="/settings" class="normal-font">
-      <i class="bi bi-speedometer2">Settings</i> 
-  </a>
-  <a href="/helpcenter" class="normal-font">
-      <i class="bi bi-question-circle">Help Center</i>
-  </a>
-  <div id="clock"></div>
+    <strong>Preferences</strong>
+    <a href="/settings" class="normal-font">
+        <i class="bi bi-speedometer2">Settings</i> 
+    </a>
+    <a href="/helpcenter" class="normal-font">
+        <i class="bi bi-question-circle">Help Center</i>
+    </a>
+    <div id="clock"></div>
 </div>
-  <i class="bi bi-list" onclick="toggleMenu()" style="font-size: 60px"></i>
+    <i class="bi bi-list" onclick="toggleMenu()" style="font-size: 60px"></i>
 <script>
-  let isOpen = true;
-  function toggleMenu() {
-      if (isOpen){
-          document.getElementById("mySidenav").style.width = "0";
-          document.getElementById("main").style.marginLeft = "0";
-          isOpen = false;
-      }else{
-          document.getElementById("mySidenav").style.width = "250px";
-          document.getElementById("main").style.marginLeft = "250px";
-          isOpen = true;
-      };
-  };
-  function displayTime() {
-      var date = new Date();
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var meridiem = "AM";
-      if (hours > 12) {
-        hours = hours - 12;
-        meridiem = "PM";
+    let isOpen = true;
+    function toggleMenu() {
+        if (isOpen){
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+            isOpen = false;
+        }else{
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+            isOpen = true;
+        };
+    };
+    function displayTime() {
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var meridiem = "AM";
+        if (hours > 12) {
+          hours = hours - 12;
+          meridiem = "PM";
+        }
+        if (hours == 0) {
+          hours = 12;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        var time = hours + ":" + minutes + " " + meridiem;
+        document.getElementById("clock").innerHTML = time;
       }
-      if (hours == 0) {
-        hours = 12;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-      var time = hours + ":" + minutes + " " + meridiem;
-      document.getElementById("clock").innerHTML = time;
-    }
-    setInterval(displayTime, 1000);
-    function saveAccountSettings() {
-  const companyNameInput = document.getElementById("companyName");
-  const sponsorNameInput = document.getElementById("sponsorName");
-  const emailInput = document.getElementById("email");
-  const addressInput = document.getElementById("address");
-  const phoneInput = document.getElementById("phone");
+      setInterval(displayTime, 1000);
+      function saveAccountSettings() {
+    const companyNameInput = document.getElementById("companyName");
+    const sponsorNameInput = document.getElementById("sponsorName");
+    const emailInput = document.getElementById("email");
+    const addressInput = document.getElementById("address");
+    const phoneInput = document.getElementById("phone");
 
-  const companyName = companyNameInput.value;
-  const sponsorName = sponsorNameInput.value;
-  const email = emailInput.value;
-  const address = addressInput.value;
-  const phone = phoneInput.value;
+    const companyName = companyNameInput.value;
+    const sponsorName = sponsorNameInput.value;
+    const email = emailInput.value;
+    const address = addressInput.value;
+    const phone = phoneInput.value;
 
-  localStorage.setItem("companyName", companyName);
-  localStorage.setItem("sponsorName", sponsorName);
-  localStorage.setItem("email", email);
-  localStorage.setItem("address", address);
-  localStorage.setItem("phone", phone);
+    localStorage.setItem("companyName", companyName);
+    localStorage.setItem("sponsorName", sponsorName);
+    localStorage.setItem("email", email);
+    localStorage.setItem("address", address);
+    localStorage.setItem("phone", phone);
 
-  companyNameInput.value = companyName;
-  sponsorNameInput.value = sponsorName;
-  emailInput.value = email;
-  addressInput.value = address;
-  phoneInput.value = phone;
-
-  companyNameInput.disabled = true;
-  sponsorNameInput.disabled = true;
-  emailInput.disabled = true;
-  addressInput.disabled = true;
-  phoneInput.disabled = true;
-}
-
-function changeAccountSettings() {
-  const companyNameInput = document.getElementById("companyName");
-  const sponsorNameInput = document.getElementById("sponsorName");
-  const emailInput = document.getElementById("email");
-  const addressInput = document.getElementById("address");
-  const phoneInput = document.getElementById("phone");
-
-  companyNameInput.disabled = false;
-  sponsorNameInput.disabled = false;
-  emailInput.disabled = false;
-  addressInput.disabled = false;
-  phoneInput.disabled = false;
-}
-
-window.addEventListener("load", function() {
-  const companyNameInput = document.getElementById("companyName");
-  const sponsorNameInput = document.getElementById("sponsorName");
-  const emailInput = document.getElementById("email");
-  const addressInput = document.getElementById("address");
-  const phoneInput = document.getElementById("phone");
-
-  const companyName = localStorage.getItem("companyName");
-  const sponsorName = localStorage.getItem("sponsorName");
-  const email = localStorage.getItem("email");
-  const address = localStorage.getItem("address");
-  const phone = localStorage.getItem("phone");
-
-  if (companyName) {
     companyNameInput.value = companyName;
-    companyNameInput.disabled = true;
-  }
-  if (sponsorName) {
     sponsorNameInput.value = sponsorName;
-    sponsorNameInput.disabled = true;
-  }
-  if (email) {
     emailInput.value = email;
-    emailInput.disabled = true;
-  }
-  if (address) {
     addressInput.value = address;
-    addressInput.disabled = true;
-  }
-  if (phone) {
     phoneInput.value = phone;
+
+    companyNameInput.disabled = true;
+    sponsorNameInput.disabled = true;
+    emailInput.disabled = true;
+    addressInput.disabled = true;
     phoneInput.disabled = true;
   }
-});
-function formatPhoneNumber(input) {
-input = input.value.replace(/\D/g, '');
-input = input.substring(0, 10);
-var size = input.length;
-if(size == 0){
-  input = input;
-} else if(size < 4){
-  input = '('+input;
-} else if(size < 7){
-  input = '('+input.substring(0, 3)+') '+input.substring(3, 6);
-} else {
-  input = '('+input.substring(0, 3)+') '+input.substring(3, 6)+'-'+input.substring(6, 10);
-}
-event.target.value = input;
+
+  function changeAccountSettings() {
+    const companyNameInput = document.getElementById("companyName");
+    const sponsorNameInput = document.getElementById("sponsorName");
+    const emailInput = document.getElementById("email");
+    const addressInput = document.getElementById("address");
+    const phoneInput = document.getElementById("phone");
+
+    companyNameInput.disabled = false;
+    sponsorNameInput.disabled = false;
+    emailInput.disabled = false;
+    addressInput.disabled = false;
+    phoneInput.disabled = false;
+  }
+
+  window.addEventListener("load", function() {
+    const companyNameInput = document.getElementById("companyName");
+    const sponsorNameInput = document.getElementById("sponsorName");
+    const emailInput = document.getElementById("email");
+    const addressInput = document.getElementById("address");
+    const phoneInput = document.getElementById("phone");
+
+    const companyName = localStorage.getItem("companyName");
+    const sponsorName = localStorage.getItem("sponsorName");
+    const email = localStorage.getItem("email");
+    const address = localStorage.getItem("address");
+    const phone = localStorage.getItem("phone");
+
+    if (companyName) {
+      companyNameInput.value = companyName;
+      companyNameInput.disabled = true;
+    }
+    if (sponsorName) {
+      sponsorNameInput.value = sponsorName;
+      sponsorNameInput.disabled = true;
+    }
+    if (email) {
+      emailInput.value = email;
+      emailInput.disabled = true;
+    }
+    if (address) {
+      addressInput.value = address;
+      addressInput.disabled = true;
+    }
+    if (phone) {
+      phoneInput.value = phone;
+      phoneInput.disabled = true;
+    }
+  });
+  function formatPhoneNumber(input) {
+  input = input.value.replace(/\D/g, '');
+  input = input.substring(0, 10);
+  var size = input.length;
+  if(size == 0){
+    input = input;
+  } else if(size < 4){
+    input = '('+input;
+  } else if(size < 7){
+    input = '('+input.substring(0, 3)+') '+input.substring(3, 6);
+  } else {
+    input = '('+input.substring(0, 3)+') '+input.substring(3, 6)+'-'+input.substring(6, 10);
+  }
+  event.target.value = input;
 }
 function setTheme(themeName) {
-var backgroundColor = localStorage.getItem('background-color');
-var textColor = localStorage.getItem('text-color');
+  var backgroundColor = localStorage.getItem('background-color');
+  var textColor = localStorage.getItem('text-color');
 
-if (backgroundColor && textColor) {
-  document.documentElement.style.setProperty('--random-background-color', backgroundColor);
-  document.documentElement.style.setProperty('--random-text-color', textColor);
-}
+  if (backgroundColor && textColor) {
+    document.documentElement.style.setProperty('--random-background-color', backgroundColor);
+    document.documentElement.style.setProperty('--random-text-color', textColor);
+  }
 
-localStorage.setItem('theme', themeName);
-document.documentElement.className = themeName;
+  localStorage.setItem('theme', themeName);
+  document.documentElement.className = themeName;
 }
 
 // Get the saved theme from localStorage
 var theme = localStorage.getItem('theme');
 if (theme) {
-setTheme(theme);
+  setTheme(theme);
 }
 
 function setRandomTheme() {
-const hue = Math.floor(Math.random() * 360);
-const saturation = Math.floor(Math.random() * 100);
-const lightness = Math.floor(Math.random() * 100);
-const backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-const textColor = `hsl(${hue}, ${saturation}%, ${100 - lightness}%)`;
+  const hue = Math.floor(Math.random() * 360);
+  const saturation = Math.floor(Math.random() * 100);
+  const lightness = Math.floor(Math.random() * 100);
+  const backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  const textColor = `hsl(${hue}, ${saturation}%, ${100 - lightness}%)`;
 
-localStorage.setItem('background-color', backgroundColor);
-localStorage.setItem('text-color', textColor);
+  localStorage.setItem('background-color', backgroundColor);
+  localStorage.setItem('text-color', textColor);
 
-setTheme('theme5');
+  setTheme('theme5');
 }
 // Save font size to local storage
 function saveFontSize(fontSize) {
-localStorage.setItem('fontSize', fontSize);
+  localStorage.setItem('fontSize', fontSize);
 }
 
 // Retrieve font size from local storage
 function getFontSize() {
-return localStorage.getItem('fontSize');
+  return localStorage.getItem('fontSize');
 }
 
 // Apply font size to elements
 function applyFontSize(fontSize) {
-const elements = document.querySelectorAll('*'); // select all elements on the page
-for (let i = 0; i < elements.length; i++) {
-  elements[i].style.fontSize = `${fontSize}px`;
-}
+  const elements = document.querySelectorAll('*'); // select all elements on the page
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].style.fontSize = `${fontSize}px`;
+  }
 }
 
 // Initialize font size on page load
 const savedFontSize = getFontSize();
 if (savedFontSize) {
-applyFontSize(savedFontSize);
+  applyFontSize(savedFontSize);
 }
 
 // Increase font size and save to local storage
 function increaseFontSize() {
-const currentFontSize = parseFloat(getFontSize()) || 16;
-const newFontSize = currentFontSize + 2;
-applyFontSize(newFontSize);
-saveFontSize(newFontSize);
+  const currentFontSize = parseFloat(getFontSize()) || 16;
+  const newFontSize = currentFontSize + 2;
+  applyFontSize(newFontSize);
+  saveFontSize(newFontSize);
 }
 
 // Decrease font size and save to local storage
 function decreaseFontSize() {
-const currentFontSize = parseFloat(getFontSize()) || 16;
-const newFontSize = currentFontSize - 2;
-applyFontSize(newFontSize);
-saveFontSize(newFontSize);
+  const currentFontSize = parseFloat(getFontSize()) || 16;
+  const newFontSize = currentFontSize - 2;
+  applyFontSize(newFontSize);
+  saveFontSize(newFontSize);
 }
 function resetFontSize() {
-const confirmReset = confirm('Are you sure you want to reset the font size?');
-if (confirmReset) {
-  localStorage.removeItem('fontSize'); // remove the font size from local storage
-  window.location.reload(); // reload the page to reset the font size to default
-}
+  const confirmReset = confirm('Are you sure you want to reset the font size?');
+  if (confirmReset) {
+    localStorage.removeItem('fontSize'); // remove the font size from local storage
+    window.location.reload(); // reload the page to reset the font size to default
+  }
 }
 </script>
