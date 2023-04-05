@@ -7,6 +7,10 @@
       form {
         margin-top: 100%;
       }
+      span.required {
+  color: red;
+  margin-left: 5px;
+}
     </style>
   </head>
   <body id="main">
@@ -15,36 +19,39 @@
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
-        <form class="row g-3" method="POST" action="http://localhost:3000/customervehicle">
-          <h2>Create Customer Form</h2><p>! Indicates field is required</p>
-          <div class="col-md-3">
-            <label for="inputFirstName" class="form-label">First Name</label>
-            <input type="text" style="font-size:16px" class="form-control" id="firstName" required>
+        <form class="row g-3" method="POST">
+          <h2>Create Customer Form</h2><p><span class="required">*</span> Indicates field is required</p>
+          <div class="col-md-2">
+            <label for="inputFirstName" class="form-label">First Name<span class="required">*</span></label>
+            <input type="text" class="form-control" id="firstName" required>
           </div>
           <div class="col-md-1">
             <label for="inputMI" class="form-label">Middle Initial</label>
-            <input type="text" minlength="0" maxlength="1"class="form-control" id="MI">
+            <input type="text" min="0" max="1"class="form-control" id="MI">
           </div>
-          <div class="col-md-4">
-            <label for="inputLastName" class="form-label">Last Name</label>
+          <div class="col-md-2">
+            <label for="inputLastName" class="form-label">Last Name<span class="required">*</span></label>
             <input type="text" class="form-control" id="lastName" required>
           </div>
-          <div></div>
+          <div class="col-md-2">
+            <label for="tel" class="form-label">Phone Number<span class="required">*</span></label>
+            <input type="tel" class="form-control" id="inputPhone"  name="tel" oninput="formatPhoneNumber(this)" required>
+          </div>
           <div class="col-md-4">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4"required>
+            <label for="email" class="form-label">Email<span class="required">*</span></label>
+            <input type="email" class="form-control" id="inputEmail"  name="email"required>
           </div>
           <div class="col-4">
-            <label for="address" class="form-label">Address</label>
+            <label for="address" class="form-label">Address<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"required>
           </div>
-          <div></div>
-          <div class="col-md-3">
-            <label for="city" class="form-label">City</label>
+
+          <div class="col-md-2">
+            <label for="city" class="form-label">City<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputCity"required>
           </div>
           <div class="col-md-2">
-            <label for="state" class="form-label">State</label>
+            <label for="state" class="form-label">State<span class="required">*</span></label>
             <select id="state" class="form-select"required>
               <option selected></option>
               <% states.forEach(function(state){ %>
@@ -52,25 +59,34 @@
               <% }); %>
             </select>
           </div>
-          <div class="col-md-3">
-            <label for="zip" class="form-label">Zip</label>
-            <input type="text" maxlength="5" class="form-control" id="inputZip" required>
+          <div class="col-md-1">
+            <label for="zip" class="form-label">Zip<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputZip">
           </div>
           <h3>Car Details</h3>
-          <div class="col-md-3">
-            <label for="color" class="form-label">Color</label>
-            <input type="text" class="form-control" id="inputCity"required>
+          <div class="col-md-2">
+            <label for="color" class="form-label">Color<span class="required">*</span></label>
+            <select id="color" class="form-select"required>
+              <option selected></option>
+              <% color.forEach(function(color){ %>
+                <option value=<%= color[0] %>><%= color[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label for="city" class="form-label">Year<span class="required">*</span></label>
+            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control"required />
           </div>
           <div class="col-md-2">
-            <label for="Year" class="form-label">Year</label>
-            <input type="number" maxlength="4" min="1900" max="2099" step="1" value="2016" class="form-control"required />
+            <label for="vinnumber" class="form-label">Vin Number<span class="required">*</span></label>
+            <input type="text" class="form-control" id="vinnumber"  maxlength="17" required>
           </div>
           <div class="col-md-2">
-            <label for="VinNum" class="form-label">Vin Number</label>
-            <input type="text" minlength="11" maxlength="17"class="form-control" id="VinNum"required>
-          </div>          <div></div>
-          <div class="col-md-2">
-            <label for="service" class="form-label">Service</label>
+            <label for="licenseplate" class="form-label">License Plate Number<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputLicensePlate"  maxlength="7" required>
+          </div>
+          <div class="col-md-4">
+            <label for="service" class="form-label">Service<span class="required">*</span></label>
             <select id="service" class="form-select"required>
               <option selected></option>
               <% services.forEach(function(service){ %>
@@ -79,7 +95,7 @@
             </select>
           </div>
           <div class="col-md-2">
-            <label for="make" class="form-label">Make</label>
+            <label for="make" class="form-label">Make<span class="required">*</span></label>
             <select id="make" class="form-select" onchange="myFunction()" required>
               <option selected></option>
               <% makes.forEach(function(make){ %>
@@ -88,7 +104,7 @@
             </select>
           </div>
           <div class="col-md-2">
-            <label for="model" class="form-label">Model</label>
+            <label for="model" class="form-label">Model<span class="required">*</span></label>
             <select id="model" class="form-select"required>
               <option ></option>
               <% models.forEach(function(model){ %>
