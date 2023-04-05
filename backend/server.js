@@ -3,10 +3,13 @@ const express = require("express");
 const cors = require("cors");
 const oracledb = require('oracledb');
 const fs = require("fs");
+const bodyParser = require('body-parser');
 // dotenv
 require("dotenv").config();
 // Express
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Credentials for oracleDB user from .env
 const username = process.env.USER;
@@ -1142,7 +1145,6 @@ app.post('/customervehicle', async function(req, res) {
     let vehicleBinds = [vehicle_id, lastRow, model_id, color, year, license_plate, vin];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
 });
-
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
 });
