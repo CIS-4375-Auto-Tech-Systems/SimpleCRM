@@ -145,6 +145,7 @@ th {
             const vehicles = await response.json();
             let match = '';
             console.log(vehicles);
+            console.log(custID);
             vehicles.forEach(vehicle => {
               if (vehicle[1] == custID){
                 match = vehicle;
@@ -157,7 +158,7 @@ th {
             const models = await response.json();
             let match = '';
             models.forEach(model => {
-              if (model[0] == id){
+              if (model[0] == modelID){
                 match = model;
               }
             });
@@ -175,8 +176,8 @@ th {
             return match
           }
           async function getServiceOrder (custID, carID) {
-            const reponse = await fetch("http://localhost:3000/service-order");
-            const orders = await resposne.json();
+            const response = await fetch("http://localhost:3000/service-order");
+            const orders = await response.json();
             let match = '';
             orders.forEach(serviceOrder => {
               if (serviceOrder[3] == custID && serviceOrder[4] == carID){
@@ -212,7 +213,6 @@ th {
             /* CUSTOMER */ // customer
             // GET customer table
             const customer = await getCust(custID);
-            const custId = customer[0];
             const custName = customer[3] || 'No Name Found';
             const custAddress = customer[4] || 'No Address Found';
             const custPhone = customer[8] || 'No Phone Number Found';
@@ -230,15 +230,15 @@ th {
 
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
             // GET vehicle table
-            const vehicles = await getVehicle(custId);
+            const vehicles = await getVehicle(custID);
             console.log(vehicles);
-            const vehicleId = vehicles[0];
+            const vehicle_id = vehicles[0];
             const vehicleColor = vehicles[2] || 'No Color Found';
             const vehicleModel = vehicles[3];
             const vehicleYear = vehicles[4] || 'No Year Found';
             const vehiclePlate = vehicles[5] || 'No Plate Found';
             // GET vehicle_make table
-            const vehicle_makes = await getVehicleMake(vehicleId);
+            const vehicle_makes = await getVehicleMake(vehicle_id);
             console.log(vehicle_makes);
             const makeId = vehicle_makes[0];
             const makeName = vehicle_makes[1] || 'No Make Found';
@@ -256,10 +256,10 @@ th {
 
             /* SERVICE HISTORY */ //service_order, service, service_status
             // GET serivce_order table
-            const serivce_order = await getServiceOrder(custId, vehicle_id);
+            const service_order = await getServiceOrder(cust_id, vehicle_id);
             console.log(service_order);
-            const order_status_id = serivce_order[5]
-            const service_id = serivce_order[6];
+            const order_status_id = service_order[5]
+            const service_id = service_order[6];
 
             // GET service table
             const service = await getService(service_id);
