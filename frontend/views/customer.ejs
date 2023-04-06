@@ -46,7 +46,7 @@ img {
           </div>
           <div class="vehicle-info">
             <h2>Vehicles</h2>
-            <button type="submit" class="btn btn-primary"> Add Vehicle </button>
+            <button type="submit" class="btn btn-primary" id="vehicle-button"> Add Vehicle </button>
             <br>
             <table>
               <thead>
@@ -67,7 +67,7 @@ img {
           <br>
           <div class="service-history">
             <h2>Service History</h2>
-            <button type="submit" class="btn btn-primary"> Create Order </button>
+            <button type="submit" class="btn btn-primary" id="create-button"> Create Order </button>
             <br>
             <table>
               <thead>
@@ -99,6 +99,28 @@ img {
               sessionStorage.removeItem(key);
             }
           }
+
+          //Create Order pop-up block
+          const CreateOrder = document.getElementById("create-button");
+          CreateOrder.addEventListener("click", () => {
+            openOrderForm();
+          });
+
+          const AddVehicle = document.getElementById("vehicle-button");
+          AddVehicle.addEventListener("click", () => {
+            openVehicleForm();
+          });
+
+          //This function just opens the window and the parameters of the window.open method
+          //in parenthesis are 1.URL of the page to open (this case its empty so a new window can open)
+          //2. name of the page, if refering to it later and 3. the window features
+          function openOrderForm() {
+            const orderwindow = window.open("http://localhost:5173/createorder","Order Form","width=550, height=600");}
+          
+          function openVehicleForm() {
+            const addvehicle = window.open("http://localhost:5173/createvehicle","Order Form","width=550, height=600");}
+
+
           // Read cust_id from session storage
           const cust_id = sessionStorageControl.readItem("cust_id");
           async function getCust (custID) {

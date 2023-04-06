@@ -108,6 +108,14 @@ app.get('/', async function(req, res) {
     res.render('customer');
   });
 
+  app.get('/createorder', function(req, res){
+    res.render('createorder');
+  });
+
+  app.get('/createvehicle', function(req, res){
+    res.render('createvehicle');
+  });
+
   // remove later: just seeing the customer profile page style
   app.get('/customer', function(req, res) {
     res.render('customer');
