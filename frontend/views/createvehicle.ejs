@@ -14,48 +14,38 @@
       <div class="right-column">
         <div class="bottomrow">
         <form class="row g-3">
-          <h2>Create Order Form</h2>
+          <h2>Add Vehicle</h2>
           <div class="col-md-4">
-            <label for="color" class="form-label">Vehicle</label>
-            <select id="color" class="form-select">
+            <label for="make" class="form-label">Make</label>
+            <select id="make" class="form-select">
               <option selected></option>
             </select>
           </div>
           <div class="col-md-4">
-            <label for="color" class="form-label">Service</label>
-            <select id="color" class="form-select">
+            <label for="model" class="form-label">Model</label>
+            <select id="model" class="form-select">
               <option selected></option>
             </select>
           </div>
           <div></div>
-          <div class="col-md-4">
-            <label for="color" class="form-label">Employee</label>
-            <select id="color" class="form-select">
-              <option selected></option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="inputtotalamount" class="form-label">Total Amount</label>
-            <input type="number" class="form-control" id="totalamount"  placeholder="$" >
-          </div>
-          <div></div>
-          <div class="col-md-2">
-            <label for="inputDateIn" class="form-label">Date In</label>
-            <input type="date" class="form-control" id="DateIn">
-          </div>
-          <div class="col-md-2">
-            <label for="inputDateout" class="form-label">Date Out</label>
-            <input type="date" class="form-control" id="DateOut">
-          </div>
-          <div class="col-md-4">
-            <label for="inputOdometer" class="form-label">Odometer</label>
-            <input type="number" class="form-control" id="inputOdometer">
-          </div>
-
           <div class="col-8">
-            <label for="inputDescription" class="form-label">Description</label>
-            <input type="text" class="form-control" id="inputDescription"
+            <label for="year" class="form-label" placeholder="YYYY">Year</label>
+            <input type="text" class="form-control" id="input-year">
           </div>
+          <div class="col-8">
+            <label for="color" class="form-label">Color</label>
+            <select id="color" class="form-select">
+              <option selected></option>
+            </select>
+          </div>
+          <div class="col-8">
+            <label for="input-plate" class="form-label">Liscense Plate</label>
+            <input type="text" class="form-control" id="input-plate">
+          </div>
+          <div class="col-8">
+            <label for="input-vin" class="form-label">VIN</label>
+            <input type="text" class="form-control" id="input-vin"
+          </div><!--Leave this DIV red plz, if you add a '>' and the top here ^ then the submit button turns into a japanese font. idk ok-->
         </div>
           <div class="col-6">
             <button type="submit" class="btn btn-primary">Submit</button>
