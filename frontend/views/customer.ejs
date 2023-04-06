@@ -36,7 +36,9 @@ img {
               <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
             </div>
             <div class="customer-details">
-              <h1 id="custName"></h1>
+              <h1 id="custFirst_name"></h1>
+              <h1 id="custMiddle_in"></h1>
+              <h1 id="custLast_name"></h1>
               <p id="custAddress"></p>
               <p id="custPhone"></p>
               <p id="custEmail"></p>
@@ -59,11 +61,11 @@ img {
               </thead>
               <tbody id="vehicles">
                 <tr>
-                  <td id="vehicleMake">Hyundai</td>
-                  <td id="vehicleModel">Elantra</td>
-                  <td id="vehicleYear">2017</td>
-                  <td id="vehiclePlate">TYY4586</td>
-                  <td id="vehicleColor">Black</td>
+                  <td id="vehicleMake"></td>
+                  <td id="vehicleModel"></td>
+                  <td id="vehicleYear"></td>
+                  <td id="vehiclePlate"></td>
+                  <td id="vehicleColor"></td>
                   <td>
                     <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
@@ -100,11 +102,11 @@ img {
               </thead>
               <tbody id="services">
                 <tr>
-                  <td>Oil Change</td>
-                  <td>03/01/2023</td>
-                  <td>03/01/2023</td>
-                  <td>TYY4586</td>
-                  <td>$29.99</td>
+                  <td id="service"></td>
+                  <td id="datein"></td>
+                  <td id="dateout"></td>
+                  <td id="servicePlate"></td>
+                  <td id="serviceTotal"></td>
                   <td>
                     <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
@@ -155,8 +157,6 @@ img {
             const response = await fetch("http://localhost:3000/vehicle");
             const vehicles = await response.json();
             let match = '';
-            console.log(vehicles);
-            console.log(custID);
             vehicles.forEach(vehicle => {
               if (vehicle[1] == custID){
                 match = vehicle;
@@ -186,13 +186,24 @@ img {
             });
             return match
           }
-          async function getServiceOrder (custID, carID) {
+          async function getColor(colorID) {
+            const response = await fetch("http://localhost:3000/color");
+            const colors = await response.json();
+            let match = '';
+            colors.forEach(color => {
+              if (color[0] == colorID){
+                match = color;
+              }
+            });
+            return match
+          }
+          async function getServiceOrder (custID) {
             const response = await fetch("http://localhost:3000/service-order");
             const orders = await response.json();
-            let match = '';
+            let match = [];
             orders.forEach(serviceOrder => {
-              if (serviceOrder[3] == custID && serviceOrder[4] == carID){
-                match = serviceOrder;
+              if (serviceOrder[2] == custID){
+                match.push(serviceOrder);
               }
             });
             return match
@@ -224,17 +235,23 @@ img {
             /* CUSTOMER */ // customer
             // GET customer table
             const customer = await getCust(custID);
-            const custName = customer[3] || 'No Name Found';
-            const custAddress = customer[4] || 'No Address Found';
-            const custPhone = customer[8] || 'No Phone Number Found';
+            const custFirst_name = customer[3] || 'No Name Found';
+            const custMiddle_in = customer[4] || 'No Name Found';
+            const custLast_name = customer[5] || 'No Name Found';
+            const custAddress = customer[6] || 'No Address Found';
+            const custPhone = customer[9] || 'No Phone Number Found';
             const custEmail = customer[10] || 'No Email Found';
             // Elements for Customer Section
-            const custNameEle = document.getElementById("custName");
+            const custFirst_nameEle = document.getElementById("custFirst_name");
+            const custMiddle_inEle = document.getElementById("custMiddle_in");
+            const custLast_nameEle = document.getElementById("custLast_name");
             const custAddressEle = document.getElementById("custAddress");
             const custPhoneEle = document.getElementById("custPhone");
             const custEmailEle = document.getElementById("custEmail");
             // Add Dynamic Information
-            custNameEle.textContent = custName;
+            custFirst_nameEle.textContent = custFirst_name;
+            custMiddle_inEle.textContent = custMiddle_in;
+            custLast_nameEle.textContent = custLast_name;
             custAddressEle.textContent = custAddress;
             custPhoneEle.textContent = custPhone;
             custEmailEle.textContent = custEmail;
@@ -243,7 +260,7 @@ img {
             // GET vehicle table
             const vehicles = await getVehicle(custID);
             const vehicle_id = vehicles[0];
-            const vehicleColor = vehicles[2] || 'No Color Found';
+            const color_id = vehicles[2] || 'No Color Found';
             const vehicleModel = vehicles[3];
             const vehicleYear = vehicles[4] || 'No Year Found';
             const vehiclePlate = vehicles[5] || 'No Plate Found';
@@ -254,6 +271,9 @@ img {
             // GET vehicle_model table
             const vehicle_models = await getVehicleModel(makeId);
             const vehicle_modelName = vehicle_models[2];
+            // GET color table
+            const colors = await getColor(color_id);
+            const vehicleColor = colors[1];
             // Elements for Vehicle Section
             const makeEle = document.getElementById("vehicleMake");
             const modelEle = document.getElementById("vehicleModel");
@@ -263,29 +283,35 @@ img {
             // Add Dynamic Information ---like customerlookup.ejs
             makeEle.textContent = makeName;
             modelEle.textContent = vehicle_modelName;
-            yearEle = vehicleYear;
-            plateEle = vehiclePlate;
+            yearEle.textContent = vehicleYear;
+            plateEle.textContent = vehiclePlate;
+            colorEle.textContent = vehicleColor;
 
-            /* SERVICE HISTORY */ //service_order, service, service_status
+            /* SERVICE HISTORY */ //service_order, service
             // GET serivce_order table
-            const service_order = await getServiceOrder(cust_id, vehicle_id);
-            console.log(service_order);
-            const order_status_id = service_order[5]
-            const service_id = service_order[6];
-
+            const service_order = await getServiceOrder(cust_id);
+            const order_status_id = service_order[0][5]
+            const service_id = service_order[0][6];
+            const ttlAmount = service_order[0][7];
+            const datein = service_order[0][8];
+            const dateout = service_order[0][9];
             // GET service table
             const service = await getService(service_id);
-            console.log(service);
-            // GET service_status table
-            const service_status = await getOrderStatus(order_status_id);
-            console.log(service_status);
+            const service_name = service[1];
+
             // Elements for Serivce History Section
             const serviceEle = document.getElementById("service");
             const dateInEle = document.getElementById("datein");
             const dateOutEle = document.getElementById("dateout");
-            const totalEle = document.getElementById("totalEle");
+            const servicePlateEle = document.getElementById("servicePlate");
+            const totalEle = document.getElementById("serviceTotal");
             const actionEle = document.getElementById("action");
             // Add Dynamic Information ---like customerlookup.ejs
+            serviceEle.textContent = service_name;
+            dateInEle.textContent = datein;
+            dateOutEle.textContent = dateout;
+            servicePlateEle.textContent = vehiclePlate;
+            totalEle.textContent = ttlAmount;
 
           }
           createPage(cust_id);
