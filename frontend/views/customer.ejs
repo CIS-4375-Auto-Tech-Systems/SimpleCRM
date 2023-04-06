@@ -54,32 +54,12 @@ img {
                   <th>Make</th>
                   <th>Model</th>
                   <th>Year</th>
-                  <th>plate</th>
+                  <th>Plate</th>
                   <th>Color</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody id="vehicles">
-                <tr>
-                  <td id="vehicleMake"></td>
-                  <td id="vehicleModel"></td>
-                  <td id="vehicleYear"></td>
-                  <td id="vehiclePlate"></td>
-                  <td id="vehicleColor"></td>
-                  <td>
-                    <button type="submit" class="btn btn-primary">Edit</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Honda</td>
-                  <td>Accord</td>
-                  <td>2008</td>
-                  <td>DEF456</td>
-                  <td>Red</td>
-                  <td>
-                    <button type="submit" class="btn btn-primary">Edit</button>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -95,32 +75,11 @@ img {
                   <th>Service</th>
                   <th>Date In</th>
                   <th>Date Out</th>
-                  <th>Plate</th>
                   <th>Total Amount</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody id="services">
-                <tr>
-                  <td id="service"></td>
-                  <td id="datein"></td>
-                  <td id="dateout"></td>
-                  <td id="servicePlate"></td>
-                  <td id="serviceTotal"></td>
-                  <td>
-                    <button type="submit" class="btn btn-primary">Edit</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Brake Service</td>
-                  <td>02/01/2023</td>
-                  <td>02/01/2023</td>
-                  <td>DEF456</td>
-                  <td>$299.99</td>
-                  <td>
-                    <button type="submit" class="btn btn-primary">Edit</button>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -156,10 +115,10 @@ img {
           async function getVehicle (custID) {
             const response = await fetch("http://localhost:3000/vehicle");
             const vehicles = await response.json();
-            let match = '';
+            let match = [];
             vehicles.forEach(vehicle => {
               if (vehicle[1] == custID){
-                match = vehicle;
+                match.push(vehicle);
               }
             });
             return match
@@ -259,60 +218,106 @@ img {
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
             // GET vehicle table
             const vehicles = await getVehicle(custID);
-            const vehicle_id = vehicles[0];
-            const color_id = vehicles[2] || 'No Color Found';
-            const vehicleModel = vehicles[3];
-            const vehicleYear = vehicles[4] || 'No Year Found';
-            const vehiclePlate = vehicles[5] || 'No Plate Found';
-            // GET vehicle_make table
-            const vehicle_makes = await getVehicleMake(vehicle_id);
-            const makeId = vehicle_makes[0];
-            const makeName = vehicle_makes[1] || 'No Make Found';
-            // GET vehicle_model table
-            const vehicle_models = await getVehicleModel(makeId);
-            const vehicle_modelName = vehicle_models[2];
-            // GET color table
-            const colors = await getColor(color_id);
-            const vehicleColor = colors[1];
-            // Elements for Vehicle Section
-            const makeEle = document.getElementById("vehicleMake");
-            const modelEle = document.getElementById("vehicleModel");
-            const yearEle = document.getElementById("vehicleYear");
-            const plateEle = document.getElementById("vehiclePlate");
-            const colorEle = document.getElementById("vehicleColor");
-            // Add Dynamic Information ---like customerlookup.ejs
-            makeEle.textContent = makeName;
-            modelEle.textContent = vehicle_modelName;
-            yearEle.textContent = vehicleYear;
-            plateEle.textContent = vehiclePlate;
-            colorEle.textContent = vehicleColor;
+            const vehiclesTable = document.getElementById("vehicles");
+            for (const vehicle of vehicles) {
+              let vehicle_id = vehicle[0]
+              const color_id = vehicle[2] || 'No Color Found';
+              const vehicleModel = vehicle[3] || 'No Model Found';
+              const vehicleYear = vehicle[4] || 'No Year Found';
+              const vehiclePlate = vehicle[5] || 'No Plate Found';
+                // GET vehicle_make table
+              const vehicle_makes = await getVehicleMake(vehicle_id);
+              const makeId = vehicle_makes[0];
+              const makeName = vehicle_makes[1] || 'No Make Found';
+                // GET vehicle_model table
+              const vehicle_models = await getVehicleModel(makeId);
+              const vehicle_modelName = vehicle_models[2] || 'No Model Found';
+                // GET color table
+              const colors = await getColor(color_id);
+              const vehicleColor = colors[1] || 'No Color Found';
 
+              // Create Row identified by vehicle_id
+              let vehicleRow = document.createElement("tr");
+              vehicleRow.setAttribute("id", vehicle_id);
+              vehiclesTable.appendChild(vehicleRow);
+                // Create Entry
+              let makeEle = document.createElement("td");
+              let makeText = document.createTextNode(makeName);
+              makeEle.appendChild(makeText);
+              vehicleRow.appendChild(makeEle);
+
+              let modelEle = document.createElement("td");
+              let modelText = document.createTextNode(vehicle_modelName);
+              modelEle.appendChild(modelText);
+              vehicleRow.appendChild(modelEle);
+
+              let yearEle = document.createElement("td");
+              let yearText = document.createTextNode(vehicleYear);
+              yearEle.appendChild(yearText);
+              vehicleRow.appendChild(yearEle);
+
+              let plateEle = document.createElement("td");
+              let plateText = document.createTextNode(vehiclePlate);
+              plateEle.appendChild(plateText);
+              vehicleRow.appendChild(plateEle);
+
+              let colorEle = document.createElement("td");
+              let colorText = document.createTextNode(vehicleColor);
+              colorEle.appendChild(colorText);
+              vehicleRow.appendChild(colorEle);
+
+              let vehicleAction = document.createElement("button");
+              let vehicleActionText = document.createTextNode("Edit");
+              vehicleAction.appendChild(vehicleActionText);
+              vehicleRow.appendChild(vehicleAction);
+            }
             /* SERVICE HISTORY */ //service_order, service
             // GET serivce_order table
             const service_order = await getServiceOrder(cust_id);
-            const order_status_id = service_order[0][5]
-            const service_id = service_order[0][6];
-            const ttlAmount = service_order[0][7];
-            const datein = service_order[0][8];
-            const dateout = service_order[0][9];
-            // GET service table
-            const service = await getService(service_id);
-            const service_name = service[1];
+            const servicesTable = document.getElementById("services");
+            for (const order of service_order){
+              let order_id = order[0];
+              let order_status_id = order[5]
+              let service_id = order[6];
+              let ttlAmount = order[7];
+              let dateinRAW = new Date (order[8]);
+              let datein = dateinRAW.toLocaleDateString();
+              let dateoutRAW = new Date(order[9]);
+              let dateout = dateoutRAW.toLocaleDateString();
+              // GET service table
+              let service = await getService(service_id);
+              let service_name = service[1];
 
-            // Elements for Serivce History Section
-            const serviceEle = document.getElementById("service");
-            const dateInEle = document.getElementById("datein");
-            const dateOutEle = document.getElementById("dateout");
-            const servicePlateEle = document.getElementById("servicePlate");
-            const totalEle = document.getElementById("serviceTotal");
-            const actionEle = document.getElementById("action");
-            // Add Dynamic Information ---like customerlookup.ejs
-            serviceEle.textContent = service_name;
-            dateInEle.textContent = datein;
-            dateOutEle.textContent = dateout;
-            servicePlateEle.textContent = vehiclePlate;
-            totalEle.textContent = ttlAmount;
+              // Create Row identified by order_id
+              let serviceRow = document.createElement("tr");
+              serviceRow.setAttribute("id", order_id);
+              servicesTable.appendChild(serviceRow);
+                // Create Entry
+              let serviceEle = document.createElement("td");
+              let serviceText = document.createTextNode(service_name);
+              serviceEle.appendChild(serviceText);
+              serviceRow.appendChild(serviceEle);
 
+              let dateInEle = document.createElement("td");
+              let dateInText = document.createTextNode(datein);
+              dateInEle.appendChild(dateInText);
+              serviceRow.appendChild(dateInEle);
+
+              let dateOutEle = document.createElement("td");
+              let dateOutText = document.createTextNode(dateout);
+              dateOutEle.appendChild(dateOutText);
+              serviceRow.appendChild(dateOutEle);
+
+              let totalEle = document.createElement("td");
+              let totalText = document.createTextNode(ttlAmount);
+              totalEle.appendChild(totalText);
+              serviceRow.appendChild(totalEle);
+
+              let orderAction = document.createElement("button");
+              let orderActionText = document.createTextNode("Edit");
+              orderAction.appendChild(orderActionText);
+              serviceRow.appendChild(orderAction);
+            }
           }
           createPage(cust_id);
           // Delete cust_id from session storage when the page is unloaded
