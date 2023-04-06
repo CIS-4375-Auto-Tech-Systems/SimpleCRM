@@ -127,8 +127,7 @@ app.post('/employee', async function(req, res){
 // READ
 app.get('/employee', async function(req, res){
     let query = 'SELECT * FROM EMPLOYEE';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -229,8 +228,7 @@ app.post('/employee-status', async function(req, res){
 // READ
 app.get('/employee-status', async function(req, res){
     let query = 'SELECT * FROM EMP_STATUS';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 //UPDATE
@@ -307,8 +305,7 @@ app.post('/service-order', async function(req, res) {
 // READ
 app.get('/service-order', async function(req, res){
     let query = 'SELECT * FROM SERVICE_ORDER';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -402,8 +399,7 @@ app.post('/order-status', async function(req, res) {
 // READ
 app.get('/order-status', async function(req, res){
     let query = 'SELECT * FROM ORDER_STATUS';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -467,8 +463,7 @@ app.post('/service', async function(req, res){
 // READ
 app.get('/service', async function(req, res){
     let query = 'SELECT * FROM SERVICE';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -544,8 +539,7 @@ app.post('/customer',async function(req, res){
 // READ
 app.get('/customer', async function(req, res){
     let query = 'SELECT * FROM CUSTOMER';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -637,8 +631,7 @@ app.post('/customer-status', async function(req, res) {
 // READ
 app.get('/customer-status', async function(req, res){
     let query = 'SELECT * FROM CUST_STATUS';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -708,8 +701,7 @@ app.post('/vehicle', async function(req, res){
 // READ
 app.get('/vehicle', async function(req, res){
     let query = 'SELECT * FROM VEHICLE';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -789,8 +781,7 @@ app.post('/color', async function(req, res){
 // READ
 app.get('/color', async function(req, res){
     let query = 'SELECT * FROM COLOR';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -855,8 +846,7 @@ app.post('/vehicle-make', async function(req, res){
 // READ
 app.get('/vehicle-make', async function(req, res){
     let query = 'SELECT * FROM VEHICLE_MAKE';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -921,8 +911,7 @@ app.post('/vehicle-model', async function(req, res){
 // READ
 app.get('/vehicle-model', async function(req, res){
     let query = 'SELECT * FROM VEHICLE_MODEL';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
@@ -991,8 +980,7 @@ app.post('/state', async function(req, res){
 // READ
 app.get('/state', async function(req, res){
     let query = 'SELECT * FROM STATE';
-    // Send a response
-    const CRUDOP = await crudOP(query, undefined, true)
+    const CRUDOP = await crudOP(query,undefined, true);
     res.send(CRUDOP.rows);
 });
 // UPDATE
