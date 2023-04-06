@@ -19,7 +19,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getCustomer = await axios.get('http://localhost:3000/customer').then(function(response) {
@@ -27,7 +27,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getEmployee = await axios.get('http://localhost:3000/employee').then(function(response) {
@@ -35,7 +35,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
@@ -43,7 +43,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
@@ -51,7 +51,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
@@ -59,7 +59,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
@@ -67,7 +67,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   const getOrderStatus = await axios.get('http://localhost:3000/order-status').then(function(response) {
@@ -75,7 +75,7 @@ app.get('/', async function(req, res) {
       // Cant decide on error yet
       return [['ERROR','ERROR']]
     }else{
-      return response.data.rows
+      return response.data
     }
   });
   

@@ -59,11 +59,11 @@ img {
               </thead>
               <tbody id="vehicles">
                 <tr>
-                  <td>Hyundai</td>
-                  <td>Elantra</td>
-                  <td>2017</td>
-                  <td>TYY4586</td>
-                  <td>Black</td>
+                  <td id="vehicleMake">Hyundai</td>
+                  <td id="vehicleModel">Elantra</td>
+                  <td id="vehicleYear">2017</td>
+                  <td id="vehiclePlate">TYY4586</td>
+                  <td id="vehicleColor">Black</td>
                   <td>
                     <button type="submit" class="btn btn-primary">Edit</button>
                   </td>
@@ -242,7 +242,6 @@ img {
             /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
             // GET vehicle table
             const vehicles = await getVehicle(custID);
-            console.log(vehicles);
             const vehicle_id = vehicles[0];
             const vehicleColor = vehicles[2] || 'No Color Found';
             const vehicleModel = vehicles[3];
@@ -250,20 +249,22 @@ img {
             const vehiclePlate = vehicles[5] || 'No Plate Found';
             // GET vehicle_make table
             const vehicle_makes = await getVehicleMake(vehicle_id);
-            console.log(vehicle_makes);
             const makeId = vehicle_makes[0];
             const makeName = vehicle_makes[1] || 'No Make Found';
             // GET vehicle_model table
             const vehicle_models = await getVehicleModel(makeId);
-            console.log(vehicle_models);
             const vehicle_modelName = vehicle_models[2];
             // Elements for Vehicle Section
             const makeEle = document.getElementById("vehicleMake");
             const modelEle = document.getElementById("vehicleModel");
             const yearEle = document.getElementById("vehicleYear");
             const plateEle = document.getElementById("vehiclePlate");
+            const colorEle = document.getElementById("vehicleColor");
             // Add Dynamic Information ---like customerlookup.ejs
-
+            makeEle.textContent = makeName;
+            modelEle.textContent = vehicle_modelName;
+            yearEle = vehicleYear;
+            plateEle = vehiclePlate;
 
             /* SERVICE HISTORY */ //service_order, service, service_status
             // GET serivce_order table
