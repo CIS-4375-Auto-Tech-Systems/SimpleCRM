@@ -194,9 +194,9 @@ img {
             /* CUSTOMER */ // customer
             // GET customer table
             const customer = await getCust(custID);
-            const custFirst_name = customer[3] || 'No Name Found';
-            const custMiddle_in = customer[4] || 'No Name Found';
-            const custLast_name = customer[5] || 'No Name Found';
+            const custFirst_name = customer[3] || 'No First Name Found';
+            const custMiddle_in = customer[4];
+            const custLast_name = customer[5] || 'No Last Name Found';
             const custAddress = customer[6] || 'No Address Found';
             const custPhone = customer[9] || 'No Phone Number Found';
             const custEmail = customer[10] || 'No Email Found';
@@ -221,8 +221,8 @@ img {
             const vehiclesTable = document.getElementById("vehicles");
             for (const vehicle of vehicles) {
               let vehicle_id = vehicle[0]
-              const color_id = vehicle[2] || 'No Color Found';
-              const vehicleModel = vehicle[3] || 'No Model Found';
+              const color_id = vehicle[2];
+              const vehicleModel = vehicle[3];
               const vehicleYear = vehicle[4] || 'No Year Found';
               const vehiclePlate = vehicle[5] || 'No Plate Found';
                 // GET vehicle_make table
