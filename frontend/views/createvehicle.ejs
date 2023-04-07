@@ -2,7 +2,7 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
-    <title>Create Order Form</title>
+    <title>Add Vehicle Form</title>
     <style>
       form {
         margin-top: 100%;
@@ -37,6 +37,16 @@
           <div class="col-8">
             <label for="year" class="form-label" placeholder="YYYY">Year</label>
             <input type="text" class="form-control" id="input-year">
+          </div>
+          <div class="col-8">
+            <label for="state" class="form-label">State<span class="required"></span></label>
+            <select id="state" class="form-select" name="state_id" required>
+              <option selected></option>
+              <!--The value of the option is what is part of the request-->
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[2] %></option>
+              <% }); %>
+            </select>
           </div>
           <div class="col-8">
             <label for="color" class="form-label">Color</label>
@@ -90,25 +100,39 @@
             const color = document.getElementById("color").value;
             const plate = document.getElementById("input-plate").value;
             const VIN = document.getElementById("input-vin").value;
+            const customer = sessionStorage.getItem("cust_id");
+            const state = document.getElementById("state").value;
             const formData = {
               make,
               model,
               year,
               color,
               plate,
-              vin
+              vin,
+              customer,
+              state
             };
 
             //Not sure how this part will go. Xxavier do you know how to do this?
             //or should i just reference the enpoint in server.js?
             //but how can we attach the user ID? :/
             const options = {
-              method: "PUT",
+              method: "POST",
               headers: {
                 "content-Type":"application/json",
               },
               body: JSON.stringify(formData),
-            };  
+            };
+            fetch("/vehicle", options)
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Data saved to database:", data);
+                // Add code to update UI or show success message here
+              })
+              .catch((error) => {
+                console.error("Error saving data to database:", error);
+                // Add code to show error message here
+              });
           });
     </script>       
   </body>

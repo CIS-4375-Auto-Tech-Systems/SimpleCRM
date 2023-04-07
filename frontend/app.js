@@ -137,10 +137,19 @@ app.get('/', async function(req, res) {
         return response.data
       }
     });
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
     res.render('createvehicle', {
       makes: getMakes,
       models: getModels,
-      color: getColor
+      color: getColor,
+      states: getStates
     });
   });
 
