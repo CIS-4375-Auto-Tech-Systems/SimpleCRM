@@ -41,7 +41,7 @@
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
           <h1>Customer Lookup</h1>
-          <form action="" method="post">
+          <form>
             <fieldset>
               <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
               <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
@@ -55,6 +55,12 @@
       </div>
     </div>
     <script>
+      document.getElementById("searchBar").addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("searchButton").click();
+        }
+      });
       const sessionStorageControl = {
         //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
         storeItem(key, value){
@@ -71,7 +77,6 @@
         let http = new XMLHttpRequest();
         let customerList = document.getElementById("customers");
         customerList.replaceChildren();
-        // HAS TO BE A POST REQUEST AS GET CANT HAVE A BODY
         http.open("POST", "http://localhost:3000/lookup", true);
         http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         var params = "searchValue="+document.getElementById("searchBar").value;
@@ -80,17 +85,16 @@
           let customers = JSON.parse(http.responseText);
           customers.forEach(customer => {
             let searchResult = document.createElement("a")
-            let customerName = document.createTextNode(customer[3]);
+            let customerInfo = document.createTextNode(`${customer[3]}${customer[4] ? ` ${customer[4]}` : ''}, ${customer[5]}, ${customer[6]}, ${customer[7]}, ${customer[8]}, ${customer[9]}, ${customer[10]}`);
             searchResult.classList.add("list-group-item");
             searchResult.setAttribute("data-cust_id", customer[0]);
             searchResult.setAttribute("onclick", "getCust_ID(this.dataset.cust_id)");
             searchResult.setAttribute("href", "/customer");
-            searchResult.appendChild(customerName);
+            searchResult.appendChild(customerInfo);
             customerList.appendChild(searchResult);
           });
           if (customerList.style.display === "none"){
             customerList.style.display = "block";
-            let newSearch = true;
           }
         }
       }
