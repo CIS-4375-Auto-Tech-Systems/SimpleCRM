@@ -112,8 +112,36 @@ app.get('/', async function(req, res) {
     res.render('createorder');
   });
 
-  app.get('/createvehicle', function(req, res){
-    res.render('createvehicle');
+  app.get('/createvehicle', async function(req, res){
+    const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('createvehicle', {
+      makes: getMakes,
+      models: getModels,
+      color: getColor
+    });
   });
 
   // remove later: just seeing the customer profile page style

@@ -102,7 +102,7 @@
           <div class="col-md-2">
             <label for="model" class="form-label">Model<span class="required">*</span></label>
             <select id="model" class="form-select" name="model_id" required>
-              <option ></option>
+              <option selected></option>
               <% models.forEach(function(model){ %>
                 <option data-make_id =<%=model[1]%> value=<%= model[0] %>><%= model[2] %></option>
               <% }); %>
