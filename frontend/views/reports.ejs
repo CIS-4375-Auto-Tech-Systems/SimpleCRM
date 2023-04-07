@@ -10,7 +10,100 @@
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
-         THIS IS A REPORTS PAGE
+                   <ul class="nav nav-tabs">
+                     <li class="nav-item">
+                       <a class="nav-link active" href="#daily-tab" data-toggle="tab">Daily</a>
+                     </li>
+                     <li class="nav-item">
+                       <a class="nav-link" href="#weekly-tab" data-toggle="tab">Weekly</a>
+                     </li>
+                     <li class="nav-item">
+                       <a class="nav-link" href="#monthly-tab" data-toggle="tab">Monthly</a>
+                     </li>
+                     <li class="nav-item">
+                      <a class="nav-link" href="#yearly-tab" data-toggle="tab">Yearly</a>
+                    </li>
+                    
+                   </ul>
+                   <div class="tab-content">
+                     <div id="daily-tab" class="tab-pane fade show active">
+                       <h3>Daily Report Summary</h3>
+                       <table class="table">
+                         <thead>
+                           <tr>
+                             <th>Date</th>
+                             <th>Revenue</th>
+                             <th>Expenses</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <!-- Daily report data goes here -->
+                         </tbody>
+                       </table>
+                     </div>
+                     <div id="weekly-tab" class="tab-pane fade">
+                       <h3>Weekly Report Summary</h3>
+                       <table class="table">
+                         <thead>
+                           <tr>
+                             <th>Week</th>
+                             <th>Revenue</th>
+                             <th>Expenses</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <!-- Weekly report data goes here -->
+                         </tbody>
+                       </table>
+                     </div>
+                     <div id="monthly-tab" class="tab-pane fade">
+                       <h3>Monthly Report Summary</h3>
+                       <table class="table">
+                         <thead>
+                           <tr>
+                             <th>Month</th>
+                             <th>Revenue</th>
+                             <th>Expenses</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <!-- Monthly report data goes here -->
+                         </tbody>
+                       </table>
+                     </div>
+                     <div id="yearly-tab" class="tab-pane fade">
+                      <h3>Yearly Report Summary</h3>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Year</th>
+                            <th>Revenue</th>
+                            <th>Expenses</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- Yearly report data goes here -->
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <script>
+              $(document).ready(function() {
+                $('.nav-link').click(function() {
+                  $('.nav-link').removeClass('active');
+                  $(this).addClass('active');
+                  var tabToShow = $(this).attr('href');
+                  $('.tab-pane').removeClass('show active');
+                  $(tabToShow).addClass('show active');
+                });
+              });
+            </script>
+            
+         
           </div>
         </div>
       </div>
