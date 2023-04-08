@@ -2,13 +2,16 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
-    <title>Settings</title>
+    <title>Reports</title>
   </head>
   <body id="main">
     <div class="container">
-        <%- include('partials/navbar.ejs'); %>
+      <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
+        <!-- Mockup for reports page which includes daily, weekly, monthly, & yearly sales totals -->
+
+        <!-- This creates sales and services tabs -->
         <div class="bottomrow">
           <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -21,55 +24,174 @@
               <a class="nav-link" href="#customer-tab" data-toggle="tab">Customers</a>
             </li>
           </ul>
-          <div class="tab-content">
-            <div id="sales-tab" class="tab-pane fade show active">
-              <h3>Sales Report Summary</h3>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Revenue</th>
-                    <th>Expenses</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Sales report data goes here -->
-                </tbody>
-              </table>
-            </div>
-            <div id="services-tab" class="tab-pane fade">
-              <h3>Services Report Summary</h3>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Revenue</th>
-                    <th>Expenses</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Services report data goes here -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+<!-- Sales Tab -->
+<div class="tab-content">
+<div id="sales-tab" class="tab-pane fade show active">
+  <h3>Sales Report Summary</h3>
+  <div class="form-group">
+    <label for="interval-select">Select Report:</label>
+    <select class="form-control" id="interval-select">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="Monthly">Monthly</option>
+      <option value="Yearly">Yearly</option>
+    </select>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Total Sales</th>
+      </tr>
+    </thead>
+    <tbody id="sales-table-body">
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // populate the sales table with data based on the selected interval
+  $('#interval-select').on('change', function() {
+    var interval = $(this).val();
+    var salesData = getSalesData(interval);
+    var $salesTableBody = $('#sales-table-body');
+    $salesTableBody.empty();
+    $.each(salesData, function(index, row) {
+      var $tr = $('<tr>');
+      $tr.append($('<td>').text(row.date));
+      $tr.append($('<td>').text(row.totalSales));
+      $salesTableBody.append($tr);
+    });
+  });
+
+// simulate getting sales data from server based on the interval **dummy data**
+function getSalesData(interval) {
+  var data = [];
+  if (interval === 'daily') {
+    data.push({date: '2023-04-01', totalSales: 1000});
+    data.push({date: '2023-04-02', totalSales: 1500});
+    data.push({date: '2023-04-03', totalSales: 2000});
+  } else if (interval === 'weekly') {
+    data.push({date: '2023-03-28 - 2023-04-03', totalSales: 4500});
+    data.push({date: '2023-04-04 - 2023-04-10', totalSales: 5500});
+  } else if (interval === 'Monthly') {
+    data.push({date: '2023-01', totalSales: 25000});
+    data.push({date: '2023-02', totalSales: 30000});
+    data.push({date: '2023-03', totalSales: 40000});
+    data.push({date: '2023-04', totalSales: 35000});
+    data.push({date: '2023-05', totalSales: 42000});
+  } else if (interval === 'Yearly') {
+    data.push({date: '2020', totalSales: 150000});
+    data.push({date: '2021', totalSales: 180000});
+    data.push({date: '2022', totalSales: 200000});
+    data.push({date: '2023', totalSales: 250000});
+  }
+  return data;
+}
+</script>
+<!-- Services Tab + filter by search by service: Still need to determine best way to report... drop down of services maybe? -->
+<div id="services-tab" class="tab-pane fade">
+  <h3>Services Report Summary</h3>
+  <div class="form-group">
+    <label for="interval-select">Select Report:</label>
+    <select class="form-control" id="services-interval-select">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="Monthly">Monthly</option>
+      <option value="Yearly">Yearly</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="service-search">Search by Service Name:</label>
+    <input type="text" class="form-control" id="service-search">
+  </div>
+  <div id="services-table-container"></div>
+</div>
+
+<script>
+  // generate services table based on selected interval and search query ***dummy data***
+  function generateServicesTable(interval, query) {
+    var data;
+    
+    if (interval === "daily") {
+      data = [
+        { service: "Service A", quantity: 20, revenue: 400 },
+        { service: "Service B", quantity: 15, revenue: 300 },
+        { service: "Service C", quantity: 10, revenue: 200 }
+      ];
+    } else if (interval === "weekly") {
+      data = [
+        { service: "Service A", quantity: 140, revenue: 2800 },
+        { service: "Service B", quantity: 105, revenue: 2100 },
+        { service: "Service C", quantity: 70, revenue: 1400 }
+      ];
+    } else if (interval === "monthly") {
+      data = [
+        { service: "Service A", quantity: 500, revenue: 10000 },
+        { service: "Service B", quantity: 350, revenue: 7000 },
+        { service: "Service C", quantity: 200, revenue: 4000 }
+      ];
+    } else if (interval === "yearly") {
+      data = [
+        { service: "Service A", quantity: 6000, revenue: 120000 },
+        { service: "Service B", quantity: 4200, revenue: 84000 },
+        { service: "Service C", quantity: 2400, revenue: 48000 }
+      ];
+    } else {
+      console.error("Invalid interval: " + interval);
+      return;
+    }
+    
+    // filter data by search query
+    if (query) {
+      data = data.filter(function(d) {
+        return d.service.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+      });
+    }
+    
+    // generate table HTML
+    var tableHTML = "<table class='table'><thead><tr><th>Service Name</th><th># Customers</th><th>Order Amount</th></tr></thead><tbody>";
+    for (var i = 0; i < data.length; i++) {
+      tableHTML += "<tr><td>" + data[i].service + "</td><td>" + data[i].quantity + "</td><td>" + data[i].revenue + "</td></tr>";
+    }
+    tableHTML += "</tbody></table>";
+    
+    // render table
+    $("#services-table-container").html(tableHTML);
+  }
+  
+  $(document).ready(function() {
+    // initial table
+    generateServicesTable("daily", null);
+    
+    // update table when interval is changed
+    $("#services-interval-select").change(function() {
+      var interval = $(this).val();
+      var query = $("#service-search").val();
+      generateServicesTable(interval, query);
+    });
+    
+    // update table when search query is entered
+    $("#service-search").on("input", function() {
+      var interval = $("#services-interval-select").val();
+      var query = $(this).val();
+      generateServicesTable(interval, query);
+    });
+  });
+
+  //allows switching from sales to service tab
+  $('.nav-link').click(function() {
+    $('.nav-link').removeClass('active');
+    $(this).addClass('active');
+    var tabToShow = $(this).attr('href');
+    $('.tab-pane').removeClass('show active');
+    $(tabToShow).addClass('show active');
+  });
+
+</script>
+
+
       </div>
     </div>
-    <script>
-      $(document).ready(function() {
-        $('.nav-link').click(function() {
-          $('.nav-link').removeClass('active');
-          $(this).addClass('active');
-          var tabToShow = $(this).attr('href');
-          $('.tab-pane').removeClass('show active');
-          $(tabToShow).addClass('show active');
-        });
-      });
-    </script>
   </body>
-          </div>
-        </div>
-      </div>
-  </body>   
 </html>
