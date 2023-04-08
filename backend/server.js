@@ -87,7 +87,8 @@ function compare_update(oldValue, newValue) {
 app.post('/lookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `SELECT * FROM CUSTOMER WHERE first_name = :searchValue`;
-    let binds = [req.body.searchValue];
+    let searchValue = req.body.searchValue
+    let binds = [searchValue.toUpperCase()];
     //
 
     // Send a response
@@ -114,7 +115,7 @@ app.post('/employee', async function(req, res){
     let sex = req.body.sex;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_status_id, state_id, fname, lname, emp_address, city, state, zip, phone, datehired, sex];
+    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -187,7 +188,7 @@ app.put('/employee', async function(req, res){
     let sex = compare_update(oldSex, newSex);
     // Query Creation 
     let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
-    let binds = [emp_status_id, state_id, fname, lname, emp_address, city, state, zip, phone, datehired, sex, emp_id];
+    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), emp_id];
     let CRUDOP = await crudOP(query, binds, false)
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -216,7 +217,7 @@ app.post('/employee-status', async function(req, res){
     let status_desc = req.body.status_desc;
     // Query Creation
     let query = `INSERT INTO EMP_STATUS VALUES (${emp_statusAttributes})`;
-    let binds = [emp_status_id, status, status_desc];
+    let binds = [emp_status_id, status.toUpperCase(), status_desc.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected emp_status by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMP_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -255,7 +256,7 @@ app.put('/employee-status', async function(req, res){
     let status_desc = compare_update(oldStatus_desc, newStatus_desc);
     // Query Creation
     let query = `UPDATE EMP_STATUS SET ${emp_statusAttributes} WHERE emp_status_id = :emp_status_id`;
-    let binds = [status, status_desc, emp_status_id];
+    let binds = [status.toUpperCase(), status_desc.toUpperCase(), emp_status_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected emp_status by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMP_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -293,7 +294,7 @@ app.post('/service-order', async function(req, res) {
     let description = req.body.description;
     // Query Creation
     let query = `INSERT INTO SERVICE_ORDER VALUES (${service_orderAttributes})`;
-    let binds = [order_id, order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description];
+    let binds = [order_id, order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -359,7 +360,7 @@ app.put('/service-order', async function(req, res){
     let description = compare_update(oldDescription, newDescription);
     // Query Creation
     let query = `UPDATE SERVICE_ORDER SET ${service_orderAttributes} WHERE order_id = :order_id`;
-    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description, order_id];
+    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description.toUpperCase(), order_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -387,7 +388,7 @@ app.post('/order-status', async function(req, res) {
     let status = req.body.status;
     // Query Creation
     let query = `INSERT INTO ORDER_STATUS VALUES (${order_statAttributes})`;
-    let binds = [order_status_id, status];
+    let binds = [order_status_id, status.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected order_status by ROWID to send back
     let lastItemQuery = `SELECT * FROM ORDER_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -423,7 +424,7 @@ app.put('/order-status', async function(req, res){
     let status = compare_update(oldStatus, newStatus);
     // Query Creation
     let query = `UPDATE ORDER_STATUS SET ${order_statAttributes} WHERE order_status_id = :order_status_id`;
-    let binds = [status, order_status_id];
+    let binds = [status.toUpperCase(), order_status_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected employee by order_status to send back
     let lastItemQuery = `SELECT * FROM ORDER_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -451,7 +452,7 @@ app.post('/service', async function(req, res){
     let price = req.body.price;
     // Query Creation
     let query = `INSERT INTO SERVICE VALUES (${serviceAttributes})`;
-    let binds = [service_name, price];
+    let binds = [service_name.toUpperCase(), price];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -490,7 +491,7 @@ app.put('/service', async function(req, res){
     let price = compare_update(oldPrice, newPrice);
     // Query Creation
     let query = `UPDATE SERVICE SET ${serviceAttributes} WHERE service_id = :service_id`;
-    let binds = [service_name, price, service_id];
+    let binds = [service_name.toUpperCase(), price, service_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -527,7 +528,7 @@ app.post('/customer',async function(req, res){
     let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email];
+    let binds = [cust_status_id, state_id, first_name.toUpperCase(), middle_in.toUpperCase(), last_name.toUpperCase(), address.toUpperCase(), city.toUpperCase(), zip, phone, email.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -591,7 +592,7 @@ app.put('/customer', async function(req, res){
     let email = compare_update(oldEmail, newEmail);
     // Query Creation
     let query = `UPDATE CUSTOMER SET ${custAttributes} WHERE cust_id = :cust_id`;
-    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email, cust_id];
+    let binds = [cust_status_id, state_id, first_name.toUpperCase(), middle_in.toUpperCase(), last_name.toUpperCase(), address.toUpperCase(), city.toUpperCase(), zip, phone, email.toUpperCase(), cust_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -619,7 +620,7 @@ app.post('/customer-status', async function(req, res) {
     let status = req.body.status;
     // Query Creation
     let query = `INSERT INTO CUST_STATUS VALUES (${cust_statAttributes})`;
-    let binds = [cust_status_id, status];
+    let binds = [cust_status_id, status.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer_status by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUST_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -655,7 +656,7 @@ app.put('/customer-status', async function(req, res){
     let status = compare_update(oldStatus, newStatus);
     // Query Creation
     let query = `UPDATE CUST_STATUS SET ${cust_statAttributes} WHERE cust_status_id = :cust_status_id`;
-    let binds = [status, cust_status_id];
+    let binds = [status.toUpperCase(), cust_status_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected customer_status by ROWID to send back
     let lastItemQuery = `SELECT * FROM CUST_STATUS WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -689,7 +690,7 @@ app.post('/vehicle', async function(req, res){
     let vin = req.body.vin;
     // Query Creation
     let query = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let binds = [cust_id, color_id, model_id, year, license_plate, state_id, vin];
+    let binds = [cust_id, color_id, model_id, year, license_plate.toUpperCase(), state_id, vin.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -743,7 +744,7 @@ app.put('/vehicle', async function(req, res){
     let vin = compare_update(oldVin, newVin);
     // Query Creation
     let query = `UPDATE VEHICLE SET ${vehicleAttributes} WHERE vehicle_id = :vehicle_id`;
-    let binds = [cust_id, color_id, model_id, year, license_plate, state_id, vin, vehicle_id];
+    let binds = [cust_id, color_id, model_id, year, license_plate.toUpperCase(), state_id, vin.toUpperCase(), vehicle_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -769,7 +770,7 @@ app.post('/color', async function(req, res){
     let color = req.body.color;
     // Query Creation
     let query = `INSERT INTO COLOR VALUES (${colorAttrubutes})`;
-    let binds = [color_id, color];
+    let binds = [color_id, color.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle by ROWID to send back
     let lastItemQuery = `SELECT * FROM COLOR WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -805,7 +806,7 @@ app.put('/color', async function(req, res){
     let color = compare_update(oldColor, newColor);
     // Query Creation
     let query = `UPDATE COLOR SET ${colorAttributes} WHERE color_id = :color_id`;
-    let binds = [color, color_id];
+    let binds = [color.toUpperCase(), color_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM COLOR WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -834,7 +835,7 @@ app.post('/vehicle-make', async function(req, res){
     let make_name = req.body.make_name;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
-    let binds = [make_id, make_name];
+    let binds = [make_id, make_name.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -870,7 +871,7 @@ app.put('/vehicle-make', async function(req, res){
     let make_name = compare_update(oldMake_name, newMake_name);
     // Query Creation
     let query = `UPDATE VEHICLE_MAKE SET ${vehicle_makeAttributes} WHERE make_id = :make_id`;
-    let binds = [make_name, make_id];
+    let binds = [make_name.toUpperCase(), make_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -899,7 +900,7 @@ app.post('/vehicle-model', async function(req, res){
     let model = req.body.model;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MODEL VALUES (${vehicle_modelAttributes})`;
-    let binds = [model_id, make_id, model];
+    let binds = [model_id, make_id, model.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -938,7 +939,7 @@ app.put('/vehicle-model', async function(req, res){
     let model = compare_update(oldModel, newModel);
     // Query Creation
     let query = `UPDATE VEHICLE_MODEL SET ${vehicle_modelAttributes} WHERE model_id = :model_id`;
-    let binds = [make_id, model, model_id];
+    let binds = [make_id, model.toUpperCase(), model_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_model by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -968,7 +969,7 @@ app.post('/state', async function(req, res){
     let state_name = req.body.state_name;
     // Query Creation
     let query = `INSERT INTO STATE VALUES (${stateAttributes})`;
-    let binds = [state_id, state_code, state_name];
+    let binds = [state_id, state_code.toUpperCase(), state_name.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected state by ROWID to send back
     let lastItemQuery = `SELECT * FROM STATE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -1007,7 +1008,7 @@ app.put('/state', async function(req, res){
     let state_name = compare_update(oldState_name, newState_name);
     // Query Creation
     let query = `UPDATE STATE SET ${stateAttributes} WHERE state_id = :state_id`;
-    let binds = [state_code, state_name, state_id];
+    let binds = [state_code.toUpperCase(), state_name.toUpperCase(), state_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected state by ROWID to send back
     let lastItemQuery = `SELECT * FROM STATE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -1051,7 +1052,7 @@ app.post('/customervehicle', async function(req, res) {
     const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :address, :city, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_status_id, state_id, first_name, middle_in, last_name, address, city, zip, phone, email];
+    let binds = [cust_status_id, state_id, first_name.toUpperCase(), middle_in, last_name.toUpperCase(), address.toUpperCase(), city.toUpperCase(), zip, phone, email.toUpperCase()];
     let custCRUDOP = await crudOP(custQuery, binds, false);
     //Get customer rowID
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${custCRUDOP.lastRowid}'`;
@@ -1061,7 +1062,7 @@ app.post('/customervehicle', async function(req, res) {
     const vehicleAttributes = "seq_vehicle.nextval, :cust_id, :color_id, :model_id, :year, :license_plate, :state_id, :vin"
     //Vehicle Query
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
-    let vehicleBinds = [lastRowId, color_id, model_id, year, license_plate, state_id, vin];
+    let vehicleBinds = [lastRowId, color_id, model_id, year.toUpperCase(), license_plate.toUpperCase(), state_id, vin.toUpperCase()];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
     let completeResponse = vehicleCRUDOP.rows[0][0];
     res.json({
