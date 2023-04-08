@@ -65,8 +65,9 @@ async function crudOP(query, binds, isRead){
         if (connection){
             try{
                 // CLOSE CONNECTION
-                await connection.close();
-                console.log('[DB]CONNECTION CLOSED');
+                //await connection.close();
+                //console.log('[DB]CONNECTION CLOSED');
+                console.log('S');
             }catch(err){
                 console.log(err);
             }

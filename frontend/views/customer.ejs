@@ -144,10 +144,10 @@ img {
           async function getVehicleModel (modelID) {
             const response = await fetch("http://localhost:3000/vehicle-model");
             const models = await response.json();
-            let match = '';
+            let match = [];
             models.forEach(model => {
               if (model[0] == modelID){
-                match = model;
+                match.push(model) ;
               }
             });
             return match
@@ -155,10 +155,10 @@ img {
           async function getVehicleMake (makeID) {
             const response = await fetch("http://localhost:3000/vehicle-make");
             const makes = await response.json();
-            let match = '';
+            let match = [];
             makes.forEach(make => {
               if (make[0] == makeID){
-                match = make;
+                match.push(make);
               }
             });
             return match
@@ -243,13 +243,13 @@ img {
               const vehicleModel = vehicle[3];
               const vehicleYear = vehicle[4] || 'No Year Found';
               const vehiclePlate = vehicle[5] || 'No Plate Found';
-                // GET vehicle_make table
-              const vehicle_makes = await getVehicleMake(vehicle_id);
-              const makeId = vehicle_makes[0];
-              const makeName = vehicle_makes[1] || 'No Make Found';
-                // GET vehicle_model table
-              const vehicle_models = await getVehicleModel(makeId);
-              const vehicle_modelName = vehicle_models[2] || 'No Model Found';
+              // GET vehicle_model table
+              const vehicle_models = await getVehicleModel(vehicleModel);
+              const makeId = vehicle_models[0][1];
+              const vehicle_modelName = vehicle_models[0][2] || 'No Model Found';
+              // GET vehicle_make table
+              const vehicle_makes = await getVehicleMake(makeId);
+              const makeName = vehicle_makes[0][1] || 'No Make Found';
                 // GET color table
               const colors = await getColor(color_id);
               const vehicleColor = colors[1] || 'No Color Found';
