@@ -90,6 +90,7 @@ function getSalesData(interval) {
 }
 </script>
 <!-- Services Tab + filter by search by service: Still need to determine best way to report... drop down of services maybe? -->
+<!-- Mockup of search bar only functions for daily and weekly -->
 <div id="services-tab" class="tab-pane fade">
   <h3>Services Report Summary</h3>
   <div class="form-group">
@@ -178,6 +179,74 @@ function getSalesData(interval) {
       generateServicesTable(interval, query);
     });
   });
+
+</script>
+<!-- Customer Tab -->
+<div id="customer-tab" class="tab-pane fade">
+  <h3>Customer Report Summary</h3>
+  <div class="form-group">
+    <label for="customer-interval-select">Select Report:</label>
+    <select class="form-control" id="customer-interval-select">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="Monthly">Monthly</option>
+      <option value="Yearly">Yearly</option>
+    </select>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Total Sales</th>
+      </tr>
+    </thead>
+    <tbody id="customer-table-body">
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // populate the customer table with data based on the selected interval
+  $('#customer-interval-select').on('change', function() {
+    var interval = $(this).val();
+    var customerData = getCustomerData(interval);
+    var $customerTableBody = $('#customer-table-body');
+    $customerTableBody.empty();
+    $.each(customerData, function(index, row) {
+      var $tr = $('<tr>');
+      $tr.append($('<td>').text(row.customer));
+      $tr.append($('<td>').text(row.totalSales));
+      $customerTableBody.append($tr);
+    });
+  });
+
+  // simulate getting customer data from server based on the interval **dummy data**
+  function getCustomerData(interval) {
+    var data = [];
+    if (interval === 'daily') {
+      data.push({customer: 'Customer A', totalSales: 100});
+      data.push({customer: 'Customer B', totalSales: 200});
+      data.push({customer: 'Customer C', totalSales: 300});
+    } else if (interval === 'weekly') {
+      data.push({customer: 'Customer A', totalSales: 500});
+      data.push({customer: 'Customer B', totalSales: 1000});
+      data.push({customer: 'Customer C', totalSales: 1500});
+    } else if (interval === 'Monthly') {
+      data.push({customer: 'Customer A', totalSales: 2000});
+      data.push({customer: 'Customer B', totalSales: 2500});
+      data.push({customer: 'Customer C', totalSales: 3000});
+      data.push({customer: 'Customer D', totalSales: 3500});
+      data.push({customer: 'Customer E', totalSales: 4000});
+    } else if (interval === 'Yearly') {
+      data.push({customer: 'Customer A', totalSales: 20000});
+      data.push({customer: 'Customer B', totalSales: 25000});
+      data.push({customer: 'Customer C', totalSales: 30000});
+      data.push({customer: 'Customer D', totalSales: 35000});
+      data.push({customer: 'Customer E', totalSales: 40000});
+    }
+    return data;
+  }
+    
 
   //allows switching from sales to service tab
   $('.nav-link').click(function() {
