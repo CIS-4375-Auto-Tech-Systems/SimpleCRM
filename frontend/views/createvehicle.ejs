@@ -90,9 +90,17 @@
               }
           }
       };
-
+      async function postData(url = "", data) {
+        const response = await fetch(url, {
+          method: "POST",
+          mode: "cors",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      }
       //ATTEMPTING to make the submit button actually send the info to the vehicle endpoint
-      const SubmitToDB = document.getElementById("submit-on-db");
+            const SubmitToDB = document.getElementById("submit-on-db");
           SubmitToDB.addEventListener("click", () => {
             const make = document.getElementById("make").value;
             const model = document.getElementById("model").value;
@@ -102,37 +110,33 @@
             const VIN = document.getElementById("input-vin").value;
             const customer = sessionStorage.getItem("cust_id");
             const state = document.getElementById("state").value;
-            const formData = {
-              make,
-              model,
-              year,
-              color,
-              plate,
-              vin,
-              customer,
-              state
+            const formdata = {
+              "make_id":make,
+              "model_id":model,
+              "year":year,
+              "color_id":color,
+              "license_plate":plate,
+              "vin":VIN,
+              "cust_id":customer,
+              "state_id":state
             };
-
-            //Not sure how this part will go. Xxavier do you know how to do this?
-            //or should i just reference the enpoint in server.js?
-            //but how can we attach the user ID? :/
-            const options = {
-              method: "POST",
-              headers: {
-                "content-Type":"application/json",
-              },
-              body: JSON.stringify(formData),
-            };
-            fetch("/vehicle", options)
-              .then((response) => response.json())
+            postData("http://localhost:3000/vehicle", formdata)
               .then((data) => {
-                console.log("Data saved to database:", data);
-                // Add code to update UI or show success message here
-              })
-              .catch((error) => {
-                console.error("Error saving data to database:", error);
-                // Add code to show error message here
-              });
+              console.log("Data saved to database: ", data);
+              // Add code to update UI or show success message here
+            }).catch((error) => {
+              console.error("Error saving data to database:", error);
+              // Add code to show error message here
+            });
+/*             let http = new XMLHttpRequest();
+            http.open("POST", "http://localhost:3000/vehicle", true);
+            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            var params = "make_id="+make+"&model_id="+model+"&year="+year+"&color_id="+color+"&license_plate="+plate+"&vin="+VIN+"&cust_id="+customer+"&state_id="+state;
+            http.send(params);
+            http.onload = function(){
+              let response = JSON.parse(http.responseText);
+              console.log(response);
+            } */
           });
     </script>       
   </body>
