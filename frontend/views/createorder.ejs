@@ -13,7 +13,7 @@
     <div class="container">
       <div class="right-column">
         <div class="bottomrow">
-        <form class="row g-3">
+        <form class="row g-3" onsubmit="submitOrder(); return false">
           <h2>Create Order Form</h2>
           <div class="col-md-4">
             <label for="vehicle" class="form-label">Vehicle</label>
@@ -74,6 +74,54 @@
       //We need some functions here so that the dropdowns in the for above can pull from the DB
       //we vehicle, employee and service for sure and when choosing the service it should update the amount area automatically 
       //odometer and description will remain manual entires
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      }
+      async function postData(url = "", data) {
+        const response = await fetch(url, {
+          method: "POST",
+          mode: "cors",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      };
+      function submitOrder(){
+        // GET cust_id
+        const cust_id = sessionStorageControl.readItem("cust_id");
+        // Form
+        const vehicle_id = document.getElementById("vehicle").value;
+        const employee_id = document.getElementById("employee").value;
+        const service_id = document.getElementById("service").value;
+        const ttlamount = document.getElementById("total-amount").value;
+        const datein = document.getElementById("Date-In").value;
+        const dateout = document.getElementById("Date-Out").value;
+        const odometer = document.getElementById("input-Odometer").value;
+        const description = document.getElementById("input-description").value;
+        //
+        const formdata = {
+          "cust_id":cust_id,
+          "vehicle_id":vehicle_id,
+          "emp_id":employee_id,
+          //STATUS IS HERE
+          "service_id":service_id,
+          "ttlamount":ttlamount,
+          "datein":datein,
+          "dateout":dateout,
+          "odometer":odometer,
+          "description":description
+        }
+        postData("http://localhost:3000/service-order", formdata);
+      };
     </script>       
   </body>
 </html>
