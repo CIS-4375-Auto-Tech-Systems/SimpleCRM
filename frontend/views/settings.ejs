@@ -61,6 +61,41 @@
           </div>
           <br>
           <div class="section">
+            <h2>Dropdown Additions</h2>
+            <p>Add new Makes, Models, Colors, Statuses, and Services</p>
+            <button onclick="newMake()" class="btn btn-primary">New Make</button>
+            <button onclick="newModel()" class="btn btn-primary">New Model</button>
+            <button onclick="newColor()" class="btn btn-primary">New Color</button>
+            <button onclick="newCustStatus()" class="btn btn-primary">New Customer Status</button>
+            <button onclick="newEmpStatus()" class="btn btn-primary">New Employee Status</button>
+            <button onclick="newOrderStatus()" class="btn btn-primary">New Order Status</button>
+            <button onclick="newService()" class="btn btn-primary">New Service</button>
+            <script>
+              function newMake(){
+                const newMakeWindow = window.open("http://localhost:5173/","Make Form","width=550, height=600");
+              };
+              function newModel(){
+                const newModelWindow = window.open("http://localhost:5173/","Model Form","width=550, height=600");
+              };
+              function newColor(){
+                const newColorWindow = window.open("http://localhost:5173/","Color Form","width=550, height=600");
+              };
+              function newCustStatus(){
+                const newCustStatusWindow = window.open("http://localhost:5173/","Customer Status Form","width=550, height=600");
+              };
+              function newEmpStatus(){
+                const newEmpStatusWindow = window.open("http://localhost:5173/","Employee Status Form","width=550, height=600");
+              };
+              function newOrderStatus(){
+                const newOrderStatusWindow = window.open("http://localhost:5173/","Order Status Form","width=550, height=600");
+              };
+              function newService(){
+                const newServiceWindow = window.open("http://localhost:5173/","Service Form","width=550, height=600");
+              };
+            </script>
+          </div>
+          <br>
+          <div class="section">
             <h2>About Us</h2>
             <br>
             <h4><em>"Rev up your business with our tech solutions."</em></h4>
