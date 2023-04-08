@@ -25,6 +25,9 @@
             <label for="service" class="form-label">Service</label>
             <select id="service" class="form-select">
               <option selected></option>
+              <% services.forEach(function(service){ %>
+                <option value=<%= service[0] %>><%= service[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div></div>
@@ -32,6 +35,9 @@
             <label for="employee" class="form-label">Employee</label>
             <select id="employee" class="form-select">
               <option selected></option>
+              <% employees.forEach(function(employee){ %>
+                <option value=<%= employee[0] %>><%= employee[3] %> <%= employee[4] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-4">

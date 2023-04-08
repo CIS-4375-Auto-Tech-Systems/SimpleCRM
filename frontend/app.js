@@ -108,8 +108,36 @@ app.get('/', async function(req, res) {
     res.render('customer');
   });
 
-  app.get('/createorder', function(req, res){
-    res.render('createorder');
+  app.get('/createorder', async function(req, res){
+    const getVehicles = await axios.get('http://localhost:3000/vehicle').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getEmployees = await axios.get('http://localhost:3000/employee').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('createorder',{
+      vehicles: getVehicles,
+      services: getServices,
+      employees: getEmployees
+    });
   });
 
   app.get('/createvehicle', async function(req, res){
