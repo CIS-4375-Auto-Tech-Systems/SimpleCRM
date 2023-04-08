@@ -22,7 +22,7 @@
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
-        <form class="row g-3" method="POST" action="http://localhost:3000/customervehicle">
+        <form class="row g-3" onsubmit="submitCustomer(); return false">
           <h2>Create Customer Form</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-2">
             <!-- the name attribute is used to create a request so please use it-->
@@ -80,7 +80,7 @@
           </div>
           <div class="col-md-1">
             <label for="city" class="form-label">Year<span class="required">*</span></label>
-            <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control" name="year" required />
+            <input type="number" min="1900" max="2099" step="1" value="2016" id="inputYear" class="form-control" name="year" required />
           </div>
           <div class="col-md-2">
             <label for="vinnumber" class="form-label">Vin Number<span class="required">*</span></label>
@@ -109,6 +109,27 @@
             </select>
             <br>
             <script>
+                const sessionStorageControl = {
+                //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+                storeItem(key, value){
+                  sessionStorage.setItem(key, value);
+                },
+                readItem(key){
+                  return sessionStorage.getItem(key);
+                },
+                removeItem(key){
+                  sessionStorage.removeItem(key);
+                }
+              }
+              async function postData(url = "", data) {
+                const response = await fetch(url, {
+                  method: "POST",
+                  mode: "cors",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify(data),
+                });
+                return response.json();
+              }
               function myFunction(){
                   let makeValue = document.getElementById("make").value;
                   let x=document.getElementById("model").options;
@@ -117,12 +138,55 @@
                   }
                   for (let i=0; i<x.length; i++){
                       if (makeValue == x[i].dataset.make_id){
-                          console.log(makeValue);
-                          console.log(x[i]);
+                        continue;
                       }else{
                           x[i].setAttribute("hidden", "hidden");
                       }
                   }
+              };
+              function submitCustomer(){
+                //Form
+                const first_name = document.getElementById("firstName").value;
+                const middle_in = document.getElementById("MI").value;
+                const last_name = document.getElementById("lastName").value;
+                const address = document.getElementById("inputAddress").value;
+                const city = document.getElementById("inputCity").value;
+                const zip = document.getElementById("inputZip").value;
+                const phone = document.getElementById("inputPhone").value;
+                const email = document.getElementById("inputEmail").value;
+                //
+                const color_id = document.getElementById("color").value;
+                const model_id = document.getElementById("model").value;
+                const year = document.getElementById("inputYear").value;
+                const license_plate = document.getElementById("inputLicensePlate").value;
+                const state_id = document.getElementById("state").value;
+                const vin = document.getElementById("vinnumber").value;
+                //
+                const formdata = {
+                  "first_name":first_name,
+                  "middle_in":middle_in,
+                  "last_name":last_name,
+                  "address": address,
+                  "city":city,
+                  "zip":zip,
+                  "phone":phone,
+                  "email":email,
+                  "color_id":color_id,
+                  "model_id":model_id,
+                  "year":year,
+                  "license_plate":license_plate,
+                  "state_id":state_id,
+                  "vin":vin
+                }
+                //
+                // POST request
+                postData("http://localhost:3000/customervehicle", formdata).then((data) => {
+                  // Store cust_id from response
+                  let cust_id = data.cust_id
+                  sessionStorageControl.storeItem("cust_id", cust_id);
+                  // Send the user to customer profile
+                  window.location.href="/customer";
+                });
               };
           </script>
           <div class="col-12">
