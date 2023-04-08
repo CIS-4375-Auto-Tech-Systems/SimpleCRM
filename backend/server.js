@@ -1064,7 +1064,7 @@ app.post('/customervehicle', async function(req, res) {
     let vehicleQuery = `INSERT INTO VEHICLE VALUES (${vehicleAttributes})`;
     let vehicleBinds = [lastRowId, color_id, model_id, year.toUpperCase(), license_plate.toUpperCase(), state_id, vin.toUpperCase()];
     let vehicleCRUDOP = await crudOP(vehicleQuery, vehicleBinds, false);
-    let completeResponse = vehicleCRUDOP.rows[0][0];
+    let completeResponse = vehicleCRUDOP.lastRowid;
     res.json({
         lastRowID: completeResponse
     });
