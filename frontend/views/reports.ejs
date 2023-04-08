@@ -47,9 +47,13 @@
     <tbody id="sales-table-body">
     </tbody>
   </table>
+    <!-- print report -->
+    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
 </div>
 
 <script>
+//needs print functionality for all tabs
+
   // populate the sales table with data based on the selected interval
   $('#interval-select').on('change', function() {
     var interval = $(this).val();
@@ -107,6 +111,8 @@ function getSalesData(interval) {
     <input type="text" class="form-control" id="service-search">
   </div>
   <div id="services-table-container"></div>
+    <!-- print report -->
+    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
 </div>
 
 <script>
@@ -151,7 +157,7 @@ function getSalesData(interval) {
     }
     
     // generate table HTML
-    var tableHTML = "<table class='table'><thead><tr><th>Service Name</th><th># Customers</th><th>Order Amount</th></tr></thead><tbody>";
+    var tableHTML = "<table class='table'><thead><tr><th>Service Name</th><th># Customers</th><th>$ Order Amount</th></tr></thead><tbody>";
     for (var i = 0; i < data.length; i++) {
       tableHTML += "<tr><td>" + data[i].service + "</td><td>" + data[i].quantity + "</td><td>" + data[i].revenue + "</td></tr>";
     }
@@ -196,15 +202,18 @@ function getSalesData(interval) {
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Customer</th>
+        <th>Last Name</th>
+        <th>Middle Initial</th>
+        <th>First Name</th>
         <th>Total Sales</th>
       </tr>
     </thead>
     <tbody id="customer-table-body">
     </tbody>
   </table>
+  <!-- print report -->
+  <button class="btn btn-primary" id="print-customer-report">Print Report</button>
 </div>
-
 <script>
   // populate the customer table with data based on the selected interval
   $('#customer-interval-select').on('change', function() {
@@ -214,7 +223,9 @@ function getSalesData(interval) {
     $customerTableBody.empty();
     $.each(customerData, function(index, row) {
       var $tr = $('<tr>');
-      $tr.append($('<td>').text(row.customer));
+      $tr.append($('<td>').text(row.lastName));
+      $tr.append($('<td>').text(row.middleInitial));
+      $tr.append($('<td>').text(row.firstName));
       $tr.append($('<td>').text(row.totalSales));
       $customerTableBody.append($tr);
     });
@@ -224,29 +235,29 @@ function getSalesData(interval) {
   function getCustomerData(interval) {
     var data = [];
     if (interval === 'daily') {
-      data.push({customer: 'Customer A', totalSales: 100});
-      data.push({customer: 'Customer B', totalSales: 200});
-      data.push({customer: 'Customer C', totalSales: 300});
+      data.push({lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 100});
+      data.push({lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 200});
+      data.push({lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 300});
     } else if (interval === 'weekly') {
-      data.push({customer: 'Customer A', totalSales: 500});
-      data.push({customer: 'Customer B', totalSales: 1000});
-      data.push({customer: 'Customer C', totalSales: 1500});
+      data.push({lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 500});
+      data.push({lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 1000});
+      data.push({lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 1500});
     } else if (interval === 'Monthly') {
-      data.push({customer: 'Customer A', totalSales: 2000});
-      data.push({customer: 'Customer B', totalSales: 2500});
-      data.push({customer: 'Customer C', totalSales: 3000});
-      data.push({customer: 'Customer D', totalSales: 3500});
-      data.push({customer: 'Customer E', totalSales: 4000});
+      data.push({lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 2000});
+      data.push({lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 2500});
+      data.push({lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 3000});
+      data.push({lastName: 'Jones', middleInitial: 'D', firstName: 'Mike', totalSales: 3500});
+      data.push({lastName: 'Davis', middleInitial: 'E', firstName: 'Kate', totalSales: 4000});
     } else if (interval === 'Yearly') {
-      data.push({customer: 'Customer A', totalSales: 20000});
-      data.push({customer: 'Customer B', totalSales: 25000});
-      data.push({customer: 'Customer C', totalSales: 30000});
-      data.push({customer: 'Customer D', totalSales: 35000});
-      data.push({customer: 'Customer E', totalSales: 40000});
+      data.push({lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 22000});
+      data.push({lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 24500});
+      data.push({lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 13000});
+      data.push({lastName: 'Jones', middleInitial: 'D', firstName: 'Mike', totalSales: 35400});
+      data.push({lastName: 'Davis', middleInitial: 'E', firstName: 'Kate', totalSales: 40200});
     }
     return data;
   }
-    
+  
 
   //allows switching from sales to service tab
   $('.nav-link').click(function() {
