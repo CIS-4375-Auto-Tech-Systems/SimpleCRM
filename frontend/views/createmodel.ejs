@@ -40,7 +40,29 @@
             </div>
         </div>
         <script>
-            
+            async function postData(url = "", data) {
+                const response = await fetch(url, {
+                method: "POST",
+                mode: "cors",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+                });
+                return response.json();
+            };
+            function createModel() {
+                const make = document.getElementById("make").value;
+                const model = document.getElementById("model").value;
+                const formdata = {
+                    "make_id":make,
+                    "model": model
+                }
+                postData("http://localhost:3000/vehicle-model", formdata)
+                .then((data) => {
+                    window.close();
+                }).catch((error)=> {
+                    console.log(error);
+                });
+            }
         </script>
     </body>
 </html>
