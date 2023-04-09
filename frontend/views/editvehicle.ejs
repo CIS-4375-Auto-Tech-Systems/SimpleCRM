@@ -114,7 +114,6 @@
 
       async function currentData(vehicleID){
         const vehicle = await getVehicle(vehicleID);
-        console.log(vehicle[0][3]);
         const make = await getVehicleModel(vehicle[0][3])
         document.getElementById("make").value = make[0][1]
         document.getElementById("model").value = vehicle[0][3]
