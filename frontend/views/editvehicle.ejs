@@ -13,7 +13,7 @@
     <div class="container">
       <div class="right-column">
         <div class="bottomrow">
-        <form class="row g-3">
+        <form class="row g-3" onsubmit="editVehicle(); return false">
           <h2>Edit Vehicle</h2>
           <div class="col-md-4">
             <label for="make" class="form-label">Make</label>
@@ -74,6 +74,56 @@
     </div>
     </div>
     <script>
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      };
+      // Define Current
+      const vehicle_id = sessionStorageControl.readItem("vehicle_id");
+      const cust_id = sessionStorageControl.readItem("cust_id");
+      async function getVehicle (vehicleID) {
+        const response = await fetch("http://localhost:3000/vehicle");
+        const vehicles = await response.json();
+        let match = [];
+        vehicles.forEach(vehicle => {
+          if (vehicle[0] == vehicleID){
+            match.push(vehicle);
+          }
+        });
+        return match
+      }
+      async function getVehicleModel (modelID) {
+        const response = await fetch("http://localhost:3000/vehicle-model");
+        const models = await response.json();
+        let match = [];
+        models.forEach(model => {
+          if (model[0] == modelID){
+            match.push(model) ;
+          }
+        });
+        return match
+      }
+
+      async function currentData(vehicleID){
+        const vehicle = await getVehicle(vehicleID);
+        console.log(vehicle[0][3]);
+        const make = await getVehicleModel(vehicle[0][3])
+        document.getElementById("make").value = make[0][1]
+        document.getElementById("model").value = vehicle[0][3]
+        document.getElementById("input-year").value = vehicle[0][4];
+        document.getElementById("state").value = vehicle[0][6];
+        document.getElementById("color").value = vehicle[0][2];
+        document.getElementById("input-plate").value = vehicle[0][5];
+        document.getElementById("input-vin").value = vehicle[0][7];
+      };
       //functions that get the values as dropboxes for the Make, Model and Color
       function myFunction(){
           let makeValue = document.getElementById("make").value;
@@ -98,8 +148,8 @@
         });
         return response.json();
       };
-      const SubmitToDB = document.getElementById("submit-on-db");
-      SubmitToDB.addEventListener("click", () => {
+      currentData(vehicle_id);
+      function editVehicle() {
         const make = document.getElementById("make").value;
         const model = document.getElementById("model").value;
         const year = document.getElementById("input-year").value;
@@ -109,6 +159,8 @@
         const customer = sessionStorage.getItem("cust_id");
         const state = document.getElementById("state").value;
         const formdata = {
+          "vehicle_id": vehicle_id,
+          "cust_id": cust_id,
           "make_id":make,
           "model_id":model,
           "year":year,
@@ -121,12 +173,13 @@
         putData("http://localhost:3000/vehicle", formdata)
           .then((data) => {
           console.log("Data saved to database: ", data);
-          // Add code to update UI or show success message here
+          // When updated go to customer page
+          window.location.href="/customer";
         }).catch((error) => {
           console.error("Error saving data to database:", error);
           // Add code to show error message here
         });
-      });
+      };
     </script>       
   </body>
 </html>

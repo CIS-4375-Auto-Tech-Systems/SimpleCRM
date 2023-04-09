@@ -110,9 +110,10 @@
         //
         const formdata = {
           "cust_id":cust_id,
+          // ORDER NUMBER SHOULD BE HERE
           "vehicle_id":vehicle_id,
           "emp_id":employee_id,
-          //STATUS IS HERE
+          //STATUS ID SHOULD BE HERE
           "service_id":service_id,
           "ttlamount":ttlamount,
           "datein":datein,
@@ -120,7 +121,14 @@
           "odometer":odometer,
           "description":description
         }
-        postData("http://localhost:3000/service-order", formdata);
+        postData("http://localhost:3000/service-order", formdata)
+        .then((data) => {
+          console.log("Data saved to database: ", data);
+          // Add code to update UI or show success message here
+        }).catch((error) => {
+          console.error("Error saving data to database:", error);
+          // Add code to show error message here
+        });
       };
     </script>       
   </body>
