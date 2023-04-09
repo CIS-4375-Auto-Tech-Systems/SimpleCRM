@@ -43,6 +43,25 @@
           </div>
           <br>
           <div class="section">
+            <h2>Create Options</h2>
+            <p>Add new Makes, Models, and Services</p>
+            <button onclick="newMake()" class="btn btn-primary">New Make</button>
+            <button onclick="newModel()" class="btn btn-primary">New Model</button>
+            <button onclick="newService()" class="btn btn-primary">New Service</button>
+            <script>
+              function newMake(){
+                const newMakeWindow = window.open("http://localhost:5173/make","Make Form","width=550, height=600");
+              };
+              function newModel(){
+                const newModelWindow = window.open("http://localhost:5173/model","Model Form","width=550, height=600");
+              };
+              function newService(){
+                const newServiceWindow = window.open("http://localhost:5173/service","Service Form","width=550, height=600");
+              };
+            </script>
+          </div>
+          <br>
+          <div class="section">
             <h2>Theme</h2>
             <p>Choose your preferred theme here.</p>
             <button onclick="setTheme('theme1')" class="btn btn-primary">Light Mode</button>
@@ -58,25 +77,6 @@
             <button onclick="increaseFontSize()" class="btn btn-primary">Increase Font Size</button>
             <button onclick="decreaseFontSize()" class="btn btn-primary">Decrease Font Size</button>
             <button onclick="resetFontSize()" class="btn btn-primary">Reset Font Size</button>
-          </div>
-          <br>
-          <div class="section">
-            <h2>Dropdown Additions</h2>
-            <p>Add new Makes, Models, and Services</p>
-            <button onclick="newMake()" class="btn btn-primary">New Make</button>
-            <button onclick="newModel()" class="btn btn-primary">New Model</button>
-            <button onclick="newService()" class="btn btn-primary">New Service</button>
-            <script>
-              function newMake(){
-                const newMakeWindow = window.open("http://localhost:5173/vehicle-make","Make Form","width=550, height=600");
-              };
-              function newModel(){
-                const newModelWindow = window.open("http://localhost:5173/vehicle-model","Model Form","width=550, height=600");
-              };
-              function newService(){
-                const newServiceWindow = window.open("http://localhost:5173/service","Service Form","width=550, height=600");
-              };
-            </script>
           </div>
           <br>
           <div class="section">
