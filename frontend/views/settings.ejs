@@ -65,7 +65,6 @@
             <p>Add new Makes, Models, Colors, and Services</p>
             <button onclick="newMake()" class="btn btn-primary">New Make</button>
             <button onclick="newModel()" class="btn btn-primary">New Model</button>
-            <button onclick="newColor()" class="btn btn-primary">New Color</button>
             <button onclick="newService()" class="btn btn-primary">New Service</button>
             <script>
               function newMake(){
@@ -73,9 +72,6 @@
               };
               function newModel(){
                 const newModelWindow = window.open("http://localhost:5173/model","Model Form","width=550, height=600");
-              };
-              function newColor(){
-                const newColorWindow = window.open("http://localhost:5173/color","Color Form","width=550, height=600");
               };
               function newService(){
                 const newServiceWindow = window.open("http://localhost:5173/service","Service Form","width=550, height=600");

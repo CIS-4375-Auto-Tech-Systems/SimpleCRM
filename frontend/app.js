@@ -254,7 +254,6 @@ app.get('/', async function(req, res) {
     });
   });
 
-  // remove later: just seeing the customer profile page style
   app.get('/customer', function(req, res) {
     res.render('customer');
   });
@@ -384,9 +383,6 @@ app.get('/', async function(req, res) {
     res.render('createmodel', {
       makes: getMakes
     });
-  });
-  app.get('/color', function(req, res) {
-    res.render('createcolor');
   });
   app.get('/service', function(req, res) {
     res.render('createservice');
