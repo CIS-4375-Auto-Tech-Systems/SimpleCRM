@@ -130,10 +130,10 @@ img {
           //Edit customer info button
           const EditCustomerInfo = document.getElementById("info-button");
           EditCustomerInfo.addEventListener("click", () => {
-            openCreateCustForm();
+            openEditCustForm();
           });
-          function openCreateCustForm() { //The fuction that opens the form in another window
-            const EditCust = window.open("http://localhost:5173/createcustomer");}
+          function openEditCustForm() { //The fuction that opens the form in another window
+            const EditCust = window.open("http://localhost:5173/editcustomer");}
 
 
 

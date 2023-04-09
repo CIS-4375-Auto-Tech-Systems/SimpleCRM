@@ -16,9 +16,16 @@
         <form class="row g-3" onsubmit="editOrder(); return false">
           <h2>Edit Order Form</h2>
           <div class="col-md-4">
-            <label for="vehicle" class="form-label">Vehicle</label>
-            <select id="vehicle" class="form-select">
+            <label for="order_num" class="form-label">Order Number</label>
+            <input type="number" class="form-control" id="order_num">
+          </div>
+          <div class="col-md-4">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" class="form-select">
               <option selected></option>
+              <% orderStatuses.forEach(function(status){ %>
+                <option value=<%= status[0] %>><%= status[1] %></option>
+              <% }); %>
             </select>
           </div>
           <div class="col-md-4">
@@ -90,6 +97,7 @@
       const cust_id = sessionStorageControl.readItem("cust_id");
       // GET order_id
       const order_id = sessionStorageControl.readItem("order_id");
+      console.log()
       async function getServiceOrder (orderID) {
         const response = await fetch("http://localhost:3000/service-order");
         const orders = await response.json();
@@ -103,6 +111,9 @@
       }
       async function currentData(orderID){
         const serviceOrder = await getServiceOrder(orderID);
+        document.getElementById("order_num").value = serviceOrder[0][1];
+        document.getElementById("employee").value = serviceOrder[0][4];
+        document.getElementById("status").value = serviceOrder[0][5];
         document.getElementById("service").value = serviceOrder[0][6];
         document.getElementById("total-amount").value = serviceOrder[0][7];
         let indate = JSON.stringify(serviceOrder[0][8])
@@ -124,11 +135,13 @@
         return response.json();
       };
       currentData(order_id);
-      function editOrder(){
+      async function editOrder(){
+        const serviceOrder = await getServiceOrder(order_id);
         // Form
         const order_num = document.getElementById("order_num").value;
-        const vehicle_id = document.getElementById("vehicle").value;
+        const vehicle_id = serviceOrder[0][3];
         const employee_id = document.getElementById("employee").value;
+        const order_status_id = document.getElementById("status").value;
         const service_id = document.getElementById("service").value;
         const ttlamount = document.getElementById("total-amount").value;
         const datein = document.getElementById("Date-In").value;
@@ -138,11 +151,11 @@
         //
         const formdata = {
           "order_id": order_id,
-          "cust_id":cust_id,
           "order_num":order_num,
+          "cust_id":cust_id,
           "vehicle_id":vehicle_id,
           "emp_id":employee_id,
-          "order_status_id": "2",
+          "order_status_id": order_status_id,
           "service_id":service_id,
           "ttlamount":ttlamount,
           "datein":datein,
@@ -153,7 +166,8 @@
         putData("http://localhost:3000/service-order", formdata)
         .then((data) => {
           console.log("Data saved to database: ", data);
-          // Add code to update UI or show success message here
+          // When updated go to customer page
+          window.location.href="/customer";
         }).catch((error) => {
           console.error("Error saving data to database:", error);
           // Add code to show error message here
