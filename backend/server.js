@@ -845,13 +845,13 @@ app.delete('/color', async function(req, res){
 // CREATE
 app.post('/vehicle-make', async function(req, res){
     // Column Name
-    const vehicle_makeAttributes = ':make_id, :make_name';
+    const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
     let make_id = req.body.make_id;
     let make_name = req.body.make_name;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
-    let binds = [make_id, make_name.toUpperCase()];
+    let binds = [make_name.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -909,14 +909,14 @@ app.delete('/vehicle_make', async function(req, res){
 // CREATE
 app.post('/vehicle-model', async function(req, res){
     // Column Name
-    const vehicle_modelAttributes = ':model_id, :make_id, :model';
+    const vehicle_modelAttributes = 'seq_vehicle_model.nextval, :make_id, :model';
     // Values
     let model_id = req.body.model_id;
     let make_id = req.body.make_id;
     let model = req.body.model;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MODEL VALUES (${vehicle_modelAttributes})`;
-    let binds = [model_id, make_id, model.toUpperCase()];
+    let binds = [make_id, model.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
