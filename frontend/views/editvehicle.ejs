@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <title>Edit Vehicle Form</title>
+    <style>
+      form {
+        margin-top: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="right-column">
+        <div class="bottomrow">
+        <form class="row g-3">
+          <h2>Edit Vehicle</h2>
+          <div class="col-md-4">
+            <label for="make" class="form-label">Make</label>
+            <select id="make" class="form-select" onchange="myFunction()" required>
+              <option selected></option>
+              <% makes.forEach(function(make){ %>
+                <option value=<%= make[0] %>><%= make[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="model" class="form-label">Model</label>
+            <select id="model" class="form-select" name="model_id" required>
+              <option selected></option>
+              <% models.forEach(function(model){ %>
+                <option data-make_id =<%=model[1]%> value=<%= model[0] %>><%= model[2] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div></div>
+          <div class="col-8">
+            <label for="year" class="form-label" placeholder="YYYY">Year</label>
+            <input type="text" class="form-control" id="input-year">
+          </div>
+          <div class="col-8">
+            <label for="state" class="form-label">State<span class="required"></span></label>
+            <select id="state" class="form-select" name="state_id" required>
+              <option selected></option>
+              <!--The value of the option is what is part of the request-->
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[2] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-8">
+            <label for="color" class="form-label">Color</label>
+            <select id="color" class="form-select" name="color_id" required>
+              <option selected></option>
+              <% color.forEach(function(color){ %>
+                <option value=<%= color[0] %>><%= color[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-8">
+            <label for="input-plate" class="form-label">License Plate</label>
+            <input type="text" class="form-control" id="input-plate">
+          </div>
+          <div class="col-8">
+            <label for="input-vin" class="form-label">VIN</label>
+            <input type="text" class="form-control" id="input-vin"
+          </div><!--Leave this DIV red plz, if you add a '>' and the top here ^ then the submit button turns into a japanese font. idk ok-->
+        </div>
+          <div class="col-6">
+            <button type="submit" class="btn btn-primary" id="submit-on-db">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+    <script>
+      //functions that get the values as dropboxes for the Make, Model and Color
+      function myFunction(){
+          let makeValue = document.getElementById("make").value;
+          let x=document.getElementById("model").options;
+          for (let i=0; i<x.length; i++){
+              x[i].removeAttribute("hidden");
+          }
+          for (let i=0; i<x.length; i++){
+              if (makeValue == x[i].dataset.make_id){
+                continue;
+              }else{
+                  x[i].setAttribute("hidden", "hidden");
+              }
+          }
+      };
+      async function putData(url = "", data) {
+        const response = await fetch(url, {
+          method: "PUT",
+          mode: "cors",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      };
+      const SubmitToDB = document.getElementById("submit-on-db");
+      SubmitToDB.addEventListener("click", () => {
+        const make = document.getElementById("make").value;
+        const model = document.getElementById("model").value;
+        const year = document.getElementById("input-year").value;
+        const color = document.getElementById("color").value;
+        const plate = document.getElementById("input-plate").value;
+        const VIN = document.getElementById("input-vin").value;
+        const customer = sessionStorage.getItem("cust_id");
+        const state = document.getElementById("state").value;
+        const formdata = {
+          "make_id":make,
+          "model_id":model,
+          "year":year,
+          "color_id":color,
+          "license_plate":plate,
+          "vin":VIN,
+          "cust_id":customer,
+          "state_id":state
+        };
+        putData("http://localhost:3000/vehicle", formdata)
+          .then((data) => {
+          console.log("Data saved to database: ", data);
+          // Add code to update UI or show success message here
+        }).catch((error) => {
+          console.error("Error saving data to database:", error);
+          // Add code to show error message here
+        });
+      });
+    </script>       
+  </body>
+</html>

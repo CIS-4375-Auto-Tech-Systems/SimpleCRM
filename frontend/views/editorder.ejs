@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <title>Edit Service Order</title>
+    <style>
+      form {
+        margin-top: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="right-column">
+        <div class="bottomrow">
+        <form class="row g-3" onsubmit="submitOrder(); return false">
+          <h2>Edit Order Form</h2>
+          <div class="col-md-4">
+            <label for="vehicle" class="form-label">Vehicle</label>
+            <select id="vehicle" class="form-select">
+              <option selected></option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="service" class="form-label">Service</label>
+            <select id="service" class="form-select">
+              <option selected></option>
+              <% services.forEach(function(service){ %>
+                <option value=<%= service[0] %>><%= service[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div></div>
+          <div class="col-md-4">
+            <label for="employee" class="form-label">Employee</label>
+            <select id="employee" class="form-select">
+              <option selected></option>
+              <% employees.forEach(function(employee){ %>
+                <option value=<%= employee[0] %>><%= employee[3] %> <%= employee[4] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="inputtotalamount" class="form-label">Total Amount</label>
+            <input type="number" class="form-control" id="total-amount" placeholder="$" >
+          </div>
+          <div></div>
+          <div class="col-md-2">
+            <label for="inputDateIn" class="form-label">Date In</label>
+            <input type="date" class="form-control" id="Date-In">
+          </div>
+          <div class="col-md-2">
+            <label for="inputDateout" class="form-label">Date Out</label>
+            <input type="date" class="form-control" id="Date-Out">
+          </div>
+          <div class="col-md-4">
+            <label for="inputOdometer" class="form-label">Odometer</label>
+            <input type="number" class="form-control" id="input-Odometer">
+          </div>
+
+          <div class="col-8">
+            <label for="inputDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="input-description"
+          </div><!--Leave this DIV red plz, if not the submit button becomes japanese-->
+        </div>
+          <div class="col-6">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+    <script>
+      //We need some functions here so that the dropdowns in the for above can pull from the DB
+      //we vehicle, employee and service for sure and when choosing the service it should update the amount area automatically 
+      //odometer and description will remain manual entires
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      }
+      async function putData(url = "", data) {
+        const response = await fetch(url, {
+          method: "PUT",
+          mode: "cors",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      };
+    </script>       
+  </body>
+</html>

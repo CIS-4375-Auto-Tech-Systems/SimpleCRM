@@ -207,7 +207,14 @@ img {
             });
             return match
           }
-
+          function editVehicle(vehicle_id){
+            sessionStorageControl.storeItem("vehicle_id", vehicle_id);
+            window.location.href="/editvehicle";
+          };
+          function editServiceOrder(order_id){
+            sessionStorageControl.storeItem("order_id", order_id);
+            window.location.href="/editorder";
+          };
           async function createPage (custID) {
             /* CUSTOMER */ // customer
             // GET customer table
@@ -286,6 +293,8 @@ img {
 
               let vehicleAction = document.createElement("button");
               let vehicleActionText = document.createTextNode("Edit");
+              vehicleAction.setAttribute("data-vehicle_id", vehicle_id);
+              vehicleAction.setAttribute("onclick", "editVehicle(this.dataset.vehicle_id)");
               vehicleAction.appendChild(vehicleActionText);
               vehicleRow.appendChild(vehicleAction);
             }
@@ -333,12 +342,13 @@ img {
 
               let orderAction = document.createElement("button");
               let orderActionText = document.createTextNode("Edit");
+              orderAction.setAttribute("data-order_id", order_id);
+              orderAction.setAttribute("onclick", "editServiceOrder(this.dataset.order_id)");
               orderAction.appendChild(orderActionText);
               serviceRow.appendChild(orderAction);
             }
           }
           createPage(cust_id);
-
     </script>
   </body>
 </html>

@@ -140,6 +140,38 @@ app.get('/', async function(req, res) {
     });
   });
 
+  app.get('/editorder', async function(req, res){
+    const getVehicles = await axios.get('http://localhost:3000/vehicle').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getEmployees = await axios.get('http://localhost:3000/employee').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('editorder',{
+      vehicles: getVehicles,
+      services: getServices,
+      employees: getEmployees
+    });
+  });
+
   app.get('/createvehicle', async function(req, res){
     const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
       if (response.data == 'FAILURE'){
@@ -174,6 +206,47 @@ app.get('/', async function(req, res) {
       }
     });
     res.render('createvehicle', {
+      makes: getMakes,
+      models: getModels,
+      color: getColor,
+      states: getStates
+    });
+  });
+
+  app.get('/editvehicle', async function(req, res){
+    const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('editvehicle', {
       makes: getMakes,
       models: getModels,
       color: getColor,
