@@ -1074,8 +1074,14 @@ app.post('/customervehicle', async function(req, res) {
     res.json({
         lastRowID: completeResponse,
         cust_id: lastRowId
-    });
+    });    
 });
+app.post('/sales-data', async function(req, res) 
+{const interval = req.query.interval;
+const result = await crudOP("SELECT TO_CHAR(datein, 'DD-Mon-YY') AS date_range_start, TO_CHAR(dateout, 'DD-Mon-YY') AS date_range_end, SUM(ttlamount) AS total_sales FROM SERVICE_ORDER WHERE datein >= '01-Jan-98' AND dateout <= '31-Dec-23' GROUP BY TO_CHAR(datein, 'DD-Mon-YY'), TO_CHAR(dateout, 'DD-Mon-YY') ORDER BY TO_CHAR(datein, 'DD-Mon-YY')", undefined, true);
+console.log(result.rows)
+res.json(result.rows);
+}); 
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
 });
