@@ -575,22 +575,22 @@ app.put('/customer', async function(req, res){
     // Store Old
     let oldCust_status_id = currentCust[1];
     let oldState_id = currentCust[2];
-    let oldFirst_name = currentCust[4];
-    let oldMiddle_in = currentCust[5];
-    let oldLast_name = currentCust[6];
-    let oldAddress = currentCust[7];
-    let oldCity = currentCust[8];
-    let oldZip = currentCust[9];
-    let oldPhone = currentCust[10];
-    let oldEmail = currentCust[11];
+    let oldFirst_name = currentCust[3];
+    let oldMiddle_in = currentCust[4];
+    let oldLast_name = currentCust[5];
+    let oldAddress = currentCust[6];
+    let oldCity = currentCust[7];
+    let oldZip = currentCust[8];
+    let oldPhone = currentCust[9];
+    let oldEmail = currentCust[10];
     // Request New
     let newCust_status_id = req.body.cust_status_id;
     let newState_id = req.body.state_id;
     let newFirst_name = req.body.first_name;
     let newMiddle_in = req.body.middle_in;
     let newLast_name = req.body.last_name;
-    let newAddress = req.body.lic_address;
-    let newCity = req.body.lic_city;
+    let newAddress = req.body.address;
+    let newCity = req.body.city;
     let newZip = req.body.zip;
     let newPhone = req.body.phone;
     let newEmail = req.body.email;

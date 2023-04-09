@@ -16,10 +16,9 @@
 }
     </style>
   </head>
-  <body id="main">
+  <body>
     <div class="container">
       <div class="right-column">
-        <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
         <form class="row g-3" onsubmit="editCustomer(); return false">
           <h2>Edit Customer Form</h2><p><span class="required">*</span> Indicates field is required</p>
@@ -66,6 +65,16 @@
             <label for="zip" class="form-label">Zip<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputZip" name="zip">
           </div>
+          <div class="col-md-2">
+            <label for="status" class="form-label">Status<span class="required">*</span></label>
+            <select id="status" class="form-select" name="status" required>
+              <option selected></option>
+              <!--The value of the option is what is part of the request-->
+              <% custstatuses.forEach(function(status){ %>
+                <option value=<%= status[0] %>><%= status[1] %></option>
+              <% }); %>
+            </select>
+          </div>
             <br>
             <script>
                 const sessionStorageControl = {
@@ -89,6 +98,32 @@
                 });
                 return response.json();
               }
+              const cust_id = sessionStorageControl.readItem("cust_id");
+              async function getCust (custID) {
+                const response = await fetch("http://localhost:3000/customer");
+                const customers = await response.json();
+                let match = '';
+                customers.forEach(customer => {
+                  if (customer[0] == custID){
+                    match = customer;
+                  }
+                });
+                return match
+              };
+              async function currentData(custID){
+                const customer = await getCust(custID);
+                document.getElementById("firstName").value = customer[3];
+                document.getElementById("MI").value = customer[4];
+                document.getElementById("lastName").value = customer[5];
+                document.getElementById("inputPhone").value = customer[9];
+                document.getElementById("inputEmail").value = customer[10];
+                document.getElementById("inputAddress").value = customer[6];
+                document.getElementById("inputCity").value = customer[7];
+                document.getElementById("state").value = customer[2];
+                document.getElementById("inputZip").value = customer[8];
+                document.getElementById("status").value = customer[1];
+              }
+              currentData(cust_id);
               function editCustomer(){
                 //Form
                 const first_name = document.getElementById("firstName").value;
@@ -96,19 +131,24 @@
                 const last_name = document.getElementById("lastName").value;
                 const address = document.getElementById("inputAddress").value;
                 const city = document.getElementById("inputCity").value;
+                const state_id = document.getElementById("state").value;
                 const zip = document.getElementById("inputZip").value;
                 const phone = document.getElementById("inputPhone").value;
                 const email = document.getElementById("inputEmail").value;
+                const cust_status_id = document.getElementById("status").value;
                 //
                 const formdata = {
+                  "cust_id":cust_id,
                   "first_name":first_name,
                   "middle_in":middle_in,
                   "last_name":last_name,
                   "address": address,
                   "city":city,
+                  "state_id": state_id,
                   "zip":zip,
                   "phone":phone,
-                  "email":email
+                  "email":email,
+                  "cust_status_id": cust_status_id
                 }
                 //
                 // PUT request

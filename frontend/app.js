@@ -87,7 +87,7 @@ app.get('/', async function(req, res) {
     services: getServices,
     makes: getMakes,
     models: getModels,
-    orederstatus: getOrderStatus
+    orderstatus: getOrderStatus
   });
 
 });
@@ -310,6 +310,14 @@ app.get('/', async function(req, res) {
   });
 
   app.get('/editcustomer', async function(req, res) {
+    const getCuststatuses = await axios.get('http://localhost:3000/customer-status').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
     const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
@@ -352,6 +360,7 @@ app.get('/', async function(req, res) {
     });
     res.render('editcustomer', {
       states: getStates,
+      custstatuses: getCuststatuses,
       services: getServices,
       makes: getMakes,
       models: getModels,

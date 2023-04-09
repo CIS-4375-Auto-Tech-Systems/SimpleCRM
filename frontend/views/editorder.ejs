@@ -97,7 +97,6 @@
       const cust_id = sessionStorageControl.readItem("cust_id");
       // GET order_id
       const order_id = sessionStorageControl.readItem("order_id");
-      console.log()
       async function getServiceOrder (orderID) {
         const response = await fetch("http://localhost:3000/service-order");
         const orders = await response.json();
