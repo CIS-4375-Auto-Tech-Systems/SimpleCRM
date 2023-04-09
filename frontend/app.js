@@ -372,8 +372,18 @@ app.get('/', async function(req, res) {
   app.get('/make', function(req, res) {
     res.render('createmake');
   });
-  app.get('/model', function(req, res) {
-    res.render('createmodel');
+  app.get('/model', async function(req, res) {
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('createmodel', {
+      makes: getMakes
+    });
   });
   app.get('/color', function(req, res) {
     res.render('createcolor');
