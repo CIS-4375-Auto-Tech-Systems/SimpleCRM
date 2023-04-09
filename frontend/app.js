@@ -103,6 +103,10 @@ app.get('/', async function(req, res) {
   app.get('/customerlookup', function(req, res) {
     res.render('customerlookup');
   });
+
+  app.get('/employeelookup', function(req, res) {
+    res.render('employeelookup');
+  });
   
   app.get('/customer', function(req, res){
     res.render('customer');
