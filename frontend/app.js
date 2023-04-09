@@ -368,6 +368,30 @@ app.get('/', async function(req, res) {
     });
   });
 
+  // AUX
+  app.get('/make', function(req, res) {
+    res.render('createmake');
+  });
+  app.get('/model', function(req, res) {
+    res.render('createmodel');
+  });
+  app.get('/color', function(req, res) {
+    res.render('createcolor');
+  });
+  app.get('/customerstatus', function(req, res) {
+    res.render('createcustomerstatus');
+  });
+  app.get('/employeestatus', function(req, res) {
+    res.render('createemployeestatus');
+  });
+  app.get('/orderstatus', function(req, res) {
+    res.render('createorderstatus');
+  });
+  app.get('/service', function(req, res) {
+    res.render('createservice');
+  });
+  //
+
   app.get('/reports', async function(req, res) {
     const getServiceOrder = await axios.get('http://localhost:3000/service-order').then(function(response) {
       if (response.data == 'FAILURE'){
