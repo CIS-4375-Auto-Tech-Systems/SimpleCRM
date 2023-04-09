@@ -22,7 +22,16 @@ img {
   border-radius: 100px;
   margin: 2%;
 }
+.row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+}
 
+.column {
+      width: 50%;
+      padding: 0 10px;
+}
   </style>
   </head>
   <body id="main">
@@ -31,17 +40,18 @@ img {
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
         <div class="bottomrow">
-          <div class="customer-info">
-            <div class="profile-photo">
+          <div class="row">
+            <div class="column">
               <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
             </div>
-            <div class="customer-details">
+            <div class="column">
               <h1 id="custFirst_name"></h1>
               <h1 id="custMiddle_in"></h1>
               <h1 id="custLast_name"></h1>
               <p id="custAddress"></p>
               <p id="custPhone"></p>
               <p id="custEmail"></p>
+              <button type="submit" class="btn btn-primary" id="info-button"> Edit</button>
             </div>
           </div>
           <div class="vehicle-info">
@@ -115,6 +125,15 @@ img {
           });
           function openVehicleForm() { //The fuction that opens the form in another window
             const addvehicle = window.open("http://localhost:5173/createvehicle","Vehicle Form","width=550, height=600");}
+          
+          //Edit customer info button
+          const EditCustomerInfo = document.getElementById("info-button");
+          EditCustomerInfo.addEventListener("click", () => {
+            openCreateCustForm();
+          });
+          function openCreateCustForm() { //The fuction that opens the form in another window
+            const EditCust = window.open("http://localhost:5173/createcustomer");}
+
 
 
           // Read cust_id from session storage
@@ -207,6 +226,8 @@ img {
             });
             return match
           }
+
+          //Edit with session storage
           function editVehicle(vehicle_id){
             sessionStorageControl.storeItem("vehicle_id", vehicle_id);
             window.location.href="/editvehicle";
