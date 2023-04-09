@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const oracledb = require('oracledb');
 const fs = require("fs");
-const bodyParser = require('body-parser');
 // dotenv
 require("dotenv").config();
 // Express
