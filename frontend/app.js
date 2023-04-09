@@ -388,15 +388,6 @@ app.get('/', async function(req, res) {
   app.get('/color', function(req, res) {
     res.render('createcolor');
   });
-  app.get('/customerstatus', function(req, res) {
-    res.render('createcustomerstatus');
-  });
-  app.get('/employeestatus', function(req, res) {
-    res.render('createemployeestatus');
-  });
-  app.get('/orderstatus', function(req, res) {
-    res.render('createorderstatus');
-  });
   app.get('/service', function(req, res) {
     res.render('createservice');
   });

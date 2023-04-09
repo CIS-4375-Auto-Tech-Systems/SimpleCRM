@@ -19,7 +19,7 @@
                 <div class="bottomrow">
                     <form class="row g-3">
                         <h2>New Service</h2>
-                        <div class="col-md-4">
+                        <div class="col-md-4" onsubmit="createService()">
                             <label for="service" class="form-label">Service</label>
                             <input type="text" class="form-control" id="service">
                         </div>
@@ -35,7 +35,29 @@
             </div>
         </div>
         <script>
-            
+            async function postData(url = "", data) {
+                const response = await fetch(url, {
+                method: "POST",
+                mode: "cors",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+                });
+                return response.json();
+            };
+            function createService(){
+                const service = document.getElementById("service").value;
+                const price = document.getElementById("price").value;
+                const formdata = {
+                    "service":service,
+                    "price":price
+                };
+                postData("http://localhost:3000/service", formdata)
+                    .then((data) => {
+                        window.close();
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+            };
         </script>
     </body>
 </html>
