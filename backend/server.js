@@ -86,9 +86,16 @@ function compare_update(oldValue, newValue) {
 /* SPECIAL ENDPOINTS */
 app.post('/lookup', async function(req, res){{
     // Query has to be exact match including case
-    let query = `SELECT * FROM CUSTOMER WHERE first_name = :searchValue`;
+    let query = `
+    SELECT *
+    FROM customer
+    WHERE LOWER(first_name) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(last_name) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(address) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(phone) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(email) LIKE '%' || LOWER(:search_value) || '%'`;
     let searchValue = req.body.searchValue
-    let binds = [searchValue.toUpperCase()];
+    let binds = [searchValue];
     //
 
     // Send a response

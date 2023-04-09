@@ -4,31 +4,69 @@
     <title>Customer Lookup</title>
     <%- include('partials/head.ejs'); %>
     <style>
-      /* Styles for search bar */
-      .bottomrow {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 50px;
-        width: 100%;
-      }
+/* Styles for search bar */
+.bottomrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  width: 80%;
+}
+#searchBar {
+  border: none;
+  background-color: #f2f2f2;
+  padding: 12px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+  margin-right: 38px;
+  margin-top: 25px;
+  width: 100%;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+}
+#searchButton {
+    height: 38px;
+    margin-top: 30px;
+    margin-bottom: 5px;
+  }
+#results {
+  margin-top: 20px;
+  width: 100%;
+}
 
-      #searchBar {
-        border: none;
-        background-color: #f2f2f2;
-        padding: 12px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        margin-bottom: 20px;
-        width: 100%;
-        font-size: 16px;
-        color: #333;
-        outline: none;
-      }
+/* Styles for search results */
 
-      #results {
-        margin-top: 20px;
-      }
+.list-group-item-secondary {
+  background-color: #0d6efd;
+  color: white;
+}
+.list-group-item {
+  padding: 12px 20px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  width: 120%; /* add this line */
+  align-self: left;
+}
+.list-group-item:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+.list-group-item-secondary:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+#main {
+  position: fixed;
+  top: 0;
+  width: calc(100% - 250px);
+  height: 100%;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
     </style>
     <link rel = "icon" href = 
 "https://cdn.icon-icons.com/icons2/2645/PNG/512/person_circle_icon_159926.png" 
@@ -42,11 +80,12 @@
         <div class="bottomrow">
           <h1>Customer Lookup</h1>
           <form>
-            <fieldset>
-              <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
-              <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
-            </fieldset>
-          </form>
+            <form>
+              <fieldset style="display: flex;">
+                <input name="searchValue" type="text" id="searchBar" placeholder="Search customers...">
+                <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
+              </fieldset>
+            </form>
           <div id="results">
             <ul class="list-group" id="customers" style="display: none;">
             </ul>
@@ -74,33 +113,57 @@
         }
       }
       function search() {
-        let http = new XMLHttpRequest();
-        let customerList = document.getElementById("customers");
-        customerList.replaceChildren();
-        http.open("POST", "http://localhost:3000/lookup", true);
-        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        var params = "searchValue="+document.getElementById("searchBar").value;
-        http.send(params);
-        http.onload = function(){
-          let customers = JSON.parse(http.responseText);
-          customers.forEach(customer => {
-            let searchResult = document.createElement("a")
-            let customerInfo = document.createTextNode(`${customer[3]}${customer[4] ? ` ${customer[4]}` : ''}, ${customer[5]}, ${customer[6]}, ${customer[7]}, ${customer[8]}, ${customer[9]}, ${customer[10]}`);
-            searchResult.classList.add("list-group-item");
-            searchResult.setAttribute("data-cust_id", customer[0]);
-            searchResult.setAttribute("onclick", "getCust_ID(this.dataset.cust_id)");
-            searchResult.setAttribute("href", "/customer");
-            searchResult.appendChild(customerInfo);
-            customerList.appendChild(searchResult);
-          });
-          if (customerList.style.display === "none"){
-            customerList.style.display = "block";
-          }
+
+    let http = new XMLHttpRequest();
+    let customerList = document.getElementById("customers");
+    customerList.replaceChildren();
+    http.open("POST", "http://localhost:3000/lookup", true);
+    http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    var params = "searchValue="+document.getElementById("searchBar").value;
+    http.send(params);
+    http.onload = function(){
+    let customers = JSON.parse(http.responseText);
+
+    // Create header row
+    let headerRow = document.createElement("div");
+    headerRow.classList.add("list-group-item");
+    headerRow.classList.add("list-group-item-secondary");
+    headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Address</div><div class='col'>City</div><div class='col'>Zip</div><div class='col'>Phone</div><div class='col'>Email</div></div>";
+    customerList.appendChild(headerRow);
+
+    // Create search result rows
+    customers.forEach(customer => {
+    // Replace null values with empty string
+      for (let i = 0; i < customer.length; i++) {
+        if (customer[i] === null) {
+          customer[i] = '';
         }
       }
-      function getCust_ID(cust_id) {
-        sessionStorageControl.storeItem("cust_id", cust_id);
-      }
+      let searchResult = document.createElement("div")
+      let firstName = document.createTextNode(`${customer[3]}`);
+      let middleName = document.createTextNode(`${customer[4]}`);
+      let lastName = document.createTextNode(`${customer[5]}`);
+      let address = document.createTextNode(`${customer[6]}`);
+      let city = document.createTextNode(`${customer[7]}`);
+      let zip = document.createTextNode(`${customer[8]}`);
+      let phone = document.createTextNode(`${customer[9]}`);
+      let email = document.createTextNode(`${customer[10]}`);
+
+      searchResult.classList.add("list-group-item");
+      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div></div>`;
+      searchResult.addEventListener('click', function() {
+        sessionStorage.setItem('cust_id', customer[0]);
+        window.location.href = '/customer';
+      });
+      customerList.appendChild(searchResult);
+    });
+
+    if (customerList.style.display === "none"){
+      customerList.style.display = "block";
+    }
+  }
+}
+
     </script>
   </body>
 </html>
