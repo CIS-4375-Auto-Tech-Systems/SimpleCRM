@@ -599,7 +599,16 @@ app.put('/customer', async function(req, res){
     let cust_status_id = compare_update(oldCust_status_id, newCust_status_id);
     let state_id = compare_update(oldState_id, newState_id);
     let first_name = compare_update(oldFirst_name, newFirst_name);
-    let middle_in = compare_update(oldMiddle_in, newMiddle_in);
+    let middle_in = '';
+    if (oldMiddle_in === null && newMiddle_in === null){
+        middle_in = null;
+    }else if (oldMiddle_in === null && newMiddle_in != null){
+        middle_in = newMiddle_in;
+    }else if(oldMiddle_in != null && newMiddle_in === null){
+        middle_in = null;
+    }else{
+        middle_in = compare_update(oldMiddle_in, newMiddle_in);
+    };
     let last_name = compare_update(oldLast_name, newLast_name);
     let address = compare_update(oldAddress, newAddress);
     let city = compare_update(oldCity, newCity);
@@ -847,7 +856,6 @@ app.post('/vehicle-make', async function(req, res){
     // Column Name
     const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
-    let make_id = req.body.make_id;
     let make_name = req.body.make_name;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
@@ -911,7 +919,6 @@ app.post('/vehicle-model', async function(req, res){
     // Column Name
     const vehicle_modelAttributes = 'seq_vehicle_model.nextval, :make_id, :model';
     // Values
-    let model_id = req.body.model_id;
     let make_id = req.body.make_id;
     let model = req.body.model;
     // Query Creation
