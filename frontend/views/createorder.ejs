@@ -16,6 +16,10 @@
         <form class="row g-3" onsubmit="submitOrder(); return false">
           <h2>Create Order Form</h2>
           <div class="col-md-4">
+            <label for="order_num" class="form-label">Order Number</label>
+            <input type="number" class="form-control" id="order_num">
+          </div>
+          <div class="col-md-4">
             <label for="vehicle" class="form-label">Vehicle</label>
             <select id="vehicle" class="form-select">
               <option selected></option>
@@ -99,6 +103,7 @@
         // GET cust_id
         const cust_id = sessionStorageControl.readItem("cust_id");
         // Form
+        const order_num = document.getElementById("order_num").value;
         const vehicle_id = document.getElementById("vehicle").value;
         const employee_id = document.getElementById("employee").value;
         const service_id = document.getElementById("service").value;
@@ -110,10 +115,10 @@
         //
         const formdata = {
           "cust_id":cust_id,
-          // ORDER NUMBER SHOULD BE HERE
+          "order_num":order_num,
           "vehicle_id":vehicle_id,
           "emp_id":employee_id,
-          //STATUS ID SHOULD BE HERE
+          "order_status_id": "2",
           "service_id":service_id,
           "ttlamount":ttlamount,
           "datein":datein,
