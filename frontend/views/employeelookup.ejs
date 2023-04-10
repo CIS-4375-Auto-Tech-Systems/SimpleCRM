@@ -83,6 +83,7 @@
             <form>
               <fieldset style="display: flex;">
                 <input name="searchValue" type="text" id="searchBar" placeholder="Search active employees...">
+                
                 <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
               </fieldset>
             </form>
@@ -140,7 +141,7 @@ function search() {
       let headerRow = document.createElement("div");
       headerRow.classList.add("list-group-item");
       headerRow.classList.add("list-group-item-secondary");
-      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Last Name</div><div class='col'>Address</div><div class='col'>City</div><div class='col'>Zip</div><div class='col'>Phone</div><div class='col'>Email</div><div class='col'>Date Hired</div><div class='col'>Gender</div></div>";
+      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Last Name</div><div class='col'>Address</div><div class='col'>City</div><div class='col'>Zip</div><div class='col'>Phone</div><div class='col'>Email</div><div class='col'>Date Hired</div><div class='col'>Status</div></div>";
       employeeList.appendChild(headerRow);
 
       // Create search result rows
@@ -160,16 +161,16 @@ function search() {
         let phone = document.createTextNode(`${employee[8]}`);
         let email = document.createTextNode(`${employee[11]}`);
         let datehired = document.createTextNode(`${employee[12]}`);
-        let sex = document.createTextNode(`${employee[10]}`);
+        let status = document.createTextNode(`${employee[13]}`);
 
       searchResult.classList.add("list-group-item");
-      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${datehired.textContent}</div><div class='col'>${sex.textContent}</div></div>`;
+      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${datehired.textContent}</div><div class='col'>${status.textContent}</div></div>`;
       searchResult.addEventListener('click', function() {
         sessionStorage.setItem('cust_id', employee[0]);
         window.location.href = '/employee';
       });
         searchResult.classList.add("list-group-item");
-        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${address.data}</div><div class='col'>${city.data}</div><div class='col'>${zip.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div><div class='col'>${datehired.data}</div><div class='col'>${sex.data}</div></div>`;
+        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${address.data}</div><div class='col'>${city.data}</div><div class='col'>${zip.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div><div class='col'>${datehired.data}</div><div class='col'>${status.data}</div></div>`;
         employeeList.appendChild(searchResult);
       });
 

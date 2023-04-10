@@ -86,13 +86,15 @@ function compare_update(oldValue, newValue) {
 app.post('/lookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT *
-    FROM customer
-    WHERE LOWER(first_name) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(last_name) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(address) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(phone) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(email) LIKE '%' || LOWER(:search_value) || '%'`;
+        SELECT c.*, s.status
+        FROM customer c
+        JOIN cust_status s ON c.cust_status_id = s.cust_status_id
+        WHERE LOWER(c.first_name) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.last_name) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.address) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.phone) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.email) LIKE '%' || LOWER(:search_value) || '%'
+        `;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
     //
@@ -105,13 +107,16 @@ app.post('/lookup', async function(req, res){{
 app.post('/employeelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT employee.*, TO_CHAR(employee.datehired, 'MM/DD/YYYY') as formatted_datehired
-    FROM employee
-    WHERE LOWER(employee.fname) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.lname) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.emp_address) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.phone) LIKE '%' || LOWER(:search_value) || '%'`;
+    SELECT e.*, TO_CHAR(e.datehired, 'MM/DD/YYYY') as formatted_datehired, es.status
+    FROM employee e
+    JOIN emp_status es ON e.emp_status_id = es.emp_status_id
+    WHERE LOWER(e.fname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.lname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.emp_address) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.phone) LIKE '%' || LOWER(:search_value) || '%'
+    `;
     let searchValue = req.body.searchValue
+    let status = req.body.status
     let binds = [searchValue];
     //
 
