@@ -112,7 +112,10 @@
           sessionStorage.removeItem(key);
         }
       }
-      function search() {
+  window.onload = function() {
+  search('');
+};
+  function search() {
   let http = new XMLHttpRequest();
   let customerList = document.getElementById("customers");
   customerList.replaceChildren();
@@ -121,6 +124,7 @@
   var params = "searchValue="+document.getElementById("searchBar").value;
   http.send(params);
   http.onload = function(){
+    search('');
     let customers = JSON.parse(http.responseText);
 
     if (customers.length === 0) {

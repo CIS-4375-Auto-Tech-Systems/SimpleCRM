@@ -102,6 +102,25 @@ app.post('/lookup', async function(req, res){{
     res.send(CRUDOP.rows);
 }});
 
+app.post('/employeelookup', async function(req, res){{
+    // Query has to be exact match including case
+    let query = `
+    SELECT employee.*, TO_CHAR(employee.datehired, 'MM/DD/YYYY') as formatted_datehired
+    FROM employee
+    WHERE LOWER(employee.fname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(employee.lname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(employee.emp_address) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(employee.phone) LIKE '%' || LOWER(:search_value) || '%'`;
+    let searchValue = req.body.searchValue
+    let binds = [searchValue];
+    //
+
+    // Send a response
+    const CRUDOP = await crudOP(query,binds, true);
+    res.send(CRUDOP.rows);
+}});
+
+
 /* EMPLOYEE */
 // CREATE
 app.post('/employee', async function(req, res){
