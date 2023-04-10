@@ -22,7 +22,7 @@
           <div class="col-md-4">
             <label for="vehicle" class="form-label">Vehicle</label>
             <select id="vehicle" class="form-select">
-              <option selected></option>
+              <!--Vehicle License Plate-->
             </select>
           </div>
           <div class="col-md-4">
@@ -99,7 +99,31 @@
         });
         return response.json();
       };
-      function submitOrder(){
+      async function getData(url = "", data) {
+        const response = await fetch(url, {
+          method: "GET",
+          mode: "cors",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data),
+        });
+        return response.json();
+      };
+      getData("http://localhost:3000/vehicle")
+      .then((data) => {
+        let vehicleDropdown = document.getElementById('vehicle');
+        data.forEach(vehicle => {
+          if (vehicle[1] == sessionStorageControl.readItem("cust_id")){
+            let custVehicle = document.createElement("option");
+            let vehiclePlate = document.createTextNode(vehicle[5]);
+            custVehicle.setAttribute("value", vehicle[0]);
+            custVehicle.appendChild(vehiclePlate);
+            vehicleDropdown.appendChild(custVehicle);
+          }
+        });
+      }).catch((error) =>{
+        console.error(error);
+      });
+      async function submitOrder(){
         // GET cust_id
         const cust_id = sessionStorageControl.readItem("cust_id");
         // Form
