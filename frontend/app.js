@@ -266,6 +266,20 @@ app.get('/', async function(req, res) {
     res.render('customer');
   });
 
+  app.get('/createemployee', async function(req, res) {
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('createemployee', {
+      states: getStates,
+    });
+  });
+
   app.get('/createcustomer', async function(req, res) {
     const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
       if (response.data == 'FAILURE'){
