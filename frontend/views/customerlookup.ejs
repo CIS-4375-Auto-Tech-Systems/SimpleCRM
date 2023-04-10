@@ -137,7 +137,7 @@
       let headerRow = document.createElement("div");
       headerRow.classList.add("list-group-item");
       headerRow.classList.add("list-group-item-secondary");
-      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Address</div><div class='col'>City</div><div class='col'>Zip</div><div class='col'>Phone</div><div class='col'>Email</div></div>";
+      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Phone</div><div class='col'>Email</div><div class='col'>Status</div></div>";
       customerList.appendChild(headerRow);
 
       // Create search result rows
@@ -152,20 +152,18 @@
         let firstName = document.createTextNode(`${customer[3]}`);
         let middleName = document.createTextNode(`${customer[4]}`);
         let lastName = document.createTextNode(`${customer[5]}`);
-        let address = document.createTextNode(`${customer[6]}`);
-        let city = document.createTextNode(`${customer[7]}`);
-        let zip = document.createTextNode(`${customer[8]}`);
         let phone = document.createTextNode(`${customer[9]}`);
         let email = document.createTextNode(`${customer[10]}`);
+        let status = document.createTextNode(`${customer[11]}`);
 
       searchResult.classList.add("list-group-item");
-      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div></div>`;
+      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${status.textContent}</div></div>`;
       searchResult.addEventListener('click', function() {
         sessionStorage.setItem('cust_id', customer[0]);
         window.location.href = '/customer';
       });
         searchResult.classList.add("list-group-item");
-        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${address.data}</div><div class='col'>${city.data}</div><div class='col'>${zip.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div></div>`;
+        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div><div class='col'>${status.data}</div></div>`;
         customerList.appendChild(searchResult);
       });
 

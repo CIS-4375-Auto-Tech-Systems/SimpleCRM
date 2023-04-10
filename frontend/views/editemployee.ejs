@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <title>Edit employee Form</title>
+    <link rel = "icon" href = 
+"https://cdn.icon-icons.com/icons2/2645/PNG/512/person_plus_icon_159924.png" 
+        type = "image/x-icon">
+    <style>
+      form {
+        margin-top: 100%;
+      }
+      span.required {
+  color: red;
+  margin-left: 5px;
+}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="right-column">
+        <div class="bottomrow">
+        <form class="row g-3" onsubmit="editemployee(); return false">
+          <h2>Edit employee Form</h2><p><span class="required">*</span> Indicates field is required</p>
+          <div class="col-md-2">
+            <!-- the name attribute is used to create a request so please use it-->
+            <label for="inputFirstName" class="form-label">First Name<span class="required">*</span></label>
+            <input type="text" class="form-control" id="firstName" name="first_name" required>
+          </div>
+          <div class="col-md-1">
+            <label for="inputMI" class="form-label">Middle Initial</label>
+            <input type="text" min="0" max="1"class="form-control" id="MI" name="middle_in">
+          </div>
+          <div class="col-md-2">
+            <label for="inputLastName" class="form-label">Last Name<span class="required">*</span></label>
+            <input type="text" class="form-control" id="lastName" name="last_name" required>
+          </div>
+          <div class="col-md-2">
+            <label for="tel" class="form-label">Phone Number<span class="required">*</span></label>
+            <input type="tel" class="form-control" id="inputPhone" name="phone" placeholder="1234567890" minlength="10" maxlength="10" required>
+          </div>
+          <div class="col-md-4">
+            <label for="email" class="form-label">Email<span class="required">*</span></label>
+            <input type="email" class="form-control" id="inputEmail"  name="email" required>
+          </div>
+          <div class="col-4">
+            <label for="address" class="form-label">Address<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St"required>
+          </div>
+          <div class="col-md-2">
+            <label for="city" class="form-label">City<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputCity" name="city" required>
+          </div>
+          <div class="col-md-2">
+            <label for="state" class="form-label">State<span class="required">*</span></label>
+            <select id="state" class="form-select" name="state_id" required>
+              <option selected></option>
+              <!--The value of the option is what is part of the request-->
+              <% states.forEach(function(state){ %>
+                <option value=<%= state[0] %>><%= state[2] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label for="zip" class="form-label">Zip<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputZip" name="zip">
+          </div>
+          <div class="col-md-2">
+            <label for="status" class="form-label">Status<span class="required">*</span></label>
+            <select id="status" class="form-select" name="status" required>
+              <option selected></option>
+              <!--The value of the option is what is part of the request-->
+              <% empstatuses.forEach(function(status){ %>
+                <option value=<%= status[0] %>><%= status[1] %></option>
+              <% }); %>
+            </select>
+          </div>
+            <br>
+            <script>
+                const sessionStorageControl = {
+                //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+                storeItem(key, value){
+                  sessionStorage.setItem(key, value);
+                },
+                readItem(key){
+                  return sessionStorage.getItem(key);
+                },
+                removeItem(key){
+                  sessionStorage.removeItem(key);
+                }
+              }
+              async function putData(url = "", data) {
+                const response = await fetch(url, {
+                  method: "PUT",
+                  mode: "cors",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify(data),
+                });
+                return response.json();
+              }
+              const emp_id = sessionStorageControl.readItem("emp_id");
+              async function getemp (empID) {
+                const response = await fetch("http://localhost:3000/employee");
+                const employees = await response.json();
+                let match = '';
+                employees.forEach(employee => {
+                  if (employee[0] == empID){
+                    match = employee;
+                  }
+                });
+                return match
+              };
+              async function currentData(empID){
+                const employee = await getemp(empID);
+                document.getElementById("firstName").value = employee[3];
+                document.getElementById("MI").value = employee[4];
+                document.getElementById("lastName").value = employee[5];
+                document.getElementById("inputPhone").value = employee[9];
+                document.getElementById("inputEmail").value = employee[10];
+                document.getElementById("inputAddress").value = employee[6];
+                document.getElementById("inputCity").value = employee[7];
+                document.getElementById("state").value = employee[2];
+                document.getElementById("inputZip").value = employee[8];
+                document.getElementById("status").value = employee[1];
+              }
+              currentData(emp_id);
+              function editemployee(){
+                //Form
+                const first_name = document.getElementById("firstName").value;
+                const middle_in = document.getElementById("MI").value;
+                const last_name = document.getElementById("lastName").value;
+                const address = document.getElementById("inputAddress").value;
+                const city = document.getElementById("inputCity").value;
+                const state_id = document.getElementById("state").value;
+                const zip = document.getElementById("inputZip").value;
+                const phone = document.getElementById("inputPhone").value;
+                const email = document.getElementById("inputEmail").value;
+                const emp_status_id = document.getElementById("status").value;
+                //
+                const formdata = {
+                  "emp_id":emp_id,
+                  "first_name":first_name,
+                  "middle_in":middle_in,
+                  "last_name":last_name,
+                  "address": address,
+                  "city":city,
+                  "state_id": state_id,
+                  "zip":zip,
+                  "phone":phone,
+                  "email":email,
+                  "emp_status_id": emp_status_id
+                }
+                //
+                // PUT request
+                putData("http://localhost:3000/employee", formdata).then((data) => {
+                  // Send the user to employee profile
+                  window.location.href="/employee";
+                });
+              };
+          </script>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>        
+  </body>
+</html>

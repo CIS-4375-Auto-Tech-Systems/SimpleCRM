@@ -83,16 +83,20 @@ function compare_update(oldValue, newValue) {
 };
 
 /* SPECIAL ENDPOINTS */
+
+//CUSTOMER LOOKUP
 app.post('/lookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT *
-    FROM customer
-    WHERE LOWER(first_name) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(last_name) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(address) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(phone) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(email) LIKE '%' || LOWER(:search_value) || '%'`;
+        SELECT c.*, s.status
+        FROM customer c
+        JOIN cust_status s ON c.cust_status_id = s.cust_status_id
+        WHERE LOWER(c.first_name) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.last_name) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.address) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.phone) LIKE '%' || LOWER(:search_value) || '%'
+        OR LOWER(c.email) LIKE '%' || LOWER(:search_value) || '%'
+        `;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
     //
@@ -102,30 +106,47 @@ app.post('/lookup', async function(req, res){{
     res.send(CRUDOP.rows);
 }});
 
+//EMPLOYEE LOOKUP
 app.post('/employeelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT employee.*, TO_CHAR(employee.datehired, 'MM/DD/YYYY') as formatted_datehired
-    FROM employee
-    WHERE LOWER(employee.fname) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.lname) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.emp_address) LIKE '%' || LOWER(:search_value) || '%'
-    OR LOWER(employee.phone) LIKE '%' || LOWER(:search_value) || '%'`;
+    SELECT e.*, TO_CHAR(e.datehired, 'MM/DD/YYYY') as formatted_datehired, es.status
+    FROM employee e
+    JOIN emp_status es ON e.emp_status_id = es.emp_status_id
+    WHERE LOWER(e.fname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.lname) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.emp_address) LIKE '%' || LOWER(:search_value) || '%'
+    OR LOWER(e.phone) LIKE '%' || LOWER(:search_value) || '%'
+    `;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
-    //
-
     // Send a response
     const CRUDOP = await crudOP(query,binds, true);
     res.send(CRUDOP.rows);
 }});
 
+//SERVICE ORDER LOOKUP
+app.post('/orderlookup', async function(req, res){{
+    // Query has to be exact match including case
+    let query = `
+    SELECT * 
+    FROM service_order
+    WHERE LOWER(description) LIKE '%' || LOWER(:search_value) || '%'
+    ORDER BY datein DESC
+        `;
+    let searchValue = req.body.searchValue
+    let binds = [searchValue];
+    //
+    // Send a response
+    const CRUDOP = await crudOP(query,binds, true);
+    res.send(CRUDOP.rows);
+}});
 
 /* EMPLOYEE */
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = "seq_emp.nextval, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :state, :zip, :phone, :datehired, :sex";
+    const empAttributes = "seq_emp.nextval, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :state, :zip, :phone, :datehired, :sex, :email";
     // Values
     let emp_status_id = req.body.emp_status_id;
     let state_id = req.body.state_id;
@@ -138,9 +159,10 @@ app.post('/employee', async function(req, res){
     let phone = req.body.phone;
     let datehired = new Date(req.body.datehired);
     let sex = req.body.sex;
+    let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase()];
+    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), email.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;

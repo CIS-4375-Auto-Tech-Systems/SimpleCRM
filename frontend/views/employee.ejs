@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>employee Page</title>
+    <%- include('partials/head.ejs'); %>
+    <style>
+    table, td, th {
+  border-bottom: 1px solid;
+  padding: 1%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1%;
+}
+th {
+  background-color: #0e82b7;
+  color: white;
+}
+img {
+  border-radius: 100px;
+  margin: 2%;
+}
+.row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+}
+
+.column {
+      width: 50%;
+      padding: 0 10px;
+}
+  </style>
+  </head>
+  <body id="main">
+    <div class="container">
+      <%- include('partials/navbar.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="bottomrow">
+          <div class="row">
+            <div class="column">
+              <img id="preview" src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
+              <input type="file" id="photo" onchange="previewPhoto()">
+            </div>
+            <div class="column">
+              <h1 id="empFirst_name"></h1>
+              <h1 id="empMiddle_in"></h1>
+              <h1 id="empLast_name"></h1>
+              <p id="empAddress"></p>
+              <p id="empPhone"></p>
+              <p id="empEmail"></p>
+              <button type="submit" class="btn btn-primary" id="info-button"> Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const sessionStorageControl = {
+            //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+            storeItem(key, value){
+              sessionStorage.setItem(key, value);
+            },
+            readItem(key){
+              return sessionStorage.getItem(key);
+            },
+            removeItem(key){
+              sessionStorage.removeItem(key);
+            }
+          }
+
+          //Edit employee info button
+          const EditemployeeInfo = document.getElementById("info-button");
+          EditemployeeInfo.addEventListener("click", () => {
+            openEditempForm();
+          });
+          function openEditempForm() { //The fuction that opens the form in another window
+            window.location.href="/editemployee";
+          }
+
+
+
+          // Read emp_id from session storage
+          const emp_id = sessionStorageControl.readItem("emp_id");
+          async function getemp (empID) {
+            const response = await fetch("http://localhost:3000/employee");
+            const employees = await response.json();
+            let match = '';
+            employees.forEach(employee => {
+              if (employee[0] == empID){
+                match = employee;
+              }
+            });
+            return match
+          }
+
+
+
+          //Edit with session storage
+
+          async function createPage (empID) {
+            /* employee */ // employee
+            // GET employee table
+            const employee = await getemp(empID);
+            const empFirst_name = employee[3] || 'No First Name Found';
+            const empMiddle_in = employee[4];
+            const empLast_name = employee[5] || 'No Last Name Found';
+            const empAddress = employee[6] || 'No Address Found';
+            const empPhone = employee[9] || 'No Phone Number Found';
+            const empEmail = employee[10] || 'No Email Found';
+            // Elements for employee Section
+            const empFirst_nameEle = document.getElementById("empFirst_name");
+            const empMiddle_inEle = document.getElementById("empMiddle_in");
+            const empLast_nameEle = document.getElementById("empLast_name");
+            const empAddressEle = document.getElementById("empAddress");
+            const empPhoneEle = document.getElementById("empPhone");
+            const empEmailEle = document.getElementById("empEmail");
+            // Add Dynamic Information
+            empFirst_nameEle.textContent = empFirst_name;
+            empMiddle_inEle.textContent = empMiddle_in;
+            empLast_nameEle.textContent = empLast_name;
+            empAddressEle.textContent = empAddress;
+            empPhoneEle.textContent = empPhone;
+            empEmailEle.textContent = empEmail;
+          }
+          createPage(emp_id);
+          function previewPhoto() {
+            const preview = document.getElementById('preview');
+            const file = document.getElementById('photo').files[0];
+            const reader = new FileReader();
+
+    reader.onloadend = function() {
+    preview.src = reader.result;
+    // Save image data to local storage with key that includes employee ID
+    const emp_id = sessionStorageControl.readItem("emp_id");
+    localStorage.setItem(`profile_photo_${emp_id}`, reader.result);
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "/images/profile-placeholder.png";
+    // Clear saved image data from local storage with key that includes employee ID
+    const emp_id = sessionStorageControl.readItem("emp_id");
+    localStorage.removeItem(`profile_photo_${emp_id}`);
+  }
+}
+const empid = sessionStorageControl.readItem("emp_id");
+
+// Load saved profile photo from local storage with key that includes employee ID
+const savedPhoto = localStorage.getItem(`profile_photo_${emp_id}`);
+if (savedPhoto) {
+  const preview = document.getElementById('preview');
+  preview.src = savedPhoto;
+}
+    </script>
+  </body>
+</html>
