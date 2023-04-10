@@ -1152,10 +1152,12 @@ app.post('/api/sales-per-month', async (req, res) => {
   
       // Build the SQL query to retrieve the sales data for the current month and year
     const query = `
-    SELECT SUM(ttlamount) as totalSales, DATE_TRUNC('month', datein) as month
+    SELECT SUM(ttlamount) as totalSales, TO_CHAR(datein, 'YYYY-MM') as month
     FROM service_order
-    WHERE DATE_TRUNC('month', datein) = DATE_TRUNC('month', NOW())
-    GROUP BY DATE_TRUNC('month', datein)
+    WHERE datein < TO_DATE('2022-12-30', 'YYYY-MM-DD')
+    AND datein >= ADD_MONTHS(TO_DATE('2022-12-30', 'YYYY-MM-DD'), -12)
+    GROUP BY TO_CHAR(datein, 'YYYY-MM')
+    ORDER BY TO_CHAR(datein, 'YYYY-MM') ASC;
       `;
   
     // Execute the query and retrieve the results
