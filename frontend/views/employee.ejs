@@ -55,45 +55,6 @@ img {
               <button type="submit" class="btn btn-primary" id="info-button"> Edit</button>
             </div>
           </div>
-          <div class="vehicle-info">
-            <h2>Vehicles</h2>
-            <button type="submit" class="btn btn-primary" id="vehicle-button"> Add Vehicle </button>
-            <br>
-            <table>
-              <thead>
-                <tr>
-                  <th>Make</th>
-                  <th>Model</th>
-                  <th>Year</th>
-                  <th>Plate</th>
-                  <th>Color</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="vehicles">
-              </tbody>
-            </table>
-          </div>
-          <br>
-          <br>
-          <div class="service-history">
-            <h2>Service History</h2>
-            <button type="submit" class="btn btn-primary" id="create-button"> Create Order </button>
-            <br>
-            <table>
-              <thead>
-                <tr>
-                  <th>Service</th>
-                  <th>Date In</th>
-                  <th>Date Out</th>
-                  <th>Total Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="services">
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </div>
@@ -111,22 +72,6 @@ img {
             }
           }
 
-          //Create Order button event listener, then performs fuction
-          const CreateOrder = document.getElementById("create-button");
-          CreateOrder.addEventListener("click", () => {
-            openOrderForm();
-          });
-          function openOrderForm() { //The fuction that opens the form in another window
-            const orderwindow = window.open("http://localhost:5173/createorder","Order Form","width=550, height=600");}
-        
-          //Add Vehicle button event listener, then performs function
-          const AddVehicle = document.getElementById("vehicle-button");
-          AddVehicle.addEventListener("click", () => {
-            openVehicleForm();
-          });
-          function openVehicleForm() { //The fuction that opens the form in another window
-            const addvehicle = window.open("http://localhost:5173/createvehicle","Vehicle Form","width=550, height=600");}
-          
           //Edit employee info button
           const EditemployeeInfo = document.getElementById("info-button");
           EditemployeeInfo.addEventListener("click", () => {
@@ -180,114 +125,6 @@ img {
             empAddressEle.textContent = empAddress;
             empPhoneEle.textContent = empPhone;
             empEmailEle.textContent = empEmail;
-
-            /* VEHICLE */ //vehicle, vehicle_make, vehicle_model
-            // GET vehicle table
-            const vehicles = await getVehicle(empID);
-            const vehiclesTable = document.getElementById("vehicles");
-            for (const vehicle of vehicles) {
-              let vehicle_id = vehicle[0]
-              const color_id = vehicle[2];
-              const vehicleModel = vehicle[3];
-              const vehicleYear = vehicle[4] || 'No Year Found';
-              const vehiclePlate = vehicle[5] || 'No Plate Found';
-              // GET vehicle_model table
-              const vehicle_models = await getVehicleModel(vehicleModel);
-              const makeId = vehicle_models[0][1];
-              const vehicle_modelName = vehicle_models[0][2] || 'No Model Found';
-              // GET vehicle_make table
-              const vehicle_makes = await getVehicleMake(makeId);
-              const makeName = vehicle_makes[0][1] || 'No Make Found';
-                // GET color table
-              const colors = await getColor(color_id);
-              const vehicleColor = colors[1] || 'No Color Found';
-
-              // Create Row identified by vehicle_id
-              let vehicleRow = document.createElement("tr");
-              vehicleRow.setAttribute("id", vehicle_id);
-              vehiclesTable.appendChild(vehicleRow);
-                // Create Entry
-              let makeEle = document.createElement("td");
-              let makeText = document.createTextNode(makeName);
-              makeEle.appendChild(makeText);
-              vehicleRow.appendChild(makeEle);
-
-              let modelEle = document.createElement("td");
-              let modelText = document.createTextNode(vehicle_modelName);
-              modelEle.appendChild(modelText);
-              vehicleRow.appendChild(modelEle);
-
-              let yearEle = document.createElement("td");
-              let yearText = document.createTextNode(vehicleYear);
-              yearEle.appendChild(yearText);
-              vehicleRow.appendChild(yearEle);
-
-              let plateEle = document.createElement("td");
-              let plateText = document.createTextNode(vehiclePlate);
-              plateEle.appendChild(plateText);
-              vehicleRow.appendChild(plateEle);
-
-              let colorEle = document.createElement("td");
-              let colorText = document.createTextNode(vehicleColor);
-              colorEle.appendChild(colorText);
-              vehicleRow.appendChild(colorEle);
-
-              let vehicleAction = document.createElement("button");
-              let vehicleActionText = document.createTextNode("Edit");
-              vehicleAction.setAttribute("data-vehicle_id", vehicle_id);
-              vehicleAction.setAttribute("onclick", "editVehicle(this.dataset.vehicle_id)");
-              vehicleAction.appendChild(vehicleActionText);
-              vehicleRow.appendChild(vehicleAction);
-            }
-            /* SERVICE HISTORY */ //service_order, service
-            // GET serivce_order table
-            const service_order = await getServiceOrder(emp_id);
-            const servicesTable = document.getElementById("services");
-            for (const order of service_order){
-              let order_id = order[0];
-              let order_status_id = order[5]
-              let service_id = order[6];
-              let ttlAmount = order[7];
-              let dateinRAW = new Date (order[8]);
-              let datein = dateinRAW.toLocaleDateString();
-              let dateoutRAW = new Date(order[9]);
-              let dateout = dateoutRAW.toLocaleDateString();
-              // GET service table
-              let service = await getService(service_id);
-              let service_name = service[1];
-
-              // Create Row identified by order_id
-              let serviceRow = document.createElement("tr");
-              serviceRow.setAttribute("id", order_id);
-              servicesTable.appendChild(serviceRow);
-                // Create Entry
-              let serviceEle = document.createElement("td");
-              let serviceText = document.createTextNode(service_name);
-              serviceEle.appendChild(serviceText);
-              serviceRow.appendChild(serviceEle);
-
-              let dateInEle = document.createElement("td");
-              let dateInText = document.createTextNode(datein);
-              dateInEle.appendChild(dateInText);
-              serviceRow.appendChild(dateInEle);
-
-              let dateOutEle = document.createElement("td");
-              let dateOutText = document.createTextNode(dateout);
-              dateOutEle.appendChild(dateOutText);
-              serviceRow.appendChild(dateOutEle);
-
-              let totalEle = document.createElement("td");
-              let totalText = document.createTextNode("$"+ttlAmount);
-              totalEle.appendChild(totalText);
-              serviceRow.appendChild(totalEle);
-
-              let orderAction = document.createElement("button");
-              let orderActionText = document.createTextNode("Edit");
-              orderAction.setAttribute("data-order_id", order_id);
-              orderAction.setAttribute("onclick", "editServiceOrder(this.dataset.order_id)");
-              orderAction.appendChild(orderActionText);
-              serviceRow.appendChild(orderAction);
-            }
           }
           createPage(emp_id);
           function previewPhoto() {
