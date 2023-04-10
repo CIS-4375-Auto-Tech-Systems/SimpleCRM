@@ -1167,12 +1167,12 @@ app.post('/sales-data', async function(req, res) {
 
 app.post('/api/sales-per-month', async (req, res) => {
     try {
-      // Get the current month and year
+    // Get the current month and year
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1; // Month is zero-based, so add 1
     const currentYear = currentDate.getFullYear();
   
-      // Build the SQL query to retrieve the sales data for the current month and year
+    // Build the SQL query to retrieve the sales data for the current month and year
     const query = `
     SELECT SUM(ttlamount) as totalSales, TO_CHAR(datein, 'YYYY-MM') as month
     FROM service_order
@@ -1181,10 +1181,8 @@ app.post('/api/sales-per-month', async (req, res) => {
     GROUP BY TO_CHAR(datein, 'YYYY-MM')
     ORDER BY TO_CHAR(datein, 'YYYY-MM') ASC;
       `;
-  
     // Execute the query and retrieve the results
-    const results = await pool.query(query);
-  
+    const results = await crudOP(query, undefined, true);
     // Parse the results and format them for use in the chart
     const salesData = [];
       for (const row of results.rows) {
