@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Employee Lookup</title>
+    <%- include('partials/head.ejs'); %>
+    <style>
+/* Styles for search bar */
+.bottomrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  width: 80%;
+}
+#searchBar {
+  border: none;
+  background-color: #f2f2f2;
+  padding: 12px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+  margin-right: 38px;
+  margin-top: 25px;
+  width: 100%;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+}
+#searchButton {
+    height: 38px;
+    margin-top: 30px;
+    margin-bottom: 5px;
+  }
+#results {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Styles for search results */
+
+.list-group-item-secondary {
+  background-color: #0d6efd;
+  color: white;
+}
+.list-group-item {
+  padding: 12px 20px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  width: 120%; /* add this line */
+  align-self: left;
+}
+.list-group-item:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+.list-group-item-secondary:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+#main {
+  position: fixed;
+  top: 0;
+  width: calc(100% - 250px);
+  height: 100%;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+    </style>
+    <link rel = "icon" href = 
+"https://cdn.icon-icons.com/icons2/2645/PNG/512/person_circle_icon_159926.png" 
+        type = "image/x-icon">
+  </head>
+  <body id="main">
+    <div class="container">
+      <%- include('partials/navbar.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="bottomrow">
+          <h1>Employee Lookup</h1>
+          <form>
+            <form>
+              <fieldset style="display: flex;">
+                <input name="searchValue" type="text" id="searchBar" placeholder="Search active customers...">
+                <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
+              </fieldset>
+            </form>
+          <div id="results">
+            <ul class="list-group" id="customers" style="display: none;">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.getElementById("searchBar").addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("searchButton").click();
+        }
+      });
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      }
+      function search() {
+  let http = new XMLHttpRequest();
+  let customerList = document.getElementById("customers");
+  customerList.replaceChildren();
+  http.open("POST", "http://localhost:3000/lookup", true);
+  http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var params = "searchValue="+document.getElementById("searchBar").value;
+  http.send(params);
+  http.onload = function(){
+    let customers = JSON.parse(http.responseText);
+
+    if (customers.length === 0) {
+      let noResults = document.createElement("li");
+      noResults.classList.add("list-group-item");
+      noResults.innerHTML = "No results found!";
+      customerList.appendChild(noResults);
+    } else {
+      // Create header row
+      let headerRow = document.createElement("div");
+      headerRow.classList.add("list-group-item");
+      headerRow.classList.add("list-group-item-secondary");
+      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Address</div><div class='col'>City</div><div class='col'>Zip</div><div class='col'>Phone</div><div class='col'>Email</div></div>";
+      customerList.appendChild(headerRow);
+
+      // Create search result rows
+      customers.forEach(customer => {
+        // Replace null values with empty string
+        for (let i = 0; i < customer.length; i++) {
+          if (customer[i] === null) {
+            customer[i] = '';
+          }
+        }
+        let searchResult = document.createElement("div")
+        let firstName = document.createTextNode(`${customer[3]}`);
+        let middleName = document.createTextNode(`${customer[4]}`);
+        let lastName = document.createTextNode(`${customer[5]}`);
+        let address = document.createTextNode(`${customer[6]}`);
+        let city = document.createTextNode(`${customer[7]}`);
+        let zip = document.createTextNode(`${customer[8]}`);
+        let phone = document.createTextNode(`${customer[9]}`);
+        let email = document.createTextNode(`${customer[10]}`);
+
+      searchResult.classList.add("list-group-item");
+      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div></div>`;
+      searchResult.addEventListener('click', function() {
+        sessionStorage.setItem('cust_id', customer[0]);
+        window.location.href = '/customer';
+      });
+        searchResult.classList.add("list-group-item");
+        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${address.data}</div><div class='col'>${city.data}</div><div class='col'>${zip.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div></div>`;
+        customerList.appendChild(searchResult);
+      });
+
+    if (customerList.style.display === "none"){
+      customerList.style.display = "block";
+    }
+  }
+}}
+
+    </script>
+  </body>
+</html>

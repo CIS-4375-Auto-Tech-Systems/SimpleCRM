@@ -60,6 +60,7 @@ body {
     padding: 20px;
     border-left: 3px solid #ddd;
     overflow-y: auto;
+    max-height: 800px;
   }
   .right-column .toprow {
     display: flex;

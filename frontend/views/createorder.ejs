@@ -129,6 +129,7 @@
         postData("http://localhost:3000/service-order", formdata)
         .then((data) => {
           console.log("Data saved to database: ", data);
+          window.close();
           // Add code to update UI or show success message here
         }).catch((error) => {
           console.error("Error saving data to database:", error);

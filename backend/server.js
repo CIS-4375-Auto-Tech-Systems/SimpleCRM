@@ -318,14 +318,14 @@ app.get('/service-order', async function(req, res){
 // UPDATE
 app.put('/service-order', async function(req, res){
     // Column
-    const service_orderAttributes = 'order_num = :order_num, cust_id = :cust_id, vehicle_id = :vehicle_id, emp_id = :emp_id, order_status_id = :order_status_id, service_id = :service_id, ttlamt = :ttlamt, datein = :datein, dateout = :dateout, odometer = :odometer, desc = :desc';
+    const service_orderAttributes = 'order_num = :order_num, cust_id = :cust_id, vehicle_id = :vehicle_id, emp_id = :emp_id, order_status_id = :order_status_id, service_id = :service_id, ttlamount = :ttlamount, datein = :datein, dateout = :dateout, odometer = :odometer, description = :description';
     // Values
     let order_id = req.body.order_id;
     // READ COMPARE and UPDATE
     /*READ*/
     // Current Values
     let readQuery = 'SELECT * FROM SERVICE_ORDER WHERE order_id = :order_id';
-    let readBinds = [inv_id];
+    let readBinds = [order_id];
     let readOrder = await crudOP(readQuery, readBinds, true);
     let currentOrder = readOrder.rows[0];
     // Store Old
@@ -347,7 +347,7 @@ app.put('/service-order', async function(req, res){
     let newEmp_id = req.body.emp_id;
     let newOrder_status_id = req.body.order_status_id;
     let newService_id = req.body.service_id;
-    let newTtlamt = req.body.ttlamt;
+    let newTtlamt = req.body.ttlamount;
     let newDatein = req.body.datein;
     let newDateout  = req.body.dateout;
     let newOdometer = req.body.odometer;
@@ -359,14 +359,24 @@ app.put('/service-order', async function(req, res){
     let emp_id = compare_update(oldEmp_id, newEmp_id);
     let order_status_id = compare_update(oldOrder_status_id, newOrder_status_id);
     let service_id = compare_update(oldService_id, newService_id);
-    let ttlamt = compare_update(oldTtlamt, newTtlamt);
-    let datein = compare_update(oldDatein, newDatein);
-    let dateout = compare_update(oldDateout, newDateout);
+    let ttlamount = compare_update(oldTtlamt, newTtlamt);
+    let datein = '';
+    if (oldDatein == newDatein){
+        datein = new Date(oldDatein);
+    }else if (oldDatein != newDatein){
+        datein = new Date(newDatein);
+    };
+    let dateout = '';
+    if (oldDateout == newDateout){
+        dateout = new Date(oldDateout);
+    }else if (oldDateout != newDateout){
+        dateout = new Date(newDateout);
+    };
     let odometer = compare_update(oldOdometer, newOdometer);
     let description = compare_update(oldDescription, newDescription);
     // Query Creation
     let query = `UPDATE SERVICE_ORDER SET ${service_orderAttributes} WHERE order_id = :order_id`;
-    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description.toUpperCase(), order_id];
+    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase(), order_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -565,22 +575,22 @@ app.put('/customer', async function(req, res){
     // Store Old
     let oldCust_status_id = currentCust[1];
     let oldState_id = currentCust[2];
-    let oldFirst_name = currentCust[4];
-    let oldMiddle_in = currentCust[5];
-    let oldLast_name = currentCust[6];
-    let oldAddress = currentCust[7];
-    let oldCity = currentCust[8];
-    let oldZip = currentCust[9];
-    let oldPhone = currentCust[10];
-    let oldEmail = currentCust[11];
+    let oldFirst_name = currentCust[3];
+    let oldMiddle_in = currentCust[4];
+    let oldLast_name = currentCust[5];
+    let oldAddress = currentCust[6];
+    let oldCity = currentCust[7];
+    let oldZip = currentCust[8];
+    let oldPhone = currentCust[9];
+    let oldEmail = currentCust[10];
     // Request New
     let newCust_status_id = req.body.cust_status_id;
     let newState_id = req.body.state_id;
     let newFirst_name = req.body.first_name;
     let newMiddle_in = req.body.middle_in;
     let newLast_name = req.body.last_name;
-    let newAddress = req.body.lic_address;
-    let newCity = req.body.lic_city;
+    let newAddress = req.body.address;
+    let newCity = req.body.city;
     let newZip = req.body.zip;
     let newPhone = req.body.phone;
     let newEmail = req.body.email;
@@ -589,7 +599,16 @@ app.put('/customer', async function(req, res){
     let cust_status_id = compare_update(oldCust_status_id, newCust_status_id);
     let state_id = compare_update(oldState_id, newState_id);
     let first_name = compare_update(oldFirst_name, newFirst_name);
-    let middle_in = compare_update(oldMiddle_in, newMiddle_in);
+    let middle_in = '';
+    if (oldMiddle_in === null && newMiddle_in === null){
+        middle_in = null;
+    }else if (oldMiddle_in === null && newMiddle_in != null){
+        middle_in = newMiddle_in;
+    }else if(oldMiddle_in != null && newMiddle_in === null){
+        middle_in = null;
+    }else{
+        middle_in = compare_update(oldMiddle_in, newMiddle_in);
+    };
     let last_name = compare_update(oldLast_name, newLast_name);
     let address = compare_update(oldAddress, newAddress);
     let city = compare_update(oldCity, newCity);
@@ -835,13 +854,12 @@ app.delete('/color', async function(req, res){
 // CREATE
 app.post('/vehicle-make', async function(req, res){
     // Column Name
-    const vehicle_makeAttributes = ':make_id, :make_name';
+    const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
-    let make_id = req.body.make_id;
     let make_name = req.body.make_name;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
-    let binds = [make_id, make_name.toUpperCase()];
+    let binds = [make_name.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MAKE WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -899,14 +917,13 @@ app.delete('/vehicle_make', async function(req, res){
 // CREATE
 app.post('/vehicle-model', async function(req, res){
     // Column Name
-    const vehicle_modelAttributes = ':model_id, :make_id, :model';
+    const vehicle_modelAttributes = 'seq_vehicle_model.nextval, :make_id, :model';
     // Values
-    let model_id = req.body.model_id;
     let make_id = req.body.make_id;
     let model = req.body.model;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MODEL VALUES (${vehicle_modelAttributes})`;
-    let binds = [model_id, make_id, model.toUpperCase()];
+    let binds = [make_id, model.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected vehicle_make by ROWID to send back
     let lastItemQuery = `SELECT * FROM VEHICLE_MODEL WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -1074,8 +1091,14 @@ app.post('/customervehicle', async function(req, res) {
     res.json({
         lastRowID: completeResponse,
         cust_id: lastRowId
-    });
+    });    
 });
+app.post('/sales-data', async function(req, res) 
+{const interval = req.query.interval;
+const result = await crudOP("SELECT TO_CHAR(datein, 'DD-Mon-YY') AS date_range_start, TO_CHAR(dateout, 'DD-Mon-YY') AS date_range_end, SUM(ttlamount) AS total_sales FROM SERVICE_ORDER WHERE datein >= '01-Jan-98' AND dateout <= '31-Dec-23' GROUP BY TO_CHAR(datein, 'DD-Mon-YY'), TO_CHAR(dateout, 'DD-Mon-YY') ORDER BY TO_CHAR(datein, 'DD-Mon-YY')", undefined, true);
+console.log(result.rows)
+res.json(result.rows);
+}); 
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
 });

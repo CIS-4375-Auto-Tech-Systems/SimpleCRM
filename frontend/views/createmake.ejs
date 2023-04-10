@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <%- include('partials/head.ejs'); %>
-    <title>Add Vehicle Form</title>
-    <style>
-      form {
-        margin-top: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="right-column">
-        <div class="bottomrow">
-        <form class="row g-3" onsubmit="submitMake(); return false">
-          <h2>Add Vehicle</h2>
-          <div class="col-8">
-            <label for="make" class="form-label">Make</label>
-            <input type="text" class="form-control" id="input-make">
-          </div>
+    <head>
+        <%- include('partials/head.ejs'); %>
+        <title>New Make</title>
+        <style>
+            form {
+                margin-top: 100%;
+            }
+            span.required {
+                color: red;
+                margin-left: 5px;
+            }
+          </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="right-column">
+                <div class="bottomrow">
+                    <form class="row g-3" onsubmit="createMake()">
+                        <h2>New Make</h2>
+                        <div class="col-md-4">
+                            <label for="make" class="form-label">Make Name</label>
+                            <input type="text" class="form-control" id="make">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-          <div class="col-6">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    </div>
-    <script>
-      async function putData(url = "", data) {
-        const response = await fetch(url, {
-          method: "PUT",
-          mode: "cors",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(data),
-        });
-        return response.json();
-        };
-        putData("http://localhost:3000/vehicle-make", formdata)
-            .then((data) => {
-            console.log("Data saved to database: ", data);
-            // Add code to update UI or show success message here
-        }).catch((error) => {
-            console.error("Error saving data to database:", error);
-            // Add code to show error message here
-        });
-    </script>       
-  </body>
+        <script>
+            async function postData(url = "", data) {
+                const response = await fetch(url, {
+                method: "POST",
+                mode: "cors",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+                });
+                return response.json();
+            };
+            function createMake() {
+                const make = document.getElementById("make").value;
+                const formdata = {
+                    "make":make
+                };
+                postData("http://localhost:3000/vehicle-make", formdata)
+                .then((data) => {
+                    window.close();
+                }).catch((error)=>{
+                    console.error(error);
+                });
+            };
+        </script>
+    </body>
 </html>

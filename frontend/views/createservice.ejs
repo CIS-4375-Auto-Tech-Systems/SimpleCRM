@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('partials/head.ejs'); %>
-        <title>New Model</title>
+        <title>New Service</title>
         <style>
             form {
                 margin-top: 100%;
@@ -18,19 +18,14 @@
             <div class="right-column">
                 <div class="bottomrow">
                     <form class="row g-3">
-                        <h2>New Model</h2>
-                        <div class="col-md-4">
-                            <label for="make" class="form-label">Make</label>
-                            <select id="make" class="form-select" onchange="myFunction()" required>
-                              <option selected></option>
-                              <% makes.forEach(function(make){ %>
-                                <option value=<%= make[0] %>><%= make[1] %></option>
-                              <% }); %>
-                            </select>
+                        <h2>New Service</h2>
+                        <div class="col-md-4" onsubmit="createService()">
+                            <label for="service" class="form-label">Service</label>
+                            <input type="text" class="form-control" id="service">
                         </div>
                         <div class="col-md-4">
-                            <label for="model" class="form-label">Model Name</label>
-                            <input type="text" class="form-control" id="model">
+                            <label for="price" class="form-label">Service Price</label>
+                            <input type="number" class="form-control" id="price" placeholder="$">
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-primary" id="submit">Submit</button>
@@ -49,20 +44,20 @@
                 });
                 return response.json();
             };
-            function createModel() {
-                const make = document.getElementById("make").value;
-                const model = document.getElementById("model").value;
+            function createService(){
+                const service = document.getElementById("service").value;
+                const price = document.getElementById("price").value;
                 const formdata = {
-                    "make_id":make,
-                    "model": model
-                }
-                postData("http://localhost:3000/vehicle-model", formdata)
-                .then((data) => {
-                    window.close();
-                }).catch((error)=> {
-                    console.log(error);
-                });
-            }
+                    "service":service,
+                    "price":price
+                };
+                postData("http://localhost:3000/service", formdata)
+                    .then((data) => {
+                        window.close();
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+            };
         </script>
     </body>
 </html>

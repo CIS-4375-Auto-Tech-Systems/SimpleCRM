@@ -52,47 +52,47 @@
 </div>
 
 <script>
-//needs print functionality for all tabs
-
-  // populate the sales table with data based on the selected interval
-  $('#interval-select').on('change', function() {
-    var interval = $(this).val();
-    var salesData = getSalesData(interval);
-    var $salesTableBody = $('#sales-table-body');
-    $salesTableBody.empty();
-    $.each(salesData, function(index, row) {
-      var $tr = $('<tr>');
-      $tr.append($('<td>').text(row.date));
-      $tr.append($('<td>').text(row.totalSales));
-      $salesTableBody.append($tr);
+$('#interval-select').on('change', function() {
+  var interval = $(this).val();
+  postData("http://localhost:3000/sales-data", { "interval": interval })
+    .then(function(data) {
+      console.log(data); // log the data to the console to check its contents
+      var $salesTableBody = $('#sales-table-body');
+      $salesTableBody.empty();
+      if (data && data.length > 0) { // check that data is not empty and has at least one item
+        $.each(data, function(index, row) {
+          var $tr = $('<tr>');
+          $tr.append($('<td>').text(row[0] + ' - ' + row[1]));
+          $tr.append($('<td>').text(row[2]));
+          $salesTableBody.append($tr);
+        });
+      } else {
+        // handle empty or invalid data
+        $salesTableBody.append($('<tr>').append($('<td>').text('No data available')));
+      }
+    })
+    .catch(function(error) {
+      console.error(error);
+      // handle errors
+      $('#sales-table-body').append($('<tr>').append($('<td>').text('Error: ' + error.message)));
     });
-  });
+});
 
-// simulate getting sales data from server based on the interval **dummy data**
-function getSalesData(interval) {
-  var data = [];
-  if (interval === 'daily') {
-    data.push({date: '2023-04-01', totalSales: 1000});
-    data.push({date: '2023-04-02', totalSales: 1500});
-    data.push({date: '2023-04-03', totalSales: 2000});
-  } else if (interval === 'weekly') {
-    data.push({date: '2023-03-28 - 2023-04-03', totalSales: 4500});
-    data.push({date: '2023-04-04 - 2023-04-10', totalSales: 5500});
-  } else if (interval === 'Monthly') {
-    data.push({date: '2023-01', totalSales: 25000});
-    data.push({date: '2023-02', totalSales: 30000});
-    data.push({date: '2023-03', totalSales: 40000});
-    data.push({date: '2023-04', totalSales: 35000});
-    data.push({date: '2023-05', totalSales: 42000});
-  } else if (interval === 'Yearly') {
-    data.push({date: '2020', totalSales: 150000});
-    data.push({date: '2021', totalSales: 180000});
-    data.push({date: '2022', totalSales: 200000});
-    data.push({date: '2023', totalSales: 250000});
+
+  async function postData(url = "", data) {
+    const response = await fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data),
+    });
+    return response.json();
   }
-  return data;
-}
 </script>
+
+
+
+
 <!-- Services Tab + filter by search by service: Still need to determine best way to report... drop down of services maybe? -->
 <!-- Mockup of search bar only functions for daily and weekly -->
 <div id="services-tab" class="tab-pane fade">

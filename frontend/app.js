@@ -87,7 +87,7 @@ app.get('/', async function(req, res) {
     services: getServices,
     makes: getMakes,
     models: getModels,
-    orederstatus: getOrderStatus
+    orderstatus: getOrderStatus
   });
 
 });
@@ -102,6 +102,10 @@ app.get('/', async function(req, res) {
   
   app.get('/customerlookup', function(req, res) {
     res.render('customerlookup');
+  });
+
+  app.get('/employeelookup', function(req, res) {
+    res.render('employeelookup');
   });
   
   app.get('/customer', function(req, res){
@@ -141,7 +145,7 @@ app.get('/', async function(req, res) {
   });
 
   app.get('/editorder', async function(req, res){
-    const getVehicles = await axios.get('http://localhost:3000/vehicle').then(function(response) {
+    const getOrderStatus = await axios.get('http://localhost:3000/order-status').then(function(response) {
       if (response.data == 'FAILURE'){
         // Cant decide on error yet
         return [['ERROR','ERROR']]
@@ -166,7 +170,7 @@ app.get('/', async function(req, res) {
       }
     });
     res.render('editorder',{
-      vehicles: getVehicles,
+      orderStatuses: getOrderStatus,
       services: getServices,
       employees: getEmployees
     });
@@ -254,7 +258,6 @@ app.get('/', async function(req, res) {
     });
   });
 
-  // remove later: just seeing the customer profile page style
   app.get('/customer', function(req, res) {
     res.render('customer');
   });
@@ -308,6 +311,87 @@ app.get('/', async function(req, res) {
       color: getColor
     });
   });
+
+  app.get('/editcustomer', async function(req, res) {
+    const getCuststatuses = await axios.get('http://localhost:3000/customer-status').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getColor = await axios.get('http://localhost:3000/color').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getServices = await axios.get('http://localhost:3000/service').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getModels = await axios.get('http://localhost:3000/vehicle-model').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('editcustomer', {
+      states: getStates,
+      custstatuses: getCuststatuses,
+      services: getServices,
+      makes: getMakes,
+      models: getModels,
+      color: getColor
+    });
+  });
+
+  // AUX
+  app.get('/make', function(req, res) {
+    res.render('createmake');
+  });
+  app.get('/model', async function(req, res) {
+    const getMakes = await axios.get('http://localhost:3000/vehicle-make').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('createmodel', {
+      makes: getMakes
+    });
+  });
+  app.get('/service', function(req, res) {
+    res.render('createservice');
+  });
+  //
 
   app.get('/reports', async function(req, res) {
     const getServiceOrder = await axios.get('http://localhost:3000/service-order').then(function(response) {

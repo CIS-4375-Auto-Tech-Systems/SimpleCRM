@@ -42,7 +42,8 @@ img {
         <div class="bottomrow">
           <div class="row">
             <div class="column">
-              <img src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
+              <img id="preview" src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
+              <input type="file" id="photo" onchange="previewPhoto()">
             </div>
             <div class="column">
               <h1 id="custFirst_name"></h1>
@@ -129,10 +130,11 @@ img {
           //Edit customer info button
           const EditCustomerInfo = document.getElementById("info-button");
           EditCustomerInfo.addEventListener("click", () => {
-            openCreateCustForm();
+            openEditCustForm();
           });
-          function openCreateCustForm() { //The fuction that opens the form in another window
-            const EditCust = window.open("http://localhost:5173/createcustomer");}
+          function openEditCustForm() { //The fuction that opens the form in another window
+            window.location.href="/editcustomer";
+          }
 
 
 
@@ -357,7 +359,7 @@ img {
               serviceRow.appendChild(dateOutEle);
 
               let totalEle = document.createElement("td");
-              let totalText = document.createTextNode(ttlAmount);
+              let totalText = document.createTextNode("$"+ttlAmount);
               totalEle.appendChild(totalText);
               serviceRow.appendChild(totalEle);
 
@@ -370,6 +372,35 @@ img {
             }
           }
           createPage(cust_id);
+          function previewPhoto() {
+            const preview = document.getElementById('preview');
+            const file = document.getElementById('photo').files[0];
+            const reader = new FileReader();
+
+    reader.onloadend = function() {
+    preview.src = reader.result;
+    // Save image data to local storage with key that includes customer ID
+    const cust_id = sessionStorageControl.readItem("cust_id");
+    localStorage.setItem(`profile_photo_${cust_id}`, reader.result);
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "/images/profile-placeholder.png";
+    // Clear saved image data from local storage with key that includes customer ID
+    const cust_id = sessionStorageControl.readItem("cust_id");
+    localStorage.removeItem(`profile_photo_${cust_id}`);
+  }
+}
+const custid = sessionStorageControl.readItem("cust_id");
+
+// Load saved profile photo from local storage with key that includes customer ID
+const savedPhoto = localStorage.getItem(`profile_photo_${cust_id}`);
+if (savedPhoto) {
+  const preview = document.getElementById('preview');
+  preview.src = savedPhoto;
+}
     </script>
   </body>
 </html>
