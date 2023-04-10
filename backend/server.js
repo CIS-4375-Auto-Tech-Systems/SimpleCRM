@@ -1142,6 +1142,41 @@ app.post('/sales-data', async function(req, res) {
     console.log(result.rows)
     res.json(result.rows);
   });
+
+app.post('/api/sales-per-month', async (req, res) => {
+    try {
+      // Get the current month and year
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+    const currentYear = currentDate.getFullYear();
+  
+      // Build the SQL query to retrieve the sales data for the current month and year
+    const query = `
+    SELECT SUM(ttlamount) as totalSales, DATE_TRUNC('month', datein) as month
+    FROM service_order
+    WHERE DATE_TRUNC('month', datein) = DATE_TRUNC('month', NOW())
+    GROUP BY DATE_TRUNC('month', datein)
+      `;
+  
+    // Execute the query and retrieve the results
+    const results = await pool.query(query);
+  
+    // Parse the results and format them for use in the chart
+    const salesData = [];
+      for (const row of results.rows) {
+        salesData.push({
+          month: row.month.toLocaleDateString('en-US', { month: 'long' }), // Format the month as a string
+          sales: row.totalSales
+        });
+      }
+  
+      // Send the formatted data back to the client as JSON
+      res.json(salesData);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal server error');
+    }
+});
   
   
 app.listen(PORT, () => {
