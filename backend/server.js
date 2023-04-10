@@ -120,13 +120,15 @@ app.post('/employeelookup', async function(req, res){{
     `;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
+    //
+
     // Send a response
     const CRUDOP = await crudOP(query,binds, true);
     res.send(CRUDOP.rows);
 }});
 
 //SERVICE ORDER LOOKUP
-app.post('/orderlookup', async function(req, res){{
+app.post('/servicelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
     SELECT * 
@@ -334,7 +336,7 @@ app.post('/service-order', async function(req, res) {
     let emp_id = req.body.emp_id;
     let order_status_id = req.body.order_status_id;
     let service_id = req.body.service_id;
-    let ttlamt = req.body.ttlamt;
+    let ttlamount = req.body.ttlamount;
     let datein = req.body.datein;
     let dateout = req.body.dateout;
     let odometer = req.body.odometer;
