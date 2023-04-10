@@ -107,7 +107,9 @@ app.get('/', async function(req, res) {
   app.get('/employeelookup', function(req, res) {
     res.render('employeelookup');
   });
-  
+  app.get('/orderlookup', function(req, res) {
+    res.render('orderlookup');
+  });
   app.get('/customer', function(req, res){
     res.render('customer');
   });

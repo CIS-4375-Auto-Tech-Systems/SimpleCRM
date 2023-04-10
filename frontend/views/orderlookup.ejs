@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Order Lookup</title>
+    <%- include('partials/head.ejs'); %>
+    <style>
+/* Styles for search bar */
+.bottomrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  width: 80%;
+}
+#searchBar {
+  border: none;
+  background-color: #f2f2f2;
+  padding: 12px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+  margin-right: 38px;
+  margin-top: 25px;
+  width: 100%;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+}
+#searchButton {
+    height: 38px;
+    margin-top: 30px;
+    margin-bottom: 5px;
+  }
+#results {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Styles for search results */
+
+.list-group-item-secondary {
+  background-color: #0d6efd;
+  color: white;
+}
+.list-group-item {
+  padding: 12px 20px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  width: 120%; /* add this line */
+  align-self: left;
+}
+.list-group-item:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+.list-group-item-secondary:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+#main {
+  position: fixed;
+  top: 0;
+  width: calc(100% - 250px);
+  height: 100%;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+    </style>
+    <link rel = "icon" href = 
+"https://cdn.icon-icons.com/icons2/2645/PNG/512/person_circle_icon_159926.png" 
+        type = "image/x-icon">
+  </head>
+  <body id="main">
+    <div class="container">
+      <%- include('partials/navbar.ejs'); %>
+      <div class="right-column">
+        <%- include('partials/header.ejs'); %>
+        <div class="bottomrow">
+          <h1>Order Lookup</h1>
+          <form>
+            <form>
+              <fieldset style="display: flex;">
+                <input name="searchValue" type="text" id="searchBar" placeholder="Search active Orders...">
+                <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
+              </fieldset>
+            </form>
+          <div id="results">
+            <ul class="list-group" id="Orders" style="display: none;">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.getElementById("searchBar").addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("searchButton").click();
+        }
+      });
+      const sessionStorageControl = {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        storeItem(key, value){
+          sessionStorage.setItem(key, value);
+        },
+        readItem(key){
+          return sessionStorage.getItem(key);
+        },
+        removeItem(key){
+          sessionStorage.removeItem(key);
+        }
+      }
+  window.onload = function() {
+  search('');
+};
+  function search() {
+  let http = new XMLHttpRequest();
+  let OrderList = document.getElementById("Orders");
+  OrderList.replaceChildren();
+  http.open("POST", "http://localhost:3000/orderlookup", true);
+  http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var params = "searchValue="+document.getElementById("searchBar").value;
+  http.send(params);
+  http.onload = function(){
+    search('');
+    let Orders = JSON.parse(http.responseText);
+
+    if (Orders.length === 0) {
+      let noResults = document.createElement("li");
+      noResults.classList.add("list-group-item");
+      noResults.innerHTML = "No results found!";
+      OrderList.appendChild(noResults);
+    } else {
+      // Create header row
+      let headerRow = document.createElement("div");
+      headerRow.classList.add("list-group-item");
+      headerRow.classList.add("list-group-item-secondary");
+      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Phone</div><div class='col'>Email</div><div class='col'>Status</div></div>";
+      OrderList.appendChild(headerRow);
+
+      // Create search result rows
+      Orders.forEach(Order => {
+        // Replace null values with empty string
+        for (let i = 0; i < Order.length; i++) {
+          if (Order[i] === null) {
+            Order[i] = '';
+          }
+        }
+        let searchResult = document.createElement("div")
+        let firstName = document.createTextNode(`${Order[3]}`);
+        let middleName = document.createTextNode(`${Order[4]}`);
+        let lastName = document.createTextNode(`${Order[5]}`);
+        let phone = document.createTextNode(`${Order[9]}`);
+        let email = document.createTextNode(`${Order[10]}`);
+        let status = document.createTextNode(`${Order[11]}`);
+
+      searchResult.classList.add("list-group-item");
+      searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${status.textContent}</div></div>`;
+      searchResult.addEventListener('click', function() {
+        sessionStorage.setItem('order_id', Order[0]);
+        window.location.href = '/Order';
+      });
+        searchResult.classList.add("list-group-item");
+        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div><div class='col'>${status.data}</div></div>`;
+        OrderList.appendChild(searchResult);
+      });
+
+    if (OrderList.style.display === "none"){
+      OrderList.style.display = "block";
+    }
+  }
+}}
+
+    </script>
+  </body>
+</html>

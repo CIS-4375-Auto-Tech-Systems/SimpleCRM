@@ -83,6 +83,8 @@ function compare_update(oldValue, newValue) {
 };
 
 /* SPECIAL ENDPOINTS */
+
+//CUSTOMER LOOKUP
 app.post('/lookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
@@ -104,6 +106,7 @@ app.post('/lookup', async function(req, res){{
     res.send(CRUDOP.rows);
 }});
 
+//EMPLOYEE LOOKUP
 app.post('/employeelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
@@ -116,15 +119,28 @@ app.post('/employeelookup', async function(req, res){{
     OR LOWER(e.phone) LIKE '%' || LOWER(:search_value) || '%'
     `;
     let searchValue = req.body.searchValue
-    let status = req.body.status
     let binds = [searchValue];
-    //
-
     // Send a response
     const CRUDOP = await crudOP(query,binds, true);
     res.send(CRUDOP.rows);
 }});
 
+//SERVICE ORDER LOOKUP
+app.post('/orderlookup', async function(req, res){{
+    // Query has to be exact match including case
+    let query = `
+    SELECT * 
+    FROM service_order
+    WHERE LOWER(description) LIKE '%' || LOWER(:search_value) || '%'
+    ORDER BY datein DESC
+        `;
+    let searchValue = req.body.searchValue
+    let binds = [searchValue];
+    //
+    // Send a response
+    const CRUDOP = await crudOP(query,binds, true);
+    res.send(CRUDOP.rows);
+}});
 
 /* EMPLOYEE */
 // CREATE
