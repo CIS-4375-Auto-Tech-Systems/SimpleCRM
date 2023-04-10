@@ -200,7 +200,7 @@ img {
             const orders = await response.json();
             let match = [];
             orders.forEach(serviceOrder => {
-              if (serviceOrder[2] == custID){
+              if (serviceOrder[1] == custID){
                 match.push(serviceOrder);
               }
             });
@@ -327,12 +327,12 @@ img {
             const servicesTable = document.getElementById("services");
             for (const order of service_order){
               let order_id = order[0];
-              let order_status_id = order[5]
-              let service_id = order[6];
-              let ttlAmount = order[7];
-              let dateinRAW = new Date (order[8]);
+              let order_status_id = order[4]
+              let service_id = order[5];
+              let ttlAmount = order[6];
+              let dateinRAW = new Date (order[7]);
               let datein = dateinRAW.toLocaleDateString();
-              let dateoutRAW = new Date(order[9]);
+              let dateoutRAW = new Date(order[8]);
               let dateout = dateoutRAW.toLocaleDateString();
               // GET service table
               let service = await getService(service_id);

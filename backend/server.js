@@ -328,9 +328,8 @@ app.delete('/employee-status', async function(req, res){
 // CREATE
 app.post('/service-order', async function(req, res) {
     // Column
-    const service_orderAttributes = 'seq_service_order.nextval, :order_num, :cust_id, :vehicle_id, :emp_id, :order_status_id, :service_id, :ttlamt, :datein, :dateout, :odometer, :description';
+    const service_orderAttributes = 'seq_service_order.nextval, :cust_id, :vehicle_id, :emp_id, :order_status_id, :service_id, :ttlamt, :datein, :dateout, :odometer, :description';
     // Values
-    let order_num = req.body.order_num;
     let cust_id = req.body.cust_id;
     let vehicle_id = req.body.vehicle_id;
     let emp_id = req.body.emp_id;
@@ -343,7 +342,7 @@ app.post('/service-order', async function(req, res) {
     let description = req.body.description;
     // Query Creation
     let query = `INSERT INTO SERVICE_ORDER VALUES (${service_orderAttributes})`;
-    let binds = [order_id, order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamt, datein, dateout, odometer, description.toUpperCase()];
+    let binds = [order_id, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
@@ -361,7 +360,7 @@ app.get('/service-order', async function(req, res){
 // UPDATE
 app.put('/service-order', async function(req, res){
     // Column
-    const service_orderAttributes = 'order_num = :order_num, cust_id = :cust_id, vehicle_id = :vehicle_id, emp_id = :emp_id, order_status_id = :order_status_id, service_id = :service_id, ttlamount = :ttlamount, datein = :datein, dateout = :dateout, odometer = :odometer, description = :description';
+    const service_orderAttributes = 'cust_id = :cust_id, vehicle_id = :vehicle_id, emp_id = :emp_id, order_status_id = :order_status_id, service_id = :service_id, ttlamount = :ttlamount, datein = :datein, dateout = :dateout, odometer = :odometer, description = :description';
     // Values
     let order_id = req.body.order_id;
     // READ COMPARE and UPDATE
@@ -372,19 +371,17 @@ app.put('/service-order', async function(req, res){
     let readOrder = await crudOP(readQuery, readBinds, true);
     let currentOrder = readOrder.rows[0];
     // Store Old
-    let oldOrder_num = currentOrder[1];
-    let oldCust_id  = currentOrder[2];
-    let oldVehicle_id  = currentOrder[3];
-    let oldEmp_id  = currentOrder[4];
-    let oldOrder_status_id  = currentOrder[5];
-    let oldService_id  = currentOrder[6];
-    let oldTtlamt  = currentOrder[7];
-    let oldDatein  = currentOrder[8];
-    let oldDateout  = currentOrder[9];
-    let oldOdometer  = currentOrder[10];
-    let oldDescription = currentOrder[11];
+    let oldCust_id  = currentOrder[1];
+    let oldVehicle_id  = currentOrder[2];
+    let oldEmp_id  = currentOrder[3];
+    let oldOrder_status_id  = currentOrder[4];
+    let oldService_id  = currentOrder[5];
+    let oldTtlamt  = currentOrder[6];
+    let oldDatein  = currentOrder[7];
+    let oldDateout  = currentOrder[8];
+    let oldOdometer  = currentOrder[9];
+    let oldDescription = currentOrder[10];
     // Request New
-    let newOrder_num = req.body.order_num;
     let newCust_id = req.body.cust_id;
     let newVehicle_id = req.body.vehicle_id;
     let newEmp_id = req.body.emp_id;
@@ -396,7 +393,6 @@ app.put('/service-order', async function(req, res){
     let newOdometer = req.body.odometer;
     let newDescription  = req.body.description;
     /* COMPARE and UPDATE */
-    let order_num = compare_update(oldOrder_num, newOrder_num);
     let cust_id = compare_update(oldCust_id, newCust_id);
     let vehicle_id = compare_update(oldVehicle_id, newVehicle_id);
     let emp_id = compare_update(oldEmp_id, newEmp_id);
@@ -419,7 +415,7 @@ app.put('/service-order', async function(req, res){
     let description = compare_update(oldDescription, newDescription);
     // Query Creation
     let query = `UPDATE SERVICE_ORDER SET ${service_orderAttributes} WHERE order_id = :order_id`;
-    let binds = [order_num, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase(), order_id];
+    let binds = [cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase(), order_id];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;

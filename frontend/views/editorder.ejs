@@ -16,10 +16,6 @@
         <form class="row g-3" onsubmit="editOrder(); return false">
           <h2>Edit Order Form</h2>
           <div class="col-md-4">
-            <label for="order_num" class="form-label">Order Number</label>
-            <input type="number" class="form-control" id="order_num">
-          </div>
-          <div class="col-md-4">
             <label for="status" class="form-label">Status</label>
             <select id="status" class="form-select">
               <option selected></option>
@@ -110,19 +106,18 @@
       }
       async function currentData(orderID){
         const serviceOrder = await getServiceOrder(orderID);
-        document.getElementById("order_num").value = serviceOrder[0][1];
-        document.getElementById("employee").value = serviceOrder[0][4];
-        document.getElementById("status").value = serviceOrder[0][5];
-        document.getElementById("service").value = serviceOrder[0][6];
-        document.getElementById("total-amount").value = serviceOrder[0][7];
-        let indate = JSON.stringify(serviceOrder[0][8])
+        document.getElementById("employee").value = serviceOrder[0][3];
+        document.getElementById("status").value = serviceOrder[0][4];
+        document.getElementById("service").value = serviceOrder[0][5];
+        document.getElementById("total-amount").value = serviceOrder[0][6];
+        let indate = JSON.stringify(serviceOrder[0][7])
         indate = indate.slice(1,11)
         document.getElementById("Date-In").value = indate;
-        let outdate = JSON.stringify(serviceOrder[0][9])
+        let outdate = JSON.stringify(serviceOrder[0][8])
         outdate = outdate.slice(1,11)
         document.getElementById("Date-Out").value = outdate;
-        document.getElementById("input-Odometer").value = serviceOrder[0][10];
-        document.getElementById("input-description").value = serviceOrder[0][11];
+        document.getElementById("input-Odometer").value = serviceOrder[0][9];
+        document.getElementById("input-description").value = serviceOrder[0][10];
       };
       async function putData(url = "", data) {
         const response = await fetch(url, {
@@ -137,8 +132,7 @@
       async function editOrder(){
         const serviceOrder = await getServiceOrder(order_id);
         // Form
-        const order_num = document.getElementById("order_num").value;
-        const vehicle_id = serviceOrder[0][3];
+        const vehicle_id = serviceOrder[0][2];
         const employee_id = document.getElementById("employee").value;
         const order_status_id = document.getElementById("status").value;
         const service_id = document.getElementById("service").value;
@@ -150,7 +144,6 @@
         //
         const formdata = {
           "order_id": order_id,
-          "order_num":order_num,
           "cust_id":cust_id,
           "vehicle_id":vehicle_id,
           "emp_id":employee_id,
