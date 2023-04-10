@@ -124,7 +124,6 @@
   var params = "searchValue="+document.getElementById("searchBar").value;
   http.send(params);
   http.onload = function(){
-    search('');
     let customers = JSON.parse(http.responseText);
 
     if (customers.length === 0) {

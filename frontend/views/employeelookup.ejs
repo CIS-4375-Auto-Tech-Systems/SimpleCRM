@@ -128,7 +128,6 @@ function search() {
   var params = "searchValue="+document.getElementById("searchBar").value;
   http.send(params);
   http.onload = function(){
-    search('');
     let employees = JSON.parse(http.responseText);
 
     if (employees.length === 0) {
