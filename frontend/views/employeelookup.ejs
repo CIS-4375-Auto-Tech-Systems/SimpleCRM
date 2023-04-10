@@ -166,7 +166,7 @@ function search() {
       searchResult.classList.add("list-group-item");
       searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${address.textContent}</div><div class='col'>${city.textContent}</div><div class='col'>${zip.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${datehired.textContent}</div><div class='col'>${status.textContent}</div></div>`;
       searchResult.addEventListener('click', function() {
-        sessionStorage.setItem('cust_id', employee[0]);
+        sessionStorage.setItem('emp_id', employee[0]);
         window.location.href = '/employee';
       });
         searchResult.classList.add("list-group-item");

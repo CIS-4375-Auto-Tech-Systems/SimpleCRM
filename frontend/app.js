@@ -111,6 +111,10 @@ app.get('/', async function(req, res) {
   app.get('/customer', function(req, res){
     res.render('customer');
   });
+  app.get('/employee', function(req, res){
+    res.render('employee');
+  });
+
 
   app.get('/createorder', async function(req, res){
     const getVehicles = await axios.get('http://localhost:3000/vehicle').then(function(response) {
@@ -309,6 +313,29 @@ app.get('/', async function(req, res) {
       makes: getMakes,
       models: getModels,
       color: getColor
+    });
+  });
+
+  app.get('/editemployee', async function(req, res) {
+    const getempstatuses = await axios.get('http://localhost:3000/employee-status').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    const getStates = await axios.get('http://localhost:3000/state').then(function(response) {
+      if (response.data == 'FAILURE'){
+        // Cant decide on error yet
+        return [['ERROR','ERROR']]
+      }else{
+        return response.data
+      }
+    });
+    res.render('editemployee', {
+      states: getStates,
+      empstatuses: getempstatuses,
     });
   });
 
