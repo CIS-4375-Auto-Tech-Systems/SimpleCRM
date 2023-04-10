@@ -59,12 +59,14 @@ $('#interval-select').on('change', function() {
   var interval = $(this).val();
   postData("http://localhost:3000/sales-data?interval=" + interval)
     .then(function(data) {
-      console.log(data); // log the data to the console to check its contents
+      //console.log(data); // log the data to the console to check its contents
       var $salesTableBody = $('#sales-table-body');
       $salesTableBody.empty();
       if (data && data.length > 0) { // check that data is not empty and has at least one item
         $.each(data, function(index, row) {
-          var date = new Date(row.date_range_start);
+          //console.log(row);
+          var date = new Date(row[0]);
+          //console.log(date);
           if (isNaN(date)) {
             var formattedDate = 'N/A';
           } else {
@@ -72,7 +74,7 @@ $('#interval-select').on('change', function() {
           }
           var $tr = $('<tr>');
           $tr.append($('<td>').text(formattedDate));
-          $tr.append($('<td>').text(row.total_sales));
+          $tr.append($('<td>').text('$'+row[1]));
           $salesTableBody.append($tr);
         });
       } else {
