@@ -1112,12 +1112,38 @@ app.post('/customervehicle', async function(req, res) {
         cust_id: lastRowId
     });    
 });
-app.post('/sales-data', async function(req, res) 
-{const interval = req.query.interval;
-const result = await crudOP("SELECT TO_CHAR(datein, 'DD-Mon-YY') AS date_range_start, TO_CHAR(dateout, 'DD-Mon-YY') AS date_range_end, SUM(ttlamount) AS total_sales FROM SERVICE_ORDER WHERE datein >= '01-Jan-98' AND dateout <= '31-Dec-23' GROUP BY TO_CHAR(datein, 'DD-Mon-YY'), TO_CHAR(dateout, 'DD-Mon-YY') ORDER BY TO_CHAR(datein, 'DD-Mon-YY')", undefined, true);
-console.log(result.rows)
-res.json(result.rows);
-}); 
+app.post('/sales-data', async function(req, res) {
+    const interval = req.query.interval;
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+      case "daily":
+        groupBy = "TRUNC(datein, 'DD')";
+        dateFormat = "YYYY-MM-DD";
+        break;
+      case "weekly":
+        groupBy = "TRUNC(datein, 'IW')";
+        dateFormat = "IYYY-IW";
+        break;
+      case "monthly":
+        groupBy = "TRUNC(datein, 'MM')";
+        dateFormat = "YYYY-MM";
+        break;
+      case "yearly":
+        groupBy = "TRUNC(datein, 'YYYY')";
+        dateFormat = "YYYY";
+        break;
+      default:
+        res.status(400).send("Invalid interval");
+        return;
+    }
+    const query = `SELECT TO_CHAR(${groupBy}, '${dateFormat}') AS date_range_start, SUM(ttlamount) AS total_sales FROM SERVICE_ORDER WHERE datein >= '01-Jan-98' AND dateout <= '31-Dec-23' GROUP BY ${groupBy} ORDER BY ${groupBy}`;
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows)
+    res.json(result.rows);
+  });
+  
+  
 app.listen(PORT, () => {
     console.log(PORT, "is the magic port");
 });
