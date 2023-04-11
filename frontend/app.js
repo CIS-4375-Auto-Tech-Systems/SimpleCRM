@@ -428,7 +428,7 @@ app.get('/', async function(req, res) {
     });
     
     res.render('reports', {
-      customer: getCustomer,
+      customers: getCustomer,
       serviceorder: getServiceOrder,
       employee: getEmployee,
       states: getStates,

@@ -33,6 +33,7 @@
     <div class="form-group">
       <label for="interval-select">Select Report:</label>
       <select class="form-control" id="interval-select">
+        <option value="Choose an interval">Choose an interval</option>
         <option value="daily">Daily</option>
         <option value="weekly">Weekly</option>
         <option value="monthly">Monthly</option>
@@ -103,14 +104,7 @@ async function postData(url = "", data) {
 
 </script>
 
-
-
-
-
-
-
-<!-- Services Tab + filter by search by service: Still need to determine best way to report... drop down of services maybe? -->
-<!-- Mockup of search bar only functions for daily and weekly -->
+<!-- Services Tab + filter by service name: dropdown of services -->
 <div id="services-tab" class="tab-pane fade">
   <h3>Services Report Summary</h3>
   <div class="form-group">
@@ -118,119 +112,107 @@ async function postData(url = "", data) {
     <select class="form-control" id="services-interval-select">
       <option value="daily">Daily</option>
       <option value="weekly">Weekly</option>
-      <option value="Monthly">Monthly</option>
-      <option value="Yearly">Yearly</option>
+      <option value="monthly">Monthly</option>
+      <option value="yearly">Yearly</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="service-search">Search by Service Name:</label>
-    <input type="text" class="form-control" id="service-search">
+    <label for="service-select">Filter by Service Name:</label>
+    <select class="form-control" id="service-select">
+      <option selected>All Services</option>
+      <% services.forEach(function(service){ %>
+        <option value=<%= service[0] %>><%= service[1] %></option>
+      <% }); %>
+    </select>
   </div>
+  
   <div id="services-table-container"></div>
-    <!-- print report -->
-    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
-</div>
-
-<script>
-  // generate services table based on selected interval and search query ***dummy data***
-  function generateServicesTable(interval, query) {
-    var data;
-    
-    if (interval === "daily") {
-      data = [
-        { service: "Service A", quantity: 20, revenue: 400 },
-        { service: "Service B", quantity: 15, revenue: 300 },
-        { service: "Service C", quantity: 10, revenue: 200 }
-      ];
-    } else if (interval === "weekly") {
-      data = [
-        { service: "Service A", quantity: 140, revenue: 2800 },
-        { service: "Service B", quantity: 105, revenue: 2100 },
-        { service: "Service C", quantity: 70, revenue: 1400 }
-      ];
-    } else if (interval === "monthly") {
-      data = [
-        { service: "Service A", quantity: 500, revenue: 10000 },
-        { service: "Service B", quantity: 350, revenue: 7000 },
-        { service: "Service C", quantity: 200, revenue: 4000 }
-      ];
-    } else if (interval === "yearly") {
-      data = [
-        { service: "Service A", quantity: 6000, revenue: 120000 },
-        { service: "Service B", quantity: 4200, revenue: 84000 },
-        { service: "Service C", quantity: 2400, revenue: 48000 }
-      ];
-    } else {
-      console.error("Invalid interval: " + interval);
-      return;
-    }
-    
-    // filter data by search query
-    if (query) {
-      data = data.filter(function(d) {
-        return d.service.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-      });
-    }
-    
-    // generate table HTML
-    var tableHTML = "<table class='table'><thead><tr><th>Service Name</th><th># Customers</th><th>$ Order Amount</th></tr></thead><tbody>";
-    for (var i = 0; i < data.length; i++) {
-      tableHTML += "<tr><td>" + data[i].service + "</td><td>" + data[i].quantity + "</td><td>" + data[i].revenue + "</td></tr>";
-    }
-    tableHTML += "</tbody></table>";
-    
-    // render table
-    $("#services-table-container").html(tableHTML);
+  <!-- print report -->
+  <button class="btn btn-primary" id="print-customer-report">Print Report</button>
+  </div>
+  
+  <script>
+  // generate services table based on selected interval and selected service
+  function generateServicesTable(interval, service) {
+    // Make an API request to the backend to fetch data
+    fetch('http://localhost:3000/service-tab', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        interval: interval,
+        service: service
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      // generate table HTML
+      var tableHTML = "<table class='table'><thead><tr><th>Date</th><th>Service Name</th><th># Customers</th><th>$ Order Amount</th></tr></thead><tbody>";
+      for (var i = 0; i < data.length; i++) {
+        tableHTML += "<tr><td>" + data[i][0] + "</td><td>" + data[i][1] + "</td><td>" + data[i][2] + "</td><td>" + data[i][3] + "</td></tr>";
+        console.log(data[i]);  
+      }
+      tableHTML += "</tbody></table>";
+      // append table to container
+      var tableContainer = document.getElementById("services-table-container");
+      tableContainer.innerHTML = tableHTML;
+    })
+    .catch(error => {
+      console.error("Error fetching data from backend:", error);
+    });
   }
   
-  $(document).ready(function() {
-    // initial table
-    generateServicesTable("daily", null);
-    
-    // update table when interval is changed
-    $("#services-interval-select").change(function() {
-      var interval = $(this).val();
-      var query = $("#service-search").val();
-      generateServicesTable(interval, query);
-    });
-    
-    // update table when search query is entered
-    $("#service-search").on("input", function() {
-      var interval = $("#services-interval-select").val();
-      var query = $(this).val();
-      generateServicesTable(interval, query);
-    });
+  // event listener for interval select
+  document.getElementById("services-interval-select").addEventListener("change", function(event) {
+    var interval = event.target.value;
+    var service = document.getElementById("service-select").value;
+    generateServicesTable(interval, service);
   });
+  
+  // event listener for service select
+  document.getElementById("service-select").addEventListener("change", function(event) {
+    var interval = document.getElementById("services-interval-select").value;
+    var service = event.target.value;
+    generateServicesTable(interval, service);
+  });
+  </script>
+  
 
-</script>
-<!-- Customer Tab -->
+
+<!-- Customer Tab + filter by customer name: dropdown of customers -->
+<div class="tab-content">
 <div id="customer-tab" class="tab-pane fade">
   <h3>Customer Report Summary</h3>
   <div class="form-group">
-    <label for="customer-interval-select">Select Report:</label>
+    <label for="interval-select">Select Report:</label>
     <select class="form-control" id="customer-interval-select">
       <option value="daily">Daily</option>
       <option value="weekly">Weekly</option>
-      <option value="Monthly">Monthly</option>
-      <option value="Yearly">Yearly</option>
+      <option value="monthly">Monthly</option>
+      <option value="yearly">Yearly</option>
     </select>
   </div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Last Name</th>
-        <th>Middle Initial</th>
-        <th>First Name</th>
-        <th>Total Sales</th>
-      </tr>
-    </thead>
-    <tbody id="customer-table-body">
-    </tbody>
-  </table>
+
+  <div id="customer-table-container">
+    <table id="customer-table" class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Last Name</th>
+          <th>Middle Initial</th>
+          <th>First Name</th>
+          <th>Total Sales</th>
+        </tr>
+      </thead>
+      <tbody id="customer-table-body"></tbody>
+    </table>
+  </div>
+  
   <!-- print report -->
   <button class="btn btn-primary" id="print-customer-report">Print Report</button>
 </div>
+
 <script>
   // populate the customer table with data based on the selected interval
   $('#customer-interval-select').on('change', function() {
@@ -248,7 +230,6 @@ async function postData(url = "", data) {
       $customerTableBody.append($tr);
     });
   });
-
 
  // simulate getting customer data from server based on the interval **dummy data**
 function getCustomerData(interval) {
@@ -277,19 +258,19 @@ function getCustomerData(interval) {
   return data;
 }
 
-  
 
-  //allows switching from sales to service tab
+
+</script>
+
+
+<script>  //allows switching from sales to service tab
   $('.nav-link').click(function() {
     $('.nav-link').removeClass('active');
     $(this).addClass('active');
     var tabToShow = $(this).attr('href');
     $('.tab-pane').removeClass('show active');
     $(tabToShow).addClass('show active');
-  });
-
-</script>
-
+  });</script>
 
       </div>
     </div>

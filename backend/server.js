@@ -1197,6 +1197,77 @@ app.post('/api/sales-per-month', async (req, res) => {
       res.status(500).send('Internal server error');
     }
 });
+
+app.post('/service-tab', async function(req, res) {
+    const interval = req.body.interval; // Update to use req.body instead of req.query
+    const service = req.body.service; // Get selected service from frontend
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+        case "daily":
+            groupBy = "TRUNC(datein, 'DD')";
+            dateFormat = "YYYY-MM-DD";
+            break;
+        case "weekly":
+            groupBy = "TRUNC(datein, 'IW')";
+            dateFormat = "IYYY-IW";
+            break;
+        case "monthly":
+            groupBy = "TRUNC(datein, 'MM')";
+            dateFormat = "YYYY-MM";
+            break;
+        case "yearly":
+            groupBy = "TRUNC(datein, 'YYYY')";
+            dateFormat = "YYYY";
+            break;
+        default:
+            res.status(400).send("Invalid interval");
+            return;
+    }
+
+    let query = `SELECT 
+                  TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+                  SERVICE.SERVICE_NAME, 
+                  COUNT(DISTINCT SERVICE_ORDER.CUST_ID) AS num_customers, 
+                  SUM(SERVICE.PRICE) AS total_order_amount
+                FROM 
+                  SERVICE
+                  JOIN SERVICE_ORDER ON SERVICE.SERVICE_ID = SERVICE_ORDER.SERVICE_ID 
+                WHERE 
+                  datein >= '01-Jan-98' AND dateout <= '31-Dec-23' 
+                GROUP BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME 
+                ORDER BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME`;
+  
+    if (service !== 'All Services') {
+        // Update query to include service filter
+        query = `SELECT 
+                  TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+                  SERVICE.SERVICE_NAME, 
+                  COUNT(DISTINCT SERVICE_ORDER.CUST_ID) AS num_customers, 
+                  SUM(SERVICE.PRICE) AS total_order_amount
+                FROM 
+                  SERVICE
+                  JOIN SERVICE_ORDER ON SERVICE.SERVICE_ID = SERVICE_ORDER.SERVICE_ID 
+                WHERE 
+                  datein >= '01-Jan-98' AND dateout <= '31-Dec-23' 
+                  AND SERVICE.SERVICE_ID = '${service}' 
+                GROUP BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME 
+                ORDER BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME`;
+    }
+
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows);
+    res.json(result.rows);
+});
+
   
   
 app.listen(PORT, () => {
