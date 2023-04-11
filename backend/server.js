@@ -345,7 +345,7 @@ app.post('/service-order', async function(req, res) {
     let description = req.body.description;
     // Query Creation
     let query = `INSERT INTO SERVICE_ORDER VALUES (${service_orderAttributes})`;
-    let binds = [order_id, cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase()];
+    let binds = [cust_id, vehicle_id, emp_id, order_status_id, service_id, ttlamount, datein, dateout, odometer, description.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected service_order by ROWID to send back
     let lastItemQuery = `SELECT * FROM SERVICE_ORDER WHERE ROWID = '${CRUDOP.lastRowid}'`;
