@@ -1166,7 +1166,7 @@ app.post('/sales-data', async function(req, res) {
     res.json(result.rows);
   });
 
-app.post('/api/sales-per-month', async (req, res) => {
+app.get('/api/sales-per-month', async function (req, res) {
     try {
     // Get the current month and year
     const currentDate = new Date();
@@ -1174,27 +1174,20 @@ app.post('/api/sales-per-month', async (req, res) => {
     const currentYear = currentDate.getFullYear();
   
     // Build the SQL query to retrieve the sales data for the current month and year
-    const query = `
-    SELECT SUM(ttlamount) as totalSales, TO_CHAR(datein, 'YYYY-MM') as month
-    FROM service_order
-    WHERE datein < TO_DATE('2022-12-30', 'YYYY-MM-DD')
-    AND datein >= ADD_MONTHS(TO_DATE('2022-12-30', 'YYYY-MM-DD'), -12)
-    GROUP BY TO_CHAR(datein, 'YYYY-MM')
-    ORDER BY TO_CHAR(datein, 'YYYY-MM') ASC;
-      `;
+    const query = "SELECT * FROM monthly_sales";
     // Execute the query and retrieve the results
     const results = await crudOP(query, undefined, true);
     // Parse the results and format them for use in the chart
-    const salesData = [];
-      for (const row of results.rows) {
-        salesData.push({
-          month: row.month.toLocaleDateString('en-US', { month: 'long' }), // Format the month as a string
-          sales: row.totalSales
-        });
-      }
+    console.log(results)
+    const months = [];
+    const sales = [];
+    for (const row of results.rows) {
+      months.push(row.month.toLocaleDateString('en-US', { month: 'long' }));
+      sales.push(row.totalSales);
+    }
   
       // Send the formatted data back to the client as JSON
-      res.json(salesData);
+      res.json(results.rows);
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal server error');

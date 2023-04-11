@@ -3,160 +3,107 @@
     <head>
         <%- include('partials/head.ejs'); %>
         <title>Dashboard</title>
-        <link rel = "icon" href = 
-    "https://www.iconarchive.com/download/i132085/bootstrap/bootstrap/Bootstrap-car-front.1024.png" 
-            type = "image/x-icon">
+        <link rel="icon" href="https://www.iconarchive.com/download/i132085/bootstrap/bootstrap/Bootstrap-car-front.1024.png" type="image/x-icon">     
       </head>
   <body id="main">
     <div class="container">
         <%- include('partials/navbar.ejs'); %>
       <div class="right-column">
         <%- include('partials/header.ejs'); %>
-        <div class="bottomrow">this page will have all the graphs and analytics</div>
+        <div class="bottomrow">
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+          <p>Amount of Sales each Week/Month/Year</p>
+          <select class="form-control" id="interval-select">
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+          <div>
+            <canvas id="sales-chart" style="width: 500px; height: 300px;"></canvas>
+            </div>
+          <script>
+      $(document).ready(function() {
+    var $salesChart = $('#sales-chart');
+    var salesData = {
+        labels: [],
+        datasets: [{
+            label: 'Sales',
+            data: [],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+    var salesChart = new Chart($salesChart, {
+        type: 'line',
+        data: salesData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+    $('#interval-select').on('change', function() {
+        var interval = $(this).val();
+        postData("http://localhost:3000/sales-data?interval=" + interval)
+            .then(function(data) {
+                salesData.labels = [];
+                salesData.datasets[0].data = [];
+                if (data && data.length > 0) {
+                    // group sales data by month
+                    var monthlySalesData = {};
+                    $.each(data, function(index, row) {
+                        var date = new Date(row[0]);
+                        if (!isNaN(date)) {
+                            var monthYear = moment(date).format('MMM YYYY');
+                            if (monthlySalesData[monthYear]) {
+                                monthlySalesData[monthYear] += row[1];
+                            } else {
+                                monthlySalesData[monthYear] = row[1];
+                            }
+                        }
+                    });
+
+                    // populate sales data for each month
+                    $.each(monthlySalesData, function(monthYear, sales) {
+                        salesData.labels.push(monthYear);
+                        salesData.datasets[0].data.push(sales);
+                    });
+                } else {
+                    salesData.labels = ['No data available'];
+                    salesData.datasets[0].data = [0];
+                }
+                salesChart.update();
+            })
+            .catch(function(error) {
+                console.error(error);
+                // handle errors
+                salesData.labels = ['Error: ' + error.message];
+                salesData.datasets[0].data = [0];
+                salesChart.update();
+            });
+    });
+});
+            async function postData(url = "", data) {
+              const response = await fetch(url, {
+                method: "POST",
+                mode: "cors",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+              });
+              return response.json();
+            }
+          </script>
+          
+        </div>
       </div>
     </div>   
-    <header>
-      <!-- Add your header content here -->
-    </header>
-    <nav>
-      <!-- Add your navigation elements here -->
-      <ul>
-        <li><a href="#sales-chart">Sales Chart</a></li>
-        <li><a href="#map-chart">Map Chart</a></li>
-        <li><a href="#pie-chart">Pie Chart</a></li>
-        <li><a href="https://www.example.com">External Link</a></li>
-      </ul>
-    </nav>
-    <main>
-      <section>
-        <div id="sales-chart" style="height: 500px;">
-        <h2>Average Sales Per Month</h2>
-        <canvas id="line-chart"></canvas>
-        <!-- Include any necessary scripts to generate your line chart -->
-        <h2>Average Sales Per Month</h2>
-          <canvas id="line-chart"></canvas>
-          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-          <script>
-            // Get the data from your API endpoint using an AJAX call
-            fetch('https://localhost:3000/api/sales-per-month')
-              .then(response => response.json())
-              .then(data => {
-                // Create the line chart using Chart.js
-                new Chart(document.getElementById('line-chart'), {
-                  type: 'line',
-                  data: {
-                    labels: data.months,
-                    datasets: [{
-                      label: 'Average Sales',
-                      data: data.sales,
-                      fill: false,
-                      borderColor: 'rgb(75, 192, 192)',
-                      tension: 0.1
-                    }]
-                  },
-                  options: {
-                    responsive: true,
-                    scales: {
-                      yAxes: [{
-                        ticks: {
-                          beginAtZero: true
-                        }
-                      }]
-                    }
-                  }
-                });
-              });
-          </script>
-        </div>
-      </section>
-      <section>
-        <h2>Number of Customers per Zip Code</h2>
-        <div id="map"></div>
-        <!-- Include any necessary scripts to generate your map chart -->
-        <h2>Number of Customers per Zip Code</h2>
-        <div id="map" style="height: 500px;"></div>
-        <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
-        <script>
-          // Get the data from your API endpoint using an AJAX call
-          fetch('/api/customers-by-zip')
-            .then(response => response.json())
-            .then(data => {
-              // Create the map using Leaflet.js
-              const map = L.map('map').setView([29.7604, -95.3698], 10);
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-              }).addTo(map);
-              // Add GeoJSON data and style each zip code based on the number of customers
-              L.geoJSON(geojsonData, {
-                style: function(feature) {
-                  const zipCode = feature.properties.ZCTA5CE10;
-                  const numCustomers = data[zipCode] || 0;
-                  return {
-                    fillColor: getColor(numCustomers),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.7
-                  };
-                },
-                onEachFeature: function(feature, layer) {
-                  const zipCode = feature.properties.ZCTA5CE10;
-                  const numCustomers = data[zipCode] || 0;
-                  layer.bindPopup(`<b>${zipCode}</b><br>${numCustomers} customers`);
-                }
-              }).addTo(map);
-              // Define the color scale for the map
-              function getColor(numCustomers) {
-                return numCustomers > 100 ? '#800026' :
-                      numCustomers > 50  ? '#BD0026' :
-                      numCustomers > 20  ? '#E31A1C' :
-                      numCustomers > 10  ? '#FC4E2A' :
-                      numCustomers > 5   ? '#FD8D3C' :
-                      numCustomers > 0   ? '#FEB24C' :
-                                            '#FFEDA0';
-              }
-            });
-        </script>
-      </section>
-      <section>
-        <h2>Top 10 Most Common Services</h2>
-        <canvas id="pie-chart"></canvas>
-        <!-- Include any necessary scripts to generate your pie chart -->
-        <h2>Top 10 Most Common Services</h2>
-          <div id="pie-chart" style="height: 500px;"></div>
-          <script src="http://cdn.jsdelivr.net/npm/apexcharts@3.28.0/dist/apexcharts.min.js"></script>
-          <script>
-            // Get the data from your API endpoint using an AJAX call
-            fetch('/api/top-10-services')
-              .then(response => response.json())
-              .then(data => {
-                // Format the data for use in the chart
-                const chartData = {
-                  labels: data.map(item => item.serviceType),
-                  series: data.map(item => item.numServices)
-                };
-                // Create the chart using ApexCharts.js
-                const options = {
-                  chart: {
-                    type: 'pie',
-                    height: 500
-                  },
-                  series: chartData.series,
-                  labels: chartData.labels,
-                  legend: {
-                    position: 'bottom'
-                  }
-                };
-                const chart = new ApexCharts(document.querySelector('#pie-chart'), options);
-                chart.render();
-              });
-          </script>        
-      </section>
-    </main>
-    <footer>
-      <!-- Add your footer content here -->
-    </footer>
   </body>
 </html>
-
