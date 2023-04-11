@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>employee Page</title>
+    <title>Employee Page</title>
     <%- include('partials/head.ejs'); %>
     <style>
     table, td, th {
@@ -42,17 +42,36 @@ img {
         <div class="bottomrow">
           <div class="row">
             <div class="column">
-              <img id="preview" src="/images/profile-placeholder.png" alt="Profile Photo" width="200" height="180">
-              <input type="file" id="photo" onchange="previewPhoto()">
+              <h1 id="empFirst_name"></h1>
+              <h1 id="empLastName"></h1>
             </div>
             <div class="column">
-              <h1 id="empFirst_name"></h1>
-              <h1 id="empMiddle_in"></h1>
-              <h1 id="empLast_name"></h1>
-              <p id="empAddress"></p>
-              <p id="empPhone"></p>
-              <p id="empEmail"></p>
-              <button type="submit" class="btn btn-primary" id="info-button"> Edit</button>
+              <img id="preview" src="/images/profile-placeholder.png" alt="Profile Photo" width="150" height="135">
+              <input type="file" id="photo" onchange="previewPhoto()">
+            </div>
+            <div class="row">
+              <table>
+                <tr>
+                  <th>Address</th>
+                  <th>City</th>
+                  <th>Zip</th>
+                  <th>Hired</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Action</th>
+                </tr>
+                <tr>
+                  <td><a id="empAdd"></a></td>
+                  <td><a id="empCity"></a></td>
+                  <td><a id="empZip"></a></td>
+                  <td><a id="empDate"></a></td>
+                  <td><a id="empGender"></a></td>
+                  <td><a id="empEmail"></a></td>
+                  <td><a id="empPhone"></a></td>
+                  <td><button type="submit" class="btn btn-primary" id="info-button">Edit</button></td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
@@ -81,8 +100,6 @@ img {
             window.location.href="/editemployee";
           }
 
-
-
           // Read emp_id from session storage
           const emp_id = sessionStorageControl.readItem("emp_id");
           async function getemp (empID) {
@@ -97,8 +114,6 @@ img {
             return match
           }
 
-
-
           //Edit with session storage
 
           async function createPage (empID) {
@@ -106,25 +121,83 @@ img {
             // GET employee table
             const employee = await getemp(empID);
             const empFirst_name = employee[3] || 'No First Name Found';
-            const empMiddle_in = employee[4];
-            const empLast_name = employee[5] || 'No Last Name Found';
-            const empAddress = employee[6] || 'No Address Found';
-            const empPhone = employee[9] || 'No Phone Number Found';
-            const empEmail = employee[10] || 'No Email Found';
+            const empLastName = employee[4] || 'No Last Name Found';
+            const empAdd = employee[5] || 'No Address Found';
+            const empCity = employee[6] || 'No City Found';
+            const empDate = employee[9] || 'No Hire Date Found';
+            const empGender = employee[10] || 'No Gender Found';
+            const empEmail = employee[11] || 'No Email Found';
+            const empPhone = employee[8] || 'No Phone Found';
+            const empZip = employee[7] || 'No Zip Found';
             // Elements for employee Section
             const empFirst_nameEle = document.getElementById("empFirst_name");
-            const empMiddle_inEle = document.getElementById("empMiddle_in");
-            const empLast_nameEle = document.getElementById("empLast_name");
-            const empAddressEle = document.getElementById("empAddress");
-            const empPhoneEle = document.getElementById("empPhone");
+            const empLastNameEle = document.getElementById("empLastName");
+            const empAddEle = document.getElementById("empAdd");
+            const empCityEle = document.getElementById("empCity");
+            const empDateEle = document.getElementById("empDate");
+            const empGenderEle = document.getElementById("empGender");
             const empEmailEle = document.getElementById("empEmail");
+            const empPhoneEle = document.getElementById("empPhone");
+            const empZipEle = document.getElementById("empZip");
             // Add Dynamic Information
             empFirst_nameEle.textContent = empFirst_name;
-            empMiddle_inEle.textContent = empMiddle_in;
-            empLast_nameEle.textContent = empLast_name;
-            empAddressEle.textContent = empAddress;
-            empPhoneEle.textContent = empPhone;
+            empLastNameEle.textContent = empLastName;
+            empAddEle.textContent = empAdd;
+            empCityEle.textContent = empCity;
+            empDateEle.textContent = empDate;
+            empGenderEle.textContent = empGender;
             empEmailEle.textContent = empEmail;
+            empPhoneEle.textContent = empPhone;
+            empZipEle.textContent = empZip;
+
+            //Service ORDER
+            const service_order = await getServiceOrder(cust_id);
+            const servicesTable = document.getElementById("services");
+            for (const order of service_order){
+              let order_id = order[0];
+              let order_status_id = order[4]
+              let service_id = order[5];
+              let ttlAmount = order[6];
+              let dateinRAW = new Date (order[7]);
+              let datein = dateinRAW.toLocaleDateString();
+              let dateoutRAW = new Date(order[8]);
+              let dateout = dateoutRAW.toLocaleDateString();
+              // GET service table
+              let service = await getService(service_id);
+              let service_name = service[1];
+
+              // Create Row identified by order_id
+              let serviceRow = document.createElement("tr");
+              serviceRow.setAttribute("id", order_id);
+              servicesTable.appendChild(serviceRow);
+                // Create Entry
+              let serviceEle = document.createElement("td");
+              let serviceText = document.createTextNode(service_name);
+              serviceEle.appendChild(serviceText);
+              serviceRow.appendChild(serviceEle);
+
+              let dateInEle = document.createElement("td");
+              let dateInText = document.createTextNode(datein);
+              dateInEle.appendChild(dateInText);
+              serviceRow.appendChild(dateInEle);
+
+              let dateOutEle = document.createElement("td");
+              let dateOutText = document.createTextNode(dateout);
+              dateOutEle.appendChild(dateOutText);
+              serviceRow.appendChild(dateOutEle);
+
+              let totalEle = document.createElement("td");
+              let totalText = document.createTextNode("$"+ttlAmount);
+              totalEle.appendChild(totalText);
+              serviceRow.appendChild(totalEle);
+
+              let orderAction = document.createElement("button");
+              let orderActionText = document.createTextNode("Edit");
+              orderAction.setAttribute("data-order_id", order_id);
+              orderAction.setAttribute("onclick", "editServiceOrder(this.dataset.order_id)");
+              orderAction.appendChild(orderActionText);
+              serviceRow.appendChild(orderAction);
+            }
           }
           createPage(emp_id);
           function previewPhoto() {

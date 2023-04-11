@@ -136,7 +136,7 @@
       let headerRow = document.createElement("div");
       headerRow.classList.add("list-group-item");
       headerRow.classList.add("list-group-item-secondary");
-      headerRow.innerHTML = "<div class='row'><div class='col'>First Name</div><div class='col'>Middle Name</div><div class='col'>Last Name</div><div class='col'>Phone</div><div class='col'>Email</div><div class='col'>Status</div></div>";
+      headerRow.innerHTML = "<div class='row'><div class='col'>Customer</div><div class='col'>Service</div><div class='col'>Date In</div><div class='col'>Employee</div><div class='col'>Total</div><div class='col'>Status</div></div>";
       OrderList.appendChild(headerRow);
 
       // Create search result rows
@@ -148,12 +148,12 @@
           }
         }
         let searchResult = document.createElement("div")
-        let firstName = document.createTextNode(`${Order[3]}`);
-        let middleName = document.createTextNode(`${Order[4]}`);
-        let lastName = document.createTextNode(`${Order[5]}`);
-        let phone = document.createTextNode(`${Order[9]}`);
-        let email = document.createTextNode(`${Order[10]}`);
-        let status = document.createTextNode(`${Order[11]}`);
+        let firstName = document.createTextNode(`${Order[12]}`);
+        let middleName = document.createTextNode(`${Order[13]}`);
+        let lastName = document.createTextNode(`${Order[11]}`);
+        let phone = document.createTextNode(`${Order[14]}`);
+        let email = document.createTextNode(`${Order[6]}`);
+        let status = document.createTextNode(`${Order[15]}`);
 
       searchResult.classList.add("list-group-item");
       searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${status.textContent}</div></div>`;
@@ -162,7 +162,7 @@
         window.location.href = '/Order';
       });
         searchResult.classList.add("list-group-item");
-        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${phone.data}</div><div class='col'>${email.data}</div><div class='col'>${status.data}</div></div>`;
+        searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${phone.data}</div><div class='col'><a>$ </a>${email.data}</div><div class='col'>${status.data}</div></div>`;
         OrderList.appendChild(searchResult);
       });
 

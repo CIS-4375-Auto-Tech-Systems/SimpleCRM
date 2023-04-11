@@ -2,7 +2,7 @@
 <html>
   <head>
     <%- include('partials/head.ejs'); %>
-    <title>Edit employee Form</title>
+    <title>Edit Employee</title>
     <link rel = "icon" href = 
 "https://cdn.icon-icons.com/icons2/2645/PNG/512/person_plus_icon_159924.png" 
         type = "image/x-icon">
@@ -26,10 +26,6 @@
             <!-- the name attribute is used to create a request so please use it-->
             <label for="inputFirstName" class="form-label">First Name<span class="required">*</span></label>
             <input type="text" class="form-control" id="firstName" name="first_name" required>
-          </div>
-          <div class="col-md-1">
-            <label for="inputMI" class="form-label">Middle Initial</label>
-            <input type="text" min="0" max="1"class="form-control" id="MI" name="middle_in">
           </div>
           <div class="col-md-2">
             <label for="inputLastName" class="form-label">Last Name<span class="required">*</span></label>
@@ -64,6 +60,10 @@
           <div class="col-md-1">
             <label for="zip" class="form-label">Zip<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputZip" name="zip">
+          </div>
+          <div class="col-md-2">
+            <label for="inputdatehired" class="form-label">Date Hired</label>
+            <input type="date" class="form-control" id="Date-In">
           </div>
           <div class="col-md-2">
             <label for="status" class="form-label">Status<span class="required">*</span></label>
@@ -113,21 +113,20 @@
               async function currentData(empID){
                 const employee = await getemp(empID);
                 document.getElementById("firstName").value = employee[3];
-                document.getElementById("MI").value = employee[4];
-                document.getElementById("lastName").value = employee[5];
-                document.getElementById("inputPhone").value = employee[9];
-                document.getElementById("inputEmail").value = employee[10];
-                document.getElementById("inputAddress").value = employee[6];
-                document.getElementById("inputCity").value = employee[7];
+
+                document.getElementById("lastName").value = employee[4];
+                document.getElementById("inputPhone").value = employee[8];
+                document.getElementById("inputEmail").value = employee[11];
+                document.getElementById("inputAddress").value = employee[5];
+                document.getElementById("inputCity").value = employee[6];
                 document.getElementById("state").value = employee[2];
-                document.getElementById("inputZip").value = employee[8];
+                document.getElementById("inputZip").value = employee[7];
                 document.getElementById("status").value = employee[1];
               }
               currentData(emp_id);
               function editemployee(){
-                //Form
+                   //Form
                 const first_name = document.getElementById("firstName").value;
-                const middle_in = document.getElementById("MI").value;
                 const last_name = document.getElementById("lastName").value;
                 const address = document.getElementById("inputAddress").value;
                 const city = document.getElementById("inputCity").value;
@@ -136,11 +135,11 @@
                 const phone = document.getElementById("inputPhone").value;
                 const email = document.getElementById("inputEmail").value;
                 const emp_status_id = document.getElementById("status").value;
+                const datehired = document.getElementById("Date-In").value;
                 //
                 const formdata = {
                   "emp_id":emp_id,
                   "first_name":first_name,
-                  "middle_in":middle_in,
                   "last_name":last_name,
                   "address": address,
                   "city":city,
@@ -148,7 +147,8 @@
                   "zip":zip,
                   "phone":phone,
                   "email":email,
-                  "emp_status_id": emp_status_id
+                  "emp_status_id": emp_status_id,
+                  "datehired":datehired,
                 }
                 //
                 // PUT request
