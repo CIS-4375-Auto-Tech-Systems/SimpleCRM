@@ -82,7 +82,7 @@
           <form>
             <form>
               <fieldset style="display: flex;">
-                <input name="searchValue" type="text" id="searchBar" placeholder="Search active Orders...">
+                <input name="searchValue" type="text" id="searchBar" placeholder="Search by Service...">
                 <input type="button" class="btn btn-primary" id="searchButton" onclick="search()" value="Search">
               </fieldset>
             </form>
@@ -157,10 +157,6 @@
 
       searchResult.classList.add("list-group-item");
       searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.textContent}</div><div class='col'>${middleName.textContent}</div><div class='col'>${lastName.textContent}</div><div class='col'>${phone.textContent}</div><div class='col'>${email.textContent}</div><div class='col'>${status.textContent}</div></div>`;
-      searchResult.addEventListener('click', function() {
-        sessionStorage.setItem('order_id', Order[0]);
-        window.location.href = '/Order';
-      });
         searchResult.classList.add("list-group-item");
         searchResult.innerHTML = `<div class='row'><div class='col'>${firstName.data}</div><div class='col'>${middleName.data}</div><div class='col'>${lastName.data}</div><div class='col'>${phone.data}</div><div class='col'><a>$ </a>${email.data}</div><div class='col'>${status.data}</div></div>`;
         OrderList.appendChild(searchResult);
