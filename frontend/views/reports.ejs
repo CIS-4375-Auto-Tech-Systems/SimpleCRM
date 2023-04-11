@@ -51,7 +51,8 @@
       </tbody>
     </table>
     <!-- print report -->
-    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
+    <button class="btn btn-primary" id="print-sales-report">Print Report</button>
+
   </div>
 </div>
 
@@ -128,7 +129,8 @@ async function postData(url = "", data) {
   
   <div id="services-table-container"></div>
   <!-- print report -->
-  <button class="btn btn-primary" id="print-customer-report">Print Report</button>
+  <button class="btn btn-primary" id="print-services-report">Print Report</button>
+
   </div>
   
   <script>
@@ -270,7 +272,18 @@ function getCustomerData(interval) {
     var tabToShow = $(this).attr('href');
     $('.tab-pane').removeClass('show active');
     $(tabToShow).addClass('show active');
-  });</script>
+  });
+  function printReport() {
+  window.print();
+}
+
+  // For the Sales tab
+$('#print-sales-report').on('click', printReport);
+
+// For the Services tab
+$('#print-services-report').on('click', printReport);
+
+  </script>
 
       </div>
     </div>

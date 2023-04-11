@@ -13,15 +13,15 @@
         <div class="bottomrow">
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+          <p>Amount of Sales each Week/Month/Year</p>
           <select class="form-control" id="interval-select">
             <option value="weekly">Weekly</option>
             <option value="monthly">Monthly</option>
             <option value="yearly">Yearly</option>
           </select>
           <div>
-            <canvas id="sales-chart" style="width: 500px; height: 400px;"></canvas>
-
-          </div>
+            <canvas id="sales-chart" style="width: 500px; height: 300px;"></canvas>
+            </div>
           <script>
       $(document).ready(function() {
     var $salesChart = $('#sales-chart');
@@ -48,6 +48,7 @@
             }
         }
     });
+
 
     $('#interval-select').on('change', function() {
         var interval = $(this).val();
@@ -90,8 +91,6 @@
             });
     });
 });
-
-          
             async function postData(url = "", data) {
               const response = await fetch(url, {
                 method: "POST",
