@@ -1166,7 +1166,7 @@ app.post('/sales-data', async function(req, res) {
     res.json(result.rows);
   });
 
-app.post('/api/sales-per-month', async (req, res) => {
+app.get('/api/sales-per-month', async function (req, res) {
     try {
     // Get the current month and year
     const currentDate = new Date();
@@ -1174,27 +1174,20 @@ app.post('/api/sales-per-month', async (req, res) => {
     const currentYear = currentDate.getFullYear();
   
     // Build the SQL query to retrieve the sales data for the current month and year
-    const query = `
-    SELECT SUM(ttlamount) as totalSales, TO_CHAR(datein, 'YYYY-MM') as month
-    FROM service_order
-    WHERE datein < TO_DATE('2022-12-30', 'YYYY-MM-DD')
-    AND datein >= ADD_MONTHS(TO_DATE('2022-12-30', 'YYYY-MM-DD'), -12)
-    GROUP BY TO_CHAR(datein, 'YYYY-MM')
-    ORDER BY TO_CHAR(datein, 'YYYY-MM') ASC;
-      `;
+    const query = "SELECT * FROM monthly_sales";
     // Execute the query and retrieve the results
     const results = await crudOP(query, undefined, true);
     // Parse the results and format them for use in the chart
-    const salesData = [];
-      for (const row of results.rows) {
-        salesData.push({
-          month: row.month.toLocaleDateString('en-US', { month: 'long' }), // Format the month as a string
-          sales: row.totalSales
-        });
-      }
+    console.log(results)
+    const months = [];
+    const sales = [];
+    for (const row of results.rows) {
+      months.push(row.month.toLocaleDateString('en-US', { month: 'long' }));
+      sales.push(row.totalSales);
+    }
   
       // Send the formatted data back to the client as JSON
-      res.json(salesData);
+      res.json(results.rows);
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal server error');
@@ -1270,6 +1263,79 @@ app.post('/service-tab', async function(req, res) {
     console.log(result.rows);
     res.json(result.rows);
 });
+
+app.post('/customer-report', async function(req, res) {
+    // Extract request body parameters
+    const interval = req.body.interval; // Update to use req.body instead of req.query
+    
+    // Define variables for groupBy and dateFormat based on interval
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+        case "daily":
+            groupBy = "TRUNC(datein, 'DD')";
+            dateFormat = "YYYY-MM-DD";
+            break;
+        case "weekly":
+            groupBy = "TRUNC(datein, 'IW')";
+            dateFormat = "IYYY-IW";
+            break;
+        case "monthly":
+            groupBy = "TRUNC(datein, 'MM')";
+            dateFormat = "YYYY-MM";
+            break;
+        case "yearly":
+            groupBy = "TRUNC(datein, 'YYYY')";
+            dateFormat = "YYYY";
+            break;
+        default:
+            res.status(400).send("Invalid interval");
+            return;
+    }
+
+    // Build the query string
+    let query = `
+        SELECT 
+            TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME,
+            SUM(so.TTLAMOUNT) AS total_amount
+        FROM 
+            customer c
+        JOIN 
+            (
+                SELECT 
+                    cust_id,
+                    SUM(TTLAMOUNT) AS TTLAMOUNT,
+                    DATEIN,
+                    DATEOUT
+                FROM 
+                    service_order
+                GROUP BY 
+                    cust_id,
+                    DATEIN,
+                    DATEOUT
+            ) so ON c.cust_id = so.cust_id
+        GROUP BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+        ORDER BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+    `;
+
+    // Execute the query and send the response
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows);
+    res.json(result.rows);
+});
+
+
 
   
   

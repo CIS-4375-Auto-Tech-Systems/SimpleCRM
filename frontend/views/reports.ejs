@@ -4,7 +4,19 @@
     <%- include('partials/head.ejs'); %>
     <title>Reports</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
+    <script>
+      function printReport(divID){
+        let divContents = document.getElementById(divID).innerHTML;
+        let a = window.open('','', 'height=500, width=500');
+        a.document.write('<html>');
+        a.document.write('<body>');
+        a.document.write(divContents);
+        a.document.write('</body>');
+        a.document.write('</html>');
+        a.document.close();
+        a.print();
+      }
+    </script>
   </head>
   <body id="main">
     <div class="container">
@@ -51,8 +63,7 @@
       </tbody>
     </table>
     <!-- print report -->
-    <button class="btn btn-primary" id="print-sales-report">Print Report</button>
-
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('sales-tab')">Print Report</button>
   </div>
 </div>
 
@@ -106,33 +117,33 @@ async function postData(url = "", data) {
 </script>
 
 <!-- Services Tab + filter by service name: dropdown of services -->
-<div id="services-tab" class="tab-pane fade">
-  <h3>Services Report Summary</h3>
-  <div class="form-group">
-    <label for="interval-select">Select Report:</label>
-    <select class="form-control" id="services-interval-select">
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-      <option value="yearly">Yearly</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="service-select">Filter by Service Name:</label>
-    <select class="form-control" id="service-select">
-      <option selected>All Services</option>
-      <% services.forEach(function(service){ %>
-        <option value=<%= service[0] %>><%= service[1] %></option>
-      <% }); %>
-    </select>
-  </div>
-  
-  <div id="services-table-container"></div>
-  <!-- print report -->
-  <button class="btn btn-primary" id="print-services-report">Print Report</button>
-
-  </div>
-  
+<div class="tab-content">
+  <div id="services-tab" class="tab-pane fade">
+    <h3>Services Report Summary</h3>
+    <div class="form-group">
+      <label for="interval-select">Select Report:</label>
+      <select class="form-control" id="services-interval-select">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="service-select">Filter by Service Name:</label>
+      <select class="form-control" id="service-select">
+        <option selected>All Services</option>
+        <% services.forEach(function(service){ %>
+          <option value=<%= service[0] %>><%= service[1] %></option>
+        <% }); %>
+      </select>
+    </div>
+    
+    <div id="services-table-container"></div>
+    <!-- print report -->
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('services-tab');">Print Report</button>
+    </div>
+</div>
   <script>
   // generate services table based on selected interval and selected service
   function generateServicesTable(interval, service) {
@@ -180,88 +191,72 @@ async function postData(url = "", data) {
   });
   </script>
   
-
-
-<!-- Customer Tab + filter by customer name: dropdown of customers -->
+<!-- Customer Tab -->
 <div class="tab-content">
-<div id="customer-tab" class="tab-pane fade">
-  <h3>Customer Report Summary</h3>
-  <div class="form-group">
-    <label for="interval-select">Select Report:</label>
-    <select class="form-control" id="customer-interval-select">
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-      <option value="yearly">Yearly</option>
-    </select>
-  </div>
+  <div id="customer-tab" class="tab-pane fade">
+    <h3>Customer Report Summary</h3>
+    <div class="form-group">
+      <label for="customer-interval-select">Select Report:</label>
+      <select class="form-control" id="customer-interval-select">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
 
-  <div id="customer-table-container">
-    <table id="customer-table" class="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Last Name</th>
-          <th>Middle Initial</th>
-          <th>First Name</th>
-          <th>Total Sales</th>
-        </tr>
-      </thead>
-      <tbody id="customer-table-body"></tbody>
-    </table>
+    <div id="customer-table-container">
+      <table id="customer-table" class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Last Name</th>
+            <th>Middle Initial</th>
+            <th>First Name</th>
+            <th>Total Sales</th>
+          </tr>
+        </thead>
+        <tbody id="customer-table-body"></tbody>
+      </table>
+    </div>
+    <div id="customers-table-container"></div>  
+      <!-- print report -->
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('customer-tab')">Print Report</button>
   </div>
-  
-  <!-- print report -->
-  <button class="btn btn-primary" id="print-customer-report">Print Report</button>
 </div>
 
 <script>
   // populate the customer table with data based on the selected interval
   $('#customer-interval-select').on('change', function() {
     var interval = $(this).val();
-    var customerData = getCustomerData(interval);
-    var $customerTableBody = $('#customer-table-body');
-    $customerTableBody.empty();
-    $.each(customerData, function(index, row) {
-      var $tr = $('<tr>');
-      $tr.append($('<td>').text(row.date));  
-      $tr.append($('<td>').text(row.lastName));
-      $tr.append($('<td>').text(row.middleInitial));
-      $tr.append($('<td>').text(row.firstName));
-      $tr.append($('<td>').text(row.totalSales));
-      $customerTableBody.append($tr);
-    });
+    getCustomerData(interval);
   });
 
- // simulate getting customer data from server based on the interval **dummy data**
-function getCustomerData(interval) {
-  var data = [];
-  if (interval === 'daily') {
-    data.push({date: '2023-04-07', lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 100});
-    data.push({date: '2023-04-07', lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 200});
-    data.push({date: '2023-04-07', lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 300});
-  } else if (interval === 'weekly') {
-    data.push({date: '2023-04-01', lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 500});
-    data.push({date: '2023-04-01', lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 1000});
-    data.push({date: '2023-04-01', lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 1500});
-  } else if (interval === 'Monthly') {
-    data.push({date: '2023-04-01', lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 2000});
-    data.push({date: '2023-04-01', lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 2500});
-    data.push({date: '2023-04-01', lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 3000});
-    data.push({date: '2023-03-01', lastName: 'Jones', middleInitial: 'D', firstName: 'Mike', totalSales: 3500});
-    data.push({date: '2023-03-01', lastName: 'Davis', middleInitial: 'E', firstName: 'Kate', totalSales: 4000});
-  } else if (interval === 'Yearly') {
-    data.push({date: '2022-01-01', lastName: 'Doe', middleInitial: 'A', firstName: 'John', totalSales: 22000});
-    data.push({date: '2022-01-01', lastName: 'Smith', middleInitial: 'B', firstName: 'Jane', totalSales: 24500});
-    data.push({date: '2022-01-01', lastName: 'Williams', middleInitial: 'C', firstName: 'Bob', totalSales: 13000});
-    data.push({date: '2022-01-01', lastName: 'Jones', middleInitial: 'D', firstName: 'Mike', totalSales: 35400});
-    data.push({date: '2022-01-01', lastName: 'Davis', middleInitial: 'E', firstName: 'Kate', totalSales: 40200});
+  // Fetch customer data from backend API
+  function getCustomerData(interval) {
+    $.ajax({
+      url: 'http://localhost:3000/customer-report', // Update to correct backend API endpoint
+      method: 'POST', // Update to use POST method
+      data: {interval: interval}, // Update to pass interval as request body
+      success: function(data) {
+        var $customerTableBody = $('#customer-table-body');
+        $customerTableBody.empty();
+        $.each(data, function(index, row) {
+          var $tr = $('<tr>');
+          $tr.append($('<td>').text(row[0]));
+          $tr.append($('<td>').text(row[1]));
+          $tr.append($('<td>').text(row[2]));
+          $tr.append($('<td>').text(row[3]));
+          $tr.append($('<td>').text(row[4]));
+          $customerTableBody.append($tr);
+          console.log(row)
+        });
+      },
+      error: function(error) {
+        console.error('Error fetching customer data:', error);
+      }
+    });
   }
-  return data;
-}
-
-
-
 </script>
 
 
