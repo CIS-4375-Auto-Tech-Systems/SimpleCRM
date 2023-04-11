@@ -131,11 +131,14 @@ app.post('/employeelookup', async function(req, res){{
 app.post('/servicelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT * 
-    FROM service_order
-    WHERE LOWER(description) LIKE '%' || LOWER(:search_value) || '%'
-    ORDER BY datein DESC
-        `;
+    SELECT so.*, TO_CHAR(so.datein, 'MM/DD/YYYY') AS formatted_datein, c.first_name AS customer_first_name, s.service_name, e.fname AS employee_fname, os.status
+    FROM service_order so
+    JOIN customer c ON so.cust_id = c.cust_id
+    JOIN service s ON so.service_id = s.service_id
+    JOIN employee e ON so.emp_id = e.emp_id
+    JOIN order_status os ON so.order_status_id = os.order_status_id
+    WHERE LOWER(so.description) LIKE '%' || LOWER(:search_value) || '%'
+    ORDER BY so.datein DESC`;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
     //
@@ -895,7 +898,7 @@ app.post('/vehicle-make', async function(req, res){
     // Column Name
     const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
-    let make_name = req.body.make_name;
+    let make_name = req.body.make;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
     let binds = [make_name.toUpperCase()];
