@@ -898,7 +898,7 @@ app.post('/vehicle-make', async function(req, res){
     // Column Name
     const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
-    let make_name = req.body.make_name;
+    let make_name = req.body.make;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
     let binds = [make_name.toUpperCase()];
