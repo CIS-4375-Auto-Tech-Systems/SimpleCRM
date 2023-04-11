@@ -58,7 +58,7 @@
                 }
                 postData("http://localhost:3000/vehicle-model", formdata)
                 .then((data) => {
-                    window.close();
+                    window.location.href = '/success';
                 }).catch((error)=> {
                     console.log(error);
                 });

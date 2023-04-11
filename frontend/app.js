@@ -440,5 +440,9 @@ app.get('/', async function(req, res) {
 
   });
   
+  app.get('/success', function (req,res){
+    res.render('success');
+  });
+
 // start the express application on on port 8080
 app.listen(port, ()=>console.log('Application started listening on port '+port));
