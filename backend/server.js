@@ -131,11 +131,14 @@ app.post('/employeelookup', async function(req, res){{
 app.post('/servicelookup', async function(req, res){{
     // Query has to be exact match including case
     let query = `
-    SELECT * 
-    FROM service_order
-    WHERE LOWER(description) LIKE '%' || LOWER(:search_value) || '%'
-    ORDER BY datein DESC
-        `;
+    SELECT so.*, TO_CHAR(so.datein, 'MM/DD/YYYY') AS formatted_datein, c.first_name AS customer_first_name, s.service_name, e.fname AS employee_fname, os.status
+    FROM service_order so
+    JOIN customer c ON so.cust_id = c.cust_id
+    JOIN service s ON so.service_id = s.service_id
+    JOIN employee e ON so.emp_id = e.emp_id
+    JOIN order_status os ON so.order_status_id = os.order_status_id
+    WHERE LOWER(so.description) LIKE '%' || LOWER(:search_value) || '%'
+    ORDER BY so.datein DESC`;
     let searchValue = req.body.searchValue
     let binds = [searchValue];
     //
@@ -895,7 +898,7 @@ app.post('/vehicle-make', async function(req, res){
     // Column Name
     const vehicle_makeAttributes = 'seq_vehicle_make.nextval, :make_name';
     // Values
-    let make_name = req.body.make_name;
+    let make_name = req.body.make;
     // Query Creation
     let query = `INSERT INTO VEHICLE_MAKE VALUES (${vehicle_makeAttributes})`;
     let binds = [make_name.toUpperCase()];
@@ -1190,6 +1193,150 @@ app.get('/api/sales-per-month', async function (req, res) {
       res.status(500).send('Internal server error');
     }
 });
+
+app.post('/service-tab', async function(req, res) {
+    const interval = req.body.interval; // Update to use req.body instead of req.query
+    const service = req.body.service; // Get selected service from frontend
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+        case "daily":
+            groupBy = "TRUNC(datein, 'DD')";
+            dateFormat = "YYYY-MM-DD";
+            break;
+        case "weekly":
+            groupBy = "TRUNC(datein, 'IW')";
+            dateFormat = "IYYY-IW";
+            break;
+        case "monthly":
+            groupBy = "TRUNC(datein, 'MM')";
+            dateFormat = "YYYY-MM";
+            break;
+        case "yearly":
+            groupBy = "TRUNC(datein, 'YYYY')";
+            dateFormat = "YYYY";
+            break;
+        default:
+            res.status(400).send("Invalid interval");
+            return;
+    }
+
+    let query = `SELECT 
+                  TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+                  SERVICE.SERVICE_NAME, 
+                  COUNT(DISTINCT SERVICE_ORDER.CUST_ID) AS num_customers, 
+                  SUM(SERVICE.PRICE) AS total_order_amount
+                FROM 
+                  SERVICE
+                  JOIN SERVICE_ORDER ON SERVICE.SERVICE_ID = SERVICE_ORDER.SERVICE_ID 
+                WHERE 
+                  datein >= '01-Jan-98' AND dateout <= '31-Dec-23' 
+                GROUP BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME 
+                ORDER BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME`;
+  
+    if (service !== 'All Services') {
+        // Update query to include service filter
+        query = `SELECT 
+                  TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+                  SERVICE.SERVICE_NAME, 
+                  COUNT(DISTINCT SERVICE_ORDER.CUST_ID) AS num_customers, 
+                  SUM(SERVICE.PRICE) AS total_order_amount
+                FROM 
+                  SERVICE
+                  JOIN SERVICE_ORDER ON SERVICE.SERVICE_ID = SERVICE_ORDER.SERVICE_ID 
+                WHERE 
+                  datein >= '01-Jan-98' AND dateout <= '31-Dec-23' 
+                  AND SERVICE.SERVICE_ID = '${service}' 
+                GROUP BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME 
+                ORDER BY 
+                  TO_CHAR(${groupBy}, '${dateFormat}'),
+                  SERVICE.SERVICE_NAME`;
+    }
+
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows);
+    res.json(result.rows);
+});
+
+app.post('/customer-report', async function(req, res) {
+    // Extract request body parameters
+    const interval = req.body.interval; // Update to use req.body instead of req.query
+    
+    // Define variables for groupBy and dateFormat based on interval
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+        case "daily":
+            groupBy = "TRUNC(datein, 'DD')";
+            dateFormat = "YYYY-MM-DD";
+            break;
+        case "weekly":
+            groupBy = "TRUNC(datein, 'IW')";
+            dateFormat = "IYYY-IW";
+            break;
+        case "monthly":
+            groupBy = "TRUNC(datein, 'MM')";
+            dateFormat = "YYYY-MM";
+            break;
+        case "yearly":
+            groupBy = "TRUNC(datein, 'YYYY')";
+            dateFormat = "YYYY";
+            break;
+        default:
+            res.status(400).send("Invalid interval");
+            return;
+    }
+
+    // Build the query string
+    let query = `
+        SELECT 
+            TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME,
+            SUM(so.TTLAMOUNT) AS total_amount
+        FROM 
+            customer c
+        JOIN 
+            (
+                SELECT 
+                    cust_id,
+                    SUM(TTLAMOUNT) AS TTLAMOUNT,
+                    DATEIN,
+                    DATEOUT
+                FROM 
+                    service_order
+                GROUP BY 
+                    cust_id,
+                    DATEIN,
+                    DATEOUT
+            ) so ON c.cust_id = so.cust_id
+        GROUP BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+        ORDER BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+    `;
+
+    // Execute the query and send the response
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows);
+    res.json(result.rows);
+});
+
+
+
   
   
 app.listen(PORT, () => {

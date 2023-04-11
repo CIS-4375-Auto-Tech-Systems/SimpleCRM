@@ -47,7 +47,7 @@
                 };
                 postData("http://localhost:3000/vehicle-make", formdata)
                 .then((data) => {
-                    window.close();
+                    window.location.href = '/success';
                 }).catch((error)=>{
                     console.error(error);
                 });

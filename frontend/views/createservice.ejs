@@ -53,7 +53,7 @@
                 };
                 postData("http://localhost:3000/service", formdata)
                     .then((data) => {
-                        window.close();
+                        window.location.href = '/success';
                     }).catch((error) => {
                         console.error(error);
                     });

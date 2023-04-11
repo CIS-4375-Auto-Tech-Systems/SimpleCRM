@@ -121,7 +121,7 @@
         postData("http://localhost:3000/vehicle", formdata)
           .then((data) => {
           console.log("Data saved to database: ", data);
-          window.close();
+          window.location.href = '/success';
           // Add code to update UI or show success message here
         }).catch((error) => {
           console.error("Error saving data to database:", error);
