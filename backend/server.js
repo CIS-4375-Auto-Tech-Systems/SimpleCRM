@@ -1271,6 +1271,79 @@ app.post('/service-tab', async function(req, res) {
     res.json(result.rows);
 });
 
+app.post('/customer-report', async function(req, res) {
+    // Extract request body parameters
+    const interval = req.body.interval; // Update to use req.body instead of req.query
+    
+    // Define variables for groupBy and dateFormat based on interval
+    let groupBy = "";
+    let dateFormat = "";
+    switch (interval) {
+        case "daily":
+            groupBy = "TRUNC(datein, 'DD')";
+            dateFormat = "YYYY-MM-DD";
+            break;
+        case "weekly":
+            groupBy = "TRUNC(datein, 'IW')";
+            dateFormat = "IYYY-IW";
+            break;
+        case "monthly":
+            groupBy = "TRUNC(datein, 'MM')";
+            dateFormat = "YYYY-MM";
+            break;
+        case "yearly":
+            groupBy = "TRUNC(datein, 'YYYY')";
+            dateFormat = "YYYY";
+            break;
+        default:
+            res.status(400).send("Invalid interval");
+            return;
+    }
+
+    // Build the query string
+    let query = `
+        SELECT 
+            TO_CHAR(${groupBy}, '${dateFormat}') AS date_formatted,
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME,
+            SUM(so.TTLAMOUNT) AS total_amount
+        FROM 
+            customer c
+        JOIN 
+            (
+                SELECT 
+                    cust_id,
+                    SUM(TTLAMOUNT) AS TTLAMOUNT,
+                    DATEIN,
+                    DATEOUT
+                FROM 
+                    service_order
+                GROUP BY 
+                    cust_id,
+                    DATEIN,
+                    DATEOUT
+            ) so ON c.cust_id = so.cust_id
+        GROUP BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+        ORDER BY 
+            TO_CHAR(${groupBy}, '${dateFormat}'),
+            c.LAST_NAME,
+            c.MIDDLE_IN,
+            c.FIRST_NAME
+    `;
+
+    // Execute the query and send the response
+    const result = await crudOP(query, undefined, true);
+    console.log(result.rows);
+    res.json(result.rows);
+});
+
+
+
   
   
 app.listen(PORT, () => {
