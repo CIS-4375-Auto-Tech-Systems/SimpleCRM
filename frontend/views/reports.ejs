@@ -4,7 +4,19 @@
     <%- include('partials/head.ejs'); %>
     <title>Reports</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
+    <script>
+      function printReport(divID){
+        let divContents = document.getElementById(divID).innerHTML;
+        let a = window.open('','', 'height=500, width=500');
+        a.document.write('<html>');
+        a.document.write('<body>');
+        a.document.write(divContents);
+        a.document.write('</body>');
+        a.document.write('</html>');
+        a.document.close();
+        a.print();
+      }
+    </script>
   </head>
   <body id="main">
     <div class="container">
@@ -51,7 +63,7 @@
       </tbody>
     </table>
     <!-- print report -->
-    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('sales-tab')">Print Report</button>
   </div>
 </div>
 
@@ -105,32 +117,33 @@ async function postData(url = "", data) {
 </script>
 
 <!-- Services Tab + filter by service name: dropdown of services -->
-<div id="services-tab" class="tab-pane fade">
-  <h3>Services Report Summary</h3>
-  <div class="form-group">
-    <label for="interval-select">Select Report:</label>
-    <select class="form-control" id="services-interval-select">
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-      <option value="yearly">Yearly</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="service-select">Filter by Service Name:</label>
-    <select class="form-control" id="service-select">
-      <option selected>All Services</option>
-      <% services.forEach(function(service){ %>
-        <option value=<%= service[0] %>><%= service[1] %></option>
-      <% }); %>
-    </select>
-  </div>
-  
-  <div id="services-table-container"></div>
-  <!-- print report -->
-  <button class="btn btn-primary" id="print-customer-report">Print Report</button>
-  </div>
-  
+<div class="tab-content">
+  <div id="services-tab" class="tab-pane fade">
+    <h3>Services Report Summary</h3>
+    <div class="form-group">
+      <label for="interval-select">Select Report:</label>
+      <select class="form-control" id="services-interval-select">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="service-select">Filter by Service Name:</label>
+      <select class="form-control" id="service-select">
+        <option selected>All Services</option>
+        <% services.forEach(function(service){ %>
+          <option value=<%= service[0] %>><%= service[1] %></option>
+        <% }); %>
+      </select>
+    </div>
+    
+    <div id="services-table-container"></div>
+    <!-- print report -->
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('services-tab');">Print Report</button>
+    </div>
+</div>
   <script>
   // generate services table based on selected interval and selected service
   function generateServicesTable(interval, service) {
@@ -208,7 +221,7 @@ async function postData(url = "", data) {
     </div>
     <div id="customers-table-container"></div>  
       <!-- print report -->
-    <button class="btn btn-primary" id="print-customer-report">Print Report</button>
+    <button class="btn btn-primary" id="print-customer-report" onclick="printReport('customer-tab')">Print Report</button>
   </div>
 </div>
 
