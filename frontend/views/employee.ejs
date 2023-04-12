@@ -124,7 +124,8 @@ img {
             const empLastName = employee[4] || 'No Last Name Found';
             const empAdd = employee[5] || 'No Address Found';
             const empCity = employee[6] || 'No City Found';
-            const empDate = employee[9] || 'No Hire Date Found';
+            const empDateRAW = new Date(employee[9]);
+            const empDate = empDateRAW.toLocaleDateString() || 'No Hire Date Found';
             const empGender = employee[10] || 'No Gender Found';
             const empEmail = employee[11] || 'No Email Found';
             const empPhone = employee[8] || 'No Phone Found';
@@ -149,55 +150,6 @@ img {
             empEmailEle.textContent = empEmail;
             empPhoneEle.textContent = empPhone;
             empZipEle.textContent = empZip;
-
-            //Service ORDER
-            const service_order = await getServiceOrder(cust_id);
-            const servicesTable = document.getElementById("services");
-            for (const order of service_order){
-              let order_id = order[0];
-              let order_status_id = order[4]
-              let service_id = order[5];
-              let ttlAmount = order[6];
-              let dateinRAW = new Date (order[7]);
-              let datein = dateinRAW.toLocaleDateString();
-              let dateoutRAW = new Date(order[8]);
-              let dateout = dateoutRAW.toLocaleDateString();
-              // GET service table
-              let service = await getService(service_id);
-              let service_name = service[1];
-
-              // Create Row identified by order_id
-              let serviceRow = document.createElement("tr");
-              serviceRow.setAttribute("id", order_id);
-              servicesTable.appendChild(serviceRow);
-                // Create Entry
-              let serviceEle = document.createElement("td");
-              let serviceText = document.createTextNode(service_name);
-              serviceEle.appendChild(serviceText);
-              serviceRow.appendChild(serviceEle);
-
-              let dateInEle = document.createElement("td");
-              let dateInText = document.createTextNode(datein);
-              dateInEle.appendChild(dateInText);
-              serviceRow.appendChild(dateInEle);
-
-              let dateOutEle = document.createElement("td");
-              let dateOutText = document.createTextNode(dateout);
-              dateOutEle.appendChild(dateOutText);
-              serviceRow.appendChild(dateOutEle);
-
-              let totalEle = document.createElement("td");
-              let totalText = document.createTextNode("$"+ttlAmount);
-              totalEle.appendChild(totalText);
-              serviceRow.appendChild(totalEle);
-
-              let orderAction = document.createElement("button");
-              let orderActionText = document.createTextNode("Edit");
-              orderAction.setAttribute("data-order_id", order_id);
-              orderAction.setAttribute("onclick", "editServiceOrder(this.dataset.order_id)");
-              orderAction.appendChild(orderActionText);
-              serviceRow.appendChild(orderAction);
-            }
           }
           createPage(emp_id);
           function previewPhoto() {

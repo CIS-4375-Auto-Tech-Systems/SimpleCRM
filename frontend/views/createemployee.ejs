@@ -41,6 +41,10 @@
             <label for="email" class="form-label">Email<span class="required">*</span></label>
             <input type="email" class="form-control" id="inputEmail"  name="email" required>
           </div>
+          <div class="col-md-2">
+            <label for="gender" class="form-label">Gender<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputGender" name="gender" required>
+          </div>
           <div class="col-4">
             <label for="address" class="form-label">Address<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St"required>
@@ -91,7 +95,7 @@
                   body: JSON.stringify(data),
                 });
                 return response.json();
-              }
+              };
               function myFunction(){
                   let makeValue = document.getElementById("make").value;
                   let x=document.getElementById("model").options;
@@ -106,7 +110,7 @@
                       }
                   }
               };
-              function submitemployee(){
+              async function submitemployee(){
                 //Form
                 const first_name = document.getElementById("firstName").value;
                 const last_name = document.getElementById("lastName").value;
@@ -116,27 +120,26 @@
                 const zip = document.getElementById("inputZip").value;
                 const phone = document.getElementById("inputPhone").value;
                 const email = document.getElementById("inputEmail").value;
-                const emp_status_id = document.getElementById("status").value;
                 const datehired = document.getElementById("Date-In").value;
+                const sex = document.getElementById("inputGender").value;
                 //
                 const formdata = {
-                  "emp_id":emp_id,
-                  "first_name":first_name,
-                  "last_name":last_name,
-                  "address": address,
+                  "fname":first_name,
+                  "lname":last_name,
+                  "emp_address": address,
                   "city":city,
                   "state_id": state_id,
                   "zip":zip,
                   "phone":phone,
                   "email":email,
-                  "emp_status_id": emp_status_id,
                   "datehired":datehired,
+                  "sex":sex
                 }
                 //
                 // POST request
                 postData("http://localhost:3000/employee", formdata).then((data) => {
                   // Store emp_id from response
-                  let emp_id = data.emp_id
+                  let emp_id = data.lastItemId;
                   sessionStorageControl.storeItem("emp_id", emp_id);
                   // Send the user to employee profile
                   window.location.href="/employee";

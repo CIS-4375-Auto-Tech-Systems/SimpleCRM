@@ -131,15 +131,14 @@ app.post('/employeelookup', async function(req, res){{
 // CREATE
 app.post('/employee', async function(req, res){
     // Column Names
-    const empAttributes = "seq_emp.nextval, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :state, :zip, :phone, :datehired, :sex, :email";
+    const empAttributes = "seq_emp.nextval, :emp_status_id, :state_id, :fname, :lname, :emp_address, :city, :zip, :phone, :datehired, :sex, :email";
     // Values
-    let emp_status_id = req.body.emp_status_id;
+    let emp_status_id = '2';
     let state_id = req.body.state_id;
     let fname = req.body.fname;
     let lname = req.body.lname;
     let emp_address = req.body.emp_address;
     let city = req.body.city;
-    let state = req.body.state;
     let zip = req.body.zip;
     let phone = req.body.phone;
     let datehired = new Date(req.body.datehired);
@@ -147,7 +146,7 @@ app.post('/employee', async function(req, res){
     let email = req.body.email;
     // Query Creation
     let query = `INSERT INTO EMPLOYEE VALUES (${empAttributes})`;
-    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), email.toUpperCase()];
+    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), email.toUpperCase()];
     let CRUDOP = await crudOP(query, binds, false);
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
