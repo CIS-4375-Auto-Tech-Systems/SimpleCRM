@@ -7,6 +7,10 @@
       form {
         margin-top: 100%;
       }
+      span.required {
+        color: red;
+        margin-left: 5px;
+      }
     </style>
   </head>
   <body>
@@ -14,15 +18,15 @@
       <div class="right-column">
         <div class="bottomrow">
         <form class="row g-3" onsubmit="submitOrder(); return false">
-          <h2>Create Order Form</h2>
+          <h2>Create Order Form</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-4">
-            <label for="vehicle" class="form-label">Vehicle</label>
+            <label for="vehicle" class="form-label">Vehicle<span class="required">*</span></label>
             <select id="vehicle" class="form-select">
               <!--Vehicle License Plate-->
             </select>
           </div>
           <div class="col-md-4">
-            <label for="service" class="form-label">Service</label>
+            <label for="service" class="form-label">Service<span class="required">*</span></label>
             <select id="service" class="form-select">
               <option selected></option>
               <% services.forEach(function(service){ %>
@@ -32,7 +36,7 @@
           </div>
           <div></div>
           <div class="col-md-4">
-            <label for="employee" class="form-label">Employee</label>
+            <label for="employee" class="form-label">Employee<span class="required">*</span></label>
             <select id="employee" class="form-select">
               <option selected></option>
               <% employees.forEach(function(employee){ %>
@@ -41,20 +45,20 @@
             </select>
           </div>
           <div class="col-md-4">
-            <label for="inputtotalamount" class="form-label">Total Amount</label>
+            <label for="inputtotalamount" class="form-label">Total Amount<span class="required">*</span></label>
             <input type="number" class="form-control" id="total-amount" placeholder="$" >
           </div>
           <div></div>
           <div class="col-md-2">
-            <label for="inputDateIn" class="form-label">Date In</label>
+            <label for="inputDateIn" class="form-label">Date In<span class="required">*</span></label>
             <input type="date" class="form-control" id="Date-In">
           </div>
           <div class="col-md-2">
-            <label for="inputDateout" class="form-label">Date Out</label>
+            <label for="inputDateout" class="form-label">Date Out<span class="required">*</span></label>
             <input type="date" class="form-control" id="Date-Out">
           </div>
           <div class="col-md-4">
-            <label for="inputOdometer" class="form-label">Odometer</label>
+            <label for="inputOdometer" class="form-label">Odometer<span class="required">*</span></label>
             <input type="number" class="form-control" id="input-Odometer" max="999999" min="1">
           </div>
 

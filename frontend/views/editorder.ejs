@@ -7,6 +7,10 @@
       form {
         margin-top: 100%;
       }
+      span.required {
+        color: red;
+        margin-left: 5px;
+      }
     </style>
   </head>
   <body>
@@ -14,10 +18,10 @@
       <div class="right-column">
         <div class="bottomrow">
         <form class="row g-3" onsubmit="editOrder(); return false">
-          <h2>Edit Order Form</h2>
+          <h2>Edit Order Form</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-4">
-            <label for="status" class="form-label">Status</label>
-            <select id="status" class="form-select">
+            <label for="status" class="form-label">Status<span class="required">*</span></label>
+            <select id="status" class="form-select" required>
               <option selected></option>
               <% orderStatuses.forEach(function(status){ %>
                 <option value=<%= status[0] %>><%= status[1] %></option>
@@ -25,8 +29,8 @@
             </select>
           </div>
           <div class="col-md-4">
-            <label for="service" class="form-label">Service</label>
-            <select id="service" class="form-select">
+            <label for="service" class="form-label">Service<span class="required">*</span></label>
+            <select id="service" class="form-select" required>
               <option selected></option>
               <% services.forEach(function(service){ %>
                 <option value=<%= service[0] %>><%= service[1] %></option>
@@ -35,8 +39,8 @@
           </div>
           <div></div>
           <div class="col-md-4">
-            <label for="employee" class="form-label">Employee</label>
-            <select id="employee" class="form-select">
+            <label for="employee" class="form-label">Employee<span class="required">*</span></label>
+            <select id="employee" class="form-select" required>
               <option selected></option>
               <% employees.forEach(function(employee){ %>
                 <option value=<%= employee[0] %>><%= employee[3] %> <%= employee[4] %></option>
@@ -44,21 +48,21 @@
             </select>
           </div>
           <div class="col-md-4">
-            <label for="inputtotalamount" class="form-label">Total Amount</label>
-            <input type="number" class="form-control" id="total-amount" placeholder="$" >
+            <label for="inputtotalamount" class="form-label">Total Amount<span class="required">*</span></label>
+            <input type="number" class="form-control" id="total-amount" placeholder="$" required>
           </div>
           <div></div>
           <div class="col-md-2">
-            <label for="inputDateIn" class="form-label">Date In</label>
-            <input type="date" class="form-control" id="Date-In">
+            <label for="inputDateIn" class="form-label">Date In<span class="required">*</span></label>
+            <input type="date" class="form-control" id="Date-In" required>
           </div>
           <div class="col-md-2">
-            <label for="inputDateout" class="form-label">Date Out</label>
-            <input type="date" class="form-control" id="Date-Out">
+            <label for="inputDateout" class="form-label">Date Out<span class="required">*</span></label>
+            <input type="date" class="form-control" id="Date-Out" required>
           </div>
           <div class="col-md-4">
-            <label for="inputOdometer" class="form-label">Odometer</label>
-            <input type="number" class="form-control" id="input-Odometer" max="999999" min="1">
+            <label for="inputOdometer" class="form-label">Odometer<span class="required">*</span></label>
+            <input type="number" class="form-control" id="input-Odometer" max="999999" min="1" required>
           </div>
 
           <div class="col-8">
@@ -67,7 +71,7 @@
           </div><!--Leave this DIV red plz, if not the submit button becomes japanese-->
         </div>
           <div class="col-6">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Update</button>
           </div>
         </form>
       </div>

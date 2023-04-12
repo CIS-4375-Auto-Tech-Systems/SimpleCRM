@@ -18,9 +18,9 @@
             <div class="right-column">
                 <div class="bottomrow">
                     <form class="row g-3" onsubmit="createModel(); return false" >
-                        <h2>New Model</h2>
+                        <h2>New Model</h2><p><span class="required">*</span> Indicates field is required</p>
                         <div class="col-md-4">
-                            <label for="make" class="form-label">Make</label>
+                            <label for="make" class="form-label">Make<span class="required">*</span></label>
                             <select id="make" class="form-select" onchange="myFunction()" required>
                               <option selected></option>
                               <% makes.forEach(function(make){ %>
@@ -29,7 +29,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="model" class="form-label">Model Name</label>
+                            <label for="model" class="form-label">Model Name<span class="required">*</span></label>
                             <input type="text" class="form-control" id="model">
                         </div>
                         <div class="col-md-4">
