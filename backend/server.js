@@ -506,7 +506,7 @@ app.post('/service', async function(req, res){
     // Column Name
     const serviceAttributes = 'seq_service.nextval, :service_name, :price'
     // Values
-    let service_name = req.body.service_name;
+    let service_name = req.body.service;
     let price = req.body.price;
     // Query Creation
     let query = `INSERT INTO SERVICE VALUES (${serviceAttributes})`;
