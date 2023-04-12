@@ -17,7 +17,7 @@
     <div class="container">
       <div class="right-column">
         <div class="bottomrow">
-        <form class="row g-3">
+        <form class="row g-3" onsubmit="createVehicle(); return false">
           <h2>Add Vehicle</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-4">
             <label for="make" class="form-label">Make<span class="required">*</span></label>
@@ -71,7 +71,7 @@
           </div><!--Leave this DIV red plz, if you add a '>' and the top here ^ then the submit button turns into a japanese font. idk ok-->
         </div>
           <div class="col-6">
-            <button type="submit" class="btn btn-primary" id="submit-on-db">Submit</button>
+            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
           </div>
         </form>
       </div>
@@ -102,8 +102,8 @@
         });
         return response.json();
       };
-      const SubmitToDB = document.getElementById("submit-on-db");
-      SubmitToDB.addEventListener("click", () => {
+
+      async function createVehicle(){
         const make = document.getElementById("make").value;
         const model = document.getElementById("model").value;
         const year = document.getElementById("input-year").value;
@@ -131,7 +131,7 @@
           console.error("Error saving data to database:", error);
           // Add code to show error message here
         });
-      });
+      };
     </script>       
   </body>
 </html>
