@@ -163,7 +163,7 @@ async function postData(url = "", data) {
       // generate table HTML
       var tableHTML = "<table class='table'><thead><tr><th>Date</th><th>Service Name</th><th># Customers</th><th>$ Order Amount</th></tr></thead><tbody>";
       for (var i = 0; i < data.length; i++) {
-        tableHTML += "<tr><td>" + data[i][0] + "</td><td>" + data[i][1] + "</td><td>" + data[i][2] + "</td><td>" + data[i][3] + "</td></tr>";
+        tableHTML += "<tr><td>" + data[i][0] + "</td><td>" + data[i][1] + "</td><td>" + data[i][2] + "</td><td>" + '$'+data[i][3] + "</td></tr>";
         console.log(data[i]);  
       }
       tableHTML += "</tbody></table>";
@@ -247,7 +247,7 @@ async function postData(url = "", data) {
           $tr.append($('<td>').text(row[1]));
           $tr.append($('<td>').text(row[2]));
           $tr.append($('<td>').text(row[3]));
-          $tr.append($('<td>').text(row[4]));
+          $tr.append($('<td>').text('$'+row[4]));
           $customerTableBody.append($tr);
           console.log(row)
         });
