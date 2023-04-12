@@ -7,6 +7,10 @@
       form {
         margin-top: 100%;
       }
+      span.required {
+  color: red;
+  margin-left: 5px;
+}
     </style>
   </head>
   <body>
@@ -14,9 +18,9 @@
       <div class="right-column">
         <div class="bottomrow">
         <form class="row g-3">
-          <h2>Add Vehicle</h2>
+          <h2>Add Vehicle</h2><p><span class="required">*</span> Indicates field is required</p>
           <div class="col-md-4">
-            <label for="make" class="form-label">Make</label>
+            <label for="make" class="form-label">Make<span class="required">*</span></label>
             <select id="make" class="form-select" onchange="myFunction()" required>
               <option selected></option>
               <% makes.forEach(function(make){ %>
@@ -25,7 +29,7 @@
             </select>
           </div>
           <div class="col-md-4">
-            <label for="model" class="form-label">Model</label>
+            <label for="model" class="form-label">Model<span class="required">*</span></label>
             <select id="model" class="form-select" name="model_id" required>
               <option selected></option>
               <% models.forEach(function(model){ %>
@@ -35,11 +39,11 @@
           </div>
           <div></div>
           <div class="col-8">
-            <label for="year" class="form-label" placeholder="YYYY">Year</label>
+            <label for="year" class="form-label" placeholder="YYYY">Year<span class="required">*</span></label>
             <input type="text" class="form-control" id="input-year">
           </div>
           <div class="col-8">
-            <label for="state" class="form-label">State<span class="required"></span></label>
+            <label for="state" class="form-label">State<span class="required">*</span></label>
             <select id="state" class="form-select" name="state_id" required>
               <option selected></option>
               <!--The value of the option is what is part of the request-->
@@ -49,7 +53,7 @@
             </select>
           </div>
           <div class="col-8">
-            <label for="color" class="form-label">Color</label>
+            <label for="color" class="form-label">Color<span class="required">*</span></label>
             <select id="color" class="form-select" name="color_id" required>
               <option selected></option>
               <% color.forEach(function(color){ %>
@@ -58,12 +62,12 @@
             </select>
           </div>
           <div class="col-8">
-            <label for="input-plate" class="form-label">License Plate</label>
-            <input type="text" class="form-control" id="input-plate" maxlength="7">
+            <label for="input-plate" class="form-label">License Plate<span class="required">*</span></label>
+            <input type="text" class="form-control" id="input-plate" maxlength="7" required>
           </div>
           <div class="col-8">
-            <label for="input-vin" class="form-label">VIN</label>
-            <input type="text" class="form-control" id="input-vin" maxlength="17"
+            <label for="input-vin" class="form-label">VIN<span class="required">*</span></label>
+            <input type="text" class="form-control" id="input-vin" maxlength="17" required
           </div><!--Leave this DIV red plz, if you add a '>' and the top here ^ then the submit button turns into a japanese font. idk ok-->
         </div>
           <div class="col-6">
