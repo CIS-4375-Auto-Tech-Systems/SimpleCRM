@@ -186,7 +186,7 @@ app.get('/employee', async function(req, res){
 // UPDATE
 app.put('/employee', async function(req, res){
     // Columns
-    const empAttributes = "emp_status_id = :emp_status_id, state_id = :state_id, fname = :fname, lname = :lname, emp_address = :emp_address, city = :city, state = :state, zip = :zip, phone = :phone, datehired = :datehired, sex = :sex"
+    const empAttributes = "emp_status_id = :emp_status_id, state_id = :state_id, fname = :fname, lname = :lname, emp_address = :emp_address, city = :city, zip = :zip, phone = :phone, datehired = :datehired, sex = :sex, email = :email"
     // Values
     let emp_id = req.body.emp_id;
     // READ COMPARE and UPDATE
@@ -203,11 +203,11 @@ app.put('/employee', async function(req, res){
     let oldLname = currentEmp[4];
     let oldEmp_address = currentEmp[5];
     let oldCity = currentEmp[6];
-    let oldState = currentEmp[7];
-    let oldZip = currentEmp[8];
-    let oldPhone = currentEmp[9];
-    let oldDateHired = currentEmp[10];
-    let oldSex = currentEmp[11];
+    let oldZip = currentEmp[7];
+    let oldPhone = currentEmp[8];
+    let oldDateHired = currentEmp[9];
+    let oldSex = currentEmp[10];
+    let oldEmail = currentEmp[11];
     // Request New
     let newEmp_status_id = req.body.emp_status_id;
     let newState_id = req.body.state_id;
@@ -215,11 +215,11 @@ app.put('/employee', async function(req, res){
     let newLname = req.body.lname;
     let newEmp_address = req.body.emp_address;
     let newCity = req.body.city;
-    let newState = req.body.state;
     let newZip = req.body.zip;
     let newPhone = req.body.phone;
     let newDateHired = new Date(req.body.datehired);
     let newSex = req.body.sex;
+    let newEmail = req.body.email;
 
     /* COMPARE and UPDATE */
     let emp_status_id = compare_update(oldEmp_status_id, newEmp_status_id);
@@ -228,7 +228,6 @@ app.put('/employee', async function(req, res){
     let lname = compare_update(oldLname, newLname);
     let emp_address = compare_update(oldEmp_address, newEmp_address);
     let city = compare_update(oldCity, newCity);
-    let state = compare_update(oldState, newState);
     let zip = compare_update(oldZip, newZip);
     let phone = compare_update(oldPhone, newPhone);
     let datehired = '';
@@ -238,9 +237,10 @@ app.put('/employee', async function(req, res){
         datehired = newDateHired;
     };
     let sex = compare_update(oldSex, newSex);
+    let email = compare_update(oldEmail, newEmail);
     // Query Creation 
     let query = `UPDATE EMPLOYEE SET ${empAttributes} WHERE emp_id = :emp_id`;
-    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), state.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), emp_id];
+    let binds = [emp_status_id, state_id, fname.toUpperCase(), lname.toUpperCase(), emp_address.toUpperCase(), city.toUpperCase(), zip, phone, datehired, sex.toUpperCase(), email.toUpperCase(), emp_id];
     let CRUDOP = await crudOP(query, binds, false)
         // Find Affected employee by ROWID to send back
     let lastItemQuery = `SELECT * FROM EMPLOYEE WHERE ROWID = '${CRUDOP.lastRowid}'`;
