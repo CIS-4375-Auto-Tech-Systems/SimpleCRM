@@ -1117,7 +1117,7 @@ app.post('/customervehicle', async function(req, res) {
     const custAttributes = "seq_cust.nextval, :cust_status_id, :state_id, :first_name, :middle_in, :last_name, :address, :city, :zip, :phone, :email";
     //Customer Query
     let custQuery = `INSERT INTO CUSTOMER VALUES (${custAttributes})`;
-    let binds = [cust_status_id, state_id, first_name.toUpperCase(), middle_in.toUpperCase(), last_name.toUpperCase(), address.toUpperCase(), city.toUpperCase(), zip, phone, email.toUpperCase()];
+    let binds = [cust_status_id, state_id, first_name.toUpperCase(), middle_in, last_name.toUpperCase(), address.toUpperCase(), city.toUpperCase(), zip, phone, email.toUpperCase()];
     let custCRUDOP = await crudOP(custQuery, binds, false);
     //Get customer rowID
     let lastItemQuery = `SELECT * FROM CUSTOMER WHERE ROWID = '${custCRUDOP.lastRowid}'`;

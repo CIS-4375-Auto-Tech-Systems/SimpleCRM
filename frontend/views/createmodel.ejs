@@ -17,7 +17,7 @@
         <div class="container">
             <div class="right-column">
                 <div class="bottomrow">
-                    <form class="row g-3" onsubmit="createModel()">
+                    <form class="row g-3" onsubmit="createModel(); return false" >
                         <h2>New Model</h2>
                         <div class="col-md-4">
                             <label for="make" class="form-label">Make</label>
@@ -49,7 +49,7 @@
                 });
                 return response.json();
             };
-            function createModel() {
+            async function createModel() {
                 const make = document.getElementById("make").value;
                 const model = document.getElementById("model").value;
                 const formdata = {
@@ -58,11 +58,13 @@
                 }
                 postData("http://localhost:3000/vehicle-model", formdata)
                 .then((data) => {
+                    console.log("Data saved to database: ", data);
                     window.location.href = '/success';
                 }).catch((error)=> {
                     console.log(error);
                 });
             }
+            
         </script>
     </body>
 </html>

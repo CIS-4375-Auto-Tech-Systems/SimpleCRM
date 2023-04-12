@@ -43,6 +43,10 @@
             <label for="address" class="form-label">Address<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St"required>
           </div>
+          <div class="col-md-1">
+            <label for="sex" class="form-label">Sex<span class="required">*</span></label>
+            <input type="text" class="form-control" id="inputSex" name="sex" required>
+          </div>
           <div class="col-md-2">
             <label for="city" class="form-label">City<span class="required">*</span></label>
             <input type="text" class="form-control" id="inputCity" name="city" required>
@@ -113,7 +117,6 @@
               async function currentData(empID){
                 const employee = await getemp(empID);
                 document.getElementById("firstName").value = employee[3];
-
                 document.getElementById("lastName").value = employee[4];
                 document.getElementById("inputPhone").value = employee[8];
                 document.getElementById("inputEmail").value = employee[11];
@@ -122,6 +125,7 @@
                 document.getElementById("state").value = employee[2];
                 document.getElementById("inputZip").value = employee[7];
                 document.getElementById("status").value = employee[1];
+                document.getElementById("inputSex").value = employee[10];
               }
               currentData(emp_id);
               function editemployee(){
@@ -136,6 +140,7 @@
                 const email = document.getElementById("inputEmail").value;
                 const emp_status_id = document.getElementById("status").value;
                 const datehired = document.getElementById("Date-In").value;
+                const sex = document.getElementById("inputSex").value;
                 //
                 const formdata = {
                   "emp_id":emp_id,
@@ -149,6 +154,7 @@
                   "email":email,
                   "emp_status_id": emp_status_id,
                   "datehired":datehired,
+                  "sex":sex
                 }
                 //
                 // PUT request
