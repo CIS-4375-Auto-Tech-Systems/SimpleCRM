@@ -339,8 +339,8 @@ app.post('/service-order', async function(req, res) {
     let order_status_id = req.body.order_status_id;
     let service_id = req.body.service_id;
     let ttlamount = req.body.ttlamount;
-    let datein = req.body.datein;
-    let dateout = req.body.dateout;
+    let datein = new Date(req.body.datein);
+    let dateout = new Date(req.body.dateout);
     let odometer = req.body.odometer;
     let description = req.body.description;
     // Query Creation
@@ -391,8 +391,8 @@ app.put('/service-order', async function(req, res){
     let newOrder_status_id = req.body.order_status_id;
     let newService_id = req.body.service_id;
     let newTtlamt = req.body.ttlamount;
-    let newDatein = req.body.datein;
-    let newDateout  = req.body.dateout;
+    let newDatein = new Date(req.body.datein);
+    let newDateout  = new Date(req.body.dateout);
     let newOdometer = req.body.odometer;
     let newDescription  = req.body.description;
     /* COMPARE and UPDATE */
@@ -404,9 +404,9 @@ app.put('/service-order', async function(req, res){
     let ttlamount = compare_update(oldTtlamt, newTtlamt);
     let datein = '';
     if (oldDatein == newDatein){
-        datein = new Date(oldDatein);
+        datein = oldDatein;
     }else if (oldDatein != newDatein){
-        datein = new Date(newDatein);
+        datein = newDatein;
     };
     let dateout = '';
     if (oldDateout == newDateout){
