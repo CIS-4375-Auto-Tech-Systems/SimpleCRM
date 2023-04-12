@@ -127,26 +127,6 @@ app.post('/employeelookup', async function(req, res){{
     res.send(CRUDOP.rows);
 }});
 
-//SERVICE ORDER LOOKUP
-app.post('/servicelookup', async function(req, res){{
-    // Query has to be exact match including case
-    let query = `
-    SELECT so.*, TO_CHAR(so.datein, 'MM/DD/YYYY') AS formatted_datein, c.first_name AS customer_first_name, s.service_name, e.fname AS employee_fname, os.status
-    FROM service_order so
-    JOIN customer c ON so.cust_id = c.cust_id
-    JOIN service s ON so.service_id = s.service_id
-    JOIN employee e ON so.emp_id = e.emp_id
-    JOIN order_status os ON so.order_status_id = os.order_status_id
-    WHERE LOWER(so.description) LIKE '%' || LOWER(:search_value) || '%'
-    ORDER BY so.datein DESC`;
-    let searchValue = req.body.searchValue
-    let binds = [searchValue];
-    //
-    // Send a response
-    const CRUDOP = await crudOP(query,binds, true);
-    res.send(CRUDOP.rows);
-}});
-
 /* EMPLOYEE */
 // CREATE
 app.post('/employee', async function(req, res){
